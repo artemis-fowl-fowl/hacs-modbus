@@ -2,9 +2,8 @@
   "name": "iSMART Modbus",
   "homeassistant": "2024.1.0",
   "domains": ["light"],
-  "type": "integration",
+  "render_readme": true,
   "documentation": "https://github.com/artemis-fowl-fowl/hacs-modbus",
   "issues": "https://github.com/artemis-fowl-fowl/hacs-modbus/issues",
-  "requirements": [],
-  "codeowners": ["@gabriel"]
+  "codeowners": ["@artemis-fowl-fowl"]
 }
