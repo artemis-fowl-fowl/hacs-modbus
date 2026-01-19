@@ -2,31 +2,25 @@
   "config": {
     "step": {
       "user": {
-        "title": "Configuration du serveur Modbus",
-        "description": "Entrez les paramètres de connexion à votre serveur Modbus iSMART",
+        "title": "iSMART Modbus RTU/TCP",
+        "description": "Configure la connexion Modbus RTU (RS-485) ou TCP.\n\n**Port**: /dev/ttyUSB0 pour RTU, ou adresse IP pour TCP\n**Baudrate**: 38400 (RTU)\n**Méthode**: rtu, tcp, ou rtuovertcp",
         "data": {
-          "host": "Adresse du serveur (ex: 192.168.1.11)",
-          "port": "Port (défaut: 2080)"
-        }
-      },
-      "lights": {
-        "title": "Configuration des lampes",
-        "description": "Configurez les lampes à contrôler",
-        "data": {
-          "lights": "Lampes (JSON)"
+          "name": "Nom (ex. 'iSMART Modbus')",
+          "port": "Port (ex. /dev/ttyUSB0 ou 192.168.1.11)",
+          "baudrate": "Baudrate (ex. 38400)",
+          "method": "Méthode"
         }
       }
     },
     "error": {
-      "invalid_host": "Adresse invalide",
-      "connection_error": "Erreur de connexion au serveur",
-      "invalid_json": "JSON invalide pour la configuration des lampes"
+      "connection_error": "Erreur de connexion Modbus.",
+      "invalid_json": "JSON invalide."
     },
     "abort": {
-      "already_configured": "L'intégration est déjà configurée"
+      "already_configured": "iSMART Modbus est déjà configuré."
     }
-  },
-  "options": {
+  }
+}
     "step": {
       "init": {
         "title": "Options iSMART Modbus",
