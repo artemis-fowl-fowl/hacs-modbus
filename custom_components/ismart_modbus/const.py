@@ -30,25 +30,25 @@ GABRIEL_DEVICES = {
     "lumiere": {
         "name": "Lumière Gabriel",
         "device": 1,
-        "coil": 0x2C01,  # 0x2C02 - 1 (HA Modbus attend 0-based)
+        "coil": 0x2C02,  # Adresse originale du script JS
         "type": "switch",
     },
     "lit": {
         "name": "Lit Gabriel",
         "device": 4,
-        "coil": 0x2C13,  # 0x2C14 - 1
+        "coil": 0x2C14,  # Adresse originale
         "type": "switch",
     },
     "volet_up": {
         "name": "Volet Gabriel Montée",
         "device": 3,
-        "coil": 0x2C02,  # 0x2C03 - 1
+        "coil": 0x2C03,  # Adresse originale
         "type": "switch",
     },
     "volet_down": {
         "name": "Volet Gabriel Descente",
         "device": 3,
-        "coil": 0x2C01,  # 0x2C02 - 1
+        "coil": 0x2C02,  # Adresse originale
         "type": "switch",
     },
 }
