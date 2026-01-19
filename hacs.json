@@ -3,8 +3,8 @@
   "homeassistant": "2024.1.0",
   "domains": ["light"],
   "type": "integration",
-  "documentation": "https://github.com/gabriel/ha-ismart-modbus",
-  "issues": "https://github.com/gabriel/ha-ismart-modbus/issues",
+  "documentation": "https://github.com/artemis-fowl-fowl/hacs-modbus",
+  "issues": "https://github.com/artemis-fowl-fowl/hacs-modbus/issues",
   "requirements": [],
   "codeowners": ["@gabriel"]
 }
