@@ -16,40 +16,39 @@ DEFAULT_STOPBITS = 1
 DEFAULT_BYTESIZE = 8
 DEFAULT_PARITY = "N"
 
-# Mapping device → slave ID (device est "slave - 1" dans le script JS original)
-# Ex: device=1 → slave=2, device=3 → slave=4, etc.
+# Mapping device → slave ID (device du script JS = slave Modbus direct)
 DEVICE_TO_SLAVE = {
-    1: 2,
+    1: 1,
     2: 2,
-    3: 4,
-    4: 5,
-    5: 6,
+    3: 3,
+    4: 4,
+    5: 5,
 }
 
-# Appareils Gabriel (exemple complet pour chambre Gabriel)
+# Appareils Gabriel
 GABRIEL_DEVICES = {
     "lumiere": {
         "name": "Lumière Gabriel",
         "device": 1,
-        "coil": 0x2C02,
+        "coil": 0x2C01,  # 0x2C02 - 1 (HA Modbus attend 0-based)
         "type": "switch",
     },
     "lit": {
         "name": "Lit Gabriel",
         "device": 4,
-        "coil": 0x2C14,
+        "coil": 0x2C13,  # 0x2C14 - 1
         "type": "switch",
     },
     "volet_up": {
         "name": "Volet Gabriel Montée",
         "device": 3,
-        "coil": 0x2C03,
+        "coil": 0x2C02,  # 0x2C03 - 1
         "type": "switch",
     },
     "volet_down": {
         "name": "Volet Gabriel Descente",
         "device": 3,
-        "coil": 0x2C02,
+        "coil": 0x2C01,  # 0x2C02 - 1
         "type": "switch",
     },
 }
