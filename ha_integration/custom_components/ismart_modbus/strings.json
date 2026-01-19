@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configuration du serveur Modbus",
+        "description": "Entrez les paramètres de connexion à votre serveur Modbus iSMART",
+        "data": {
+          "host": "Adresse du serveur (ex: 192.168.1.11)",
+          "port": "Port (défaut: 2080)"
+        }
+      },
+      "lights": {
+        "title": "Configuration des lampes",
+        "description": "Configurez les lampes à contrôler",
+        "data": {
+          "lights": "Lampes (JSON)"
+        }
+      }
+    },
+    "error": {
+      "invalid_host": "Adresse invalide",
+      "connection_error": "Erreur de connexion au serveur",
+      "invalid_json": "JSON invalide pour la configuration des lampes"
+    },
+    "abort": {
+      "already_configured": "L'intégration est déjà configurée"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options iSMART Modbus",
+        "description": "Modifiez les paramètres de l'intégration",
+        "data": {
+          "host": "Adresse du serveur",
+          "port": "Port",
+          "lights": "Configuration des lampes (JSON)"
+        }
+      }
+    }
+  }
+}

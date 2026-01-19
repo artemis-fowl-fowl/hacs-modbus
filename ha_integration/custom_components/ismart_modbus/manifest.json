@@ -1,0 +1,11 @@
+{
+  "manifest_version": 1,
+  "domain": "ismart_modbus",
+  "name": "iSMART Modbus",
+  "codeowners": ["@gabriel"],
+  "config_flow": true,
+  "documentation": "https://github.com/gabriel/ha-ismart-modbus",
+  "requirements": ["aiohttp>=3.8.0"],
+  "version": "0.1.0",
+  "homeassistant": "2024.1.0"
+}
