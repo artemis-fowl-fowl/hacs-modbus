@@ -3,18 +3,17 @@
 DOMAIN = "ismart_modbus"
 DEFAULT_NAME = "iSMART Modbus"
 
-# Configuration Modbus RTU/RS-485
-CONF_PORT = "port"
-CONF_BAUDRATE = "baudrate"
-CONF_METHOD = "method"
+"""Configuration réseau (HTTP) et mapping iSMART."""
 
-# Valeurs par défaut (RTU/RS-485)
-DEFAULT_PORT = "/dev/ttyUSB0"
-DEFAULT_BAUDRATE = 38400
-DEFAULT_METHOD = "rtu"
-DEFAULT_STOPBITS = 1
-DEFAULT_BYTESIZE = 8
-DEFAULT_PARITY = "N"
+# Configuration réseau (serveur maison iSMART)
+CONF_HOST = "host"
+CONF_NET_PORT = "net_port"
+CONF_MODE = "mode"  # legacy (2080 getState/writeCoil) | rest (2081 Flask)
+
+# Valeurs par défaut réseau
+DEFAULT_HOST = "192.168.1.11"
+DEFAULT_NET_PORT = 2081
+DEFAULT_MODE = "rest"
 
 # Mapping device → slave ID (device du script JS = slave Modbus direct)
 DEVICE_TO_SLAVE = {
@@ -31,24 +30,28 @@ GABRIEL_DEVICES = {
         "name": "Lumière Gabriel",
         "device": 1,
         "coil": 0x2C02,  # Adresse originale du script JS
+        "rest_name": "gabriel",
         "type": "switch",
     },
     "lit": {
         "name": "Lit Gabriel",
         "device": 4,
         "coil": 0x2C14,  # Adresse originale
+        "rest_name": "lit_gabriel",
         "type": "switch",
     },
     "volet_up": {
         "name": "Volet Gabriel Montée",
         "device": 3,
         "coil": 0x2C03,  # Adresse originale
+        "rest_name": "gabriel",
         "type": "switch",
     },
     "volet_down": {
         "name": "Volet Gabriel Descente",
         "device": 3,
         "coil": 0x2C02,  # Adresse originale
+        "rest_name": "gabriel",
         "type": "switch",
     },
 }

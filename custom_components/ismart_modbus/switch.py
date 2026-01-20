@@ -1,4 +1,4 @@
-"""Switches Modbus pour iSMART."""
+"""Switches réseau (HTTP) pour iSMART."""
 
 import logging
 from typing import Any
@@ -8,7 +8,16 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, DEVICE_TO_SLAVE, ALL_ROOMS, CONF_PORT, CONF_BAUDRATE, CONF_METHOD
+from .const import (
+    DOMAIN,
+    DEVICE_TO_SLAVE,
+    ALL_ROOMS,
+    CONF_HOST,
+    CONF_NET_PORT,
+    CONF_MODE,
+)
+
+from aiohttp import ClientSession
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,10 +30,10 @@ async def async_setup_entry(
     """Ajouter les switches depuis la config."""
     data = hass.data[DOMAIN][config_entry.entry_id]
     config = data["config"]
-    
-    port = config.get(CONF_PORT)
-    baudrate = config.get(CONF_BAUDRATE)
-    method = config.get(CONF_METHOD, "rtu")
+
+    host = config.get(CONF_HOST)
+    net_port = config.get(CONF_NET_PORT)
+    mode = config.get(CONF_MODE, "legacy")
     
     entities = []
     
@@ -36,18 +45,20 @@ async def async_setup_entry(
             coil = device_info["coil"]
             name = device_info["name"]
             entity_id = f"switch_{room_name}_{device_key}"
+            rest_name = device_info.get("rest_name")
             
             entities.append(
-                ISmartModbusSwitch(
+                ISmartNetSwitch(
                     name=name,
                     unique_id=f"ismart_{entity_id}",
                     room=room_name,
                     device_key=device_key,
                     slave=slave,
                     coil=coil,
-                    port=port,
-                    baudrate=baudrate,
-                    method=method,
+                    rest_name=rest_name,
+                    host=host,
+                    net_port=net_port,
+                    mode=mode,
                     hass=hass,
                 )
             )
@@ -57,8 +68,8 @@ async def async_setup_entry(
         _LOGGER.info(f"Ajouté {len(entities)} switches iSMART")
 
 
-class ISmartModbusSwitch(SwitchEntity):
-    """Switch Modbus iSMART."""
+class ISmartNetSwitch(SwitchEntity):
+    """Switch iSMART via serveur réseau (HTTP)."""
 
     def __init__(
         self,
@@ -68,9 +79,10 @@ class ISmartModbusSwitch(SwitchEntity):
         device_key: str,
         slave: int,
         coil: int,
-        port: str,
-        baudrate: int,
-        method: str,
+        rest_name: str | None,
+        host: str,
+        net_port: int,
+        mode: str,
         hass: HomeAssistant,
     ) -> None:
         """Initialiser le switch."""
@@ -80,10 +92,11 @@ class ISmartModbusSwitch(SwitchEntity):
         self._device_key = device_key
         self._slave = slave
         self._coil = coil
-        self._port = port
-        self._baudrate = baudrate
-        self._method = method
+        self._host = host
+        self._net_port = net_port
+        self._mode = mode
         self._hass = hass
+        self._rest_name = rest_name
         self._is_on = False
         self._available = False
 
@@ -119,17 +132,35 @@ class ISmartModbusSwitch(SwitchEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Allumer le switch."""
-        # Appeler modbus.write_coil via un service HA
-        await self._hass.services.async_call(
-            "modbus",
-            "write_coil",
-            {
-                "hub": "ismart",
-                "unit": self._slave,
-                "address": self._coil,
-                "value": True,
-            },
-        )
+        async with ClientSession() as session:
+            try:
+                if self._mode == "rest":
+                    # REST: /api/toggle/<name> (POST) ou /api/volet/<name>/open
+                    base = f"http://{self._host}:{self._net_port}"
+                    # Déduire la cible REST
+                    rest_name = getattr(self, "_rest_name", None)
+                    if rest_name is None:
+                        # fallback: slug à partir du room
+                        rest_name = self._room
+                    if "volet_up" in self._device_key:
+                        url = f"{base}/api/volet/{rest_name}/open"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                    elif "volet_down" in self._device_key:
+                        url = f"{base}/api/volet/{rest_name}/close"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                    else:
+                        url = f"{base}/api/toggle/{rest_name}"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                else:
+                    # Legacy: /writeCoil[slave,addr,1]
+                    url = f"http://{self._host}:{self._net_port}/writeCoil[{self._slave},{self._coil},1]"
+                    async with session.get(url, timeout=5) as resp:
+                        self._available = resp.status == 200
+            except Exception:
+                self._available = False
         self._is_on = True
         self._available = True
         self.async_write_ha_state()
@@ -137,17 +168,33 @@ class ISmartModbusSwitch(SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Éteindre le switch."""
-        # Pulse off ou vrai OFF selon le device
-        await self._hass.services.async_call(
-            "modbus",
-            "write_coil",
-            {
-                "hub": "ismart",
-                "unit": self._slave,
-                "address": self._coil,
-                "value": False,
-            },
-        )
+        async with ClientSession() as session:
+            try:
+                if self._mode == "rest":
+                    # REST ne fournit qu'un toggle pour les lumières; on re-toggles
+                    base = f"http://{self._host}:{self._net_port}"
+                    rest_name = getattr(self, "_rest_name", None)
+                    if rest_name is None:
+                        rest_name = self._room
+                    if "volet_up" in self._device_key:
+                        # pas de stop: on renvoie open (idempotence côté automate)
+                        url = f"{base}/api/volet/{rest_name}/open"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                    elif "volet_down" in self._device_key:
+                        url = f"{base}/api/volet/{rest_name}/close"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                    else:
+                        url = f"{base}/api/toggle/{rest_name}"
+                        async with session.post(url, timeout=5) as resp:
+                            self._available = resp.status == 200
+                else:
+                    url = f"http://{self._host}:{self._net_port}/writeCoil[{self._slave},{self._coil},0]"
+                    async with session.get(url, timeout=5) as resp:
+                        self._available = resp.status == 200
+            except Exception:
+                self._available = False
         self._is_on = False
         self._available = True
         self.async_write_ha_state()

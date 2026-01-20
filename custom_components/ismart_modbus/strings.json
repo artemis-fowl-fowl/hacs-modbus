@@ -2,13 +2,13 @@
   "config": {
     "step": {
       "user": {
-        "title": "iSMART Modbus RTU/TCP",
-        "description": "Configure la connexion Modbus RTU (RS-485) ou TCP.\n\n**Port**: /dev/ttyUSB0 pour RTU, ou adresse IP pour TCP\n**Baudrate**: 38400 (RTU)\n**Méthode**: rtu, tcp, ou rtuovertcp",
+        "title": "iSMART Modbus (réseau)",
+        "description": "Connecte-toi au serveur iSMART (legacy 2080: getState/writeCoil ; rest 2081: Flask).",
         "data": {
           "name": "Nom (ex. 'iSMART Modbus')",
-          "port": "Port (ex. /dev/ttyUSB0 ou 192.168.1.11)",
-          "baudrate": "Baudrate (ex. 38400)",
-          "method": "Méthode"
+          "host": "Hôte (ex. 192.168.1.11)",
+          "net_port": "Port (ex. 2080)",
+          "mode": "Mode (legacy/rest)"
         }
       }
     },

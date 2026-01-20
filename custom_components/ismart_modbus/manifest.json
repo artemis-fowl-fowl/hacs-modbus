@@ -5,8 +5,8 @@
   "codeowners": ["@gabriel"],
   "config_flow": true,
   "documentation": "https://github.com/artemis-fowl-fowl/hacs-modbus",
-  "requirements": [],
+  "requirements": ["aiohttp>=3.8.0"],
   "version": "1.0.0",
   "homeassistant": "2024.1.0",
-  "dependencies": ["modbus"]
+  "dependencies": []
 }
