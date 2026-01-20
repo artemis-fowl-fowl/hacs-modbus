@@ -106,7 +106,7 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
                 self._modbus.writecoil_device,
                 self._device_id,
                 self._coil,
-                0
+                1  # Les automates attendent une impulsion (1) meme pour "off"
             )
             if result == 0:
                 _LOGGER.info("Switch %s turned off", self._name)
