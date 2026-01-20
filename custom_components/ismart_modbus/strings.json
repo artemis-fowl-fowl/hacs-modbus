@@ -2,35 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "iSMART Modbus (réseau)",
-        "description": "Connecte-toi au serveur iSMART (legacy 2080: getState/writeCoil ; rest 2081: Flask).",
+        "title": "iSMART Modbus (série RS485)",
+        "description": "Connecte-toi directement aux automates iSMART via RS485",
         "data": {
           "name": "Nom (ex. 'iSMART Modbus')",
-          "host": "Hôte (ex. 192.168.1.11)",
-          "net_port": "Port (ex. 2080)",
-          "mode": "Mode (legacy/rest)"
+          "serial_port": "Port série (ex. /dev/ttyUSB0)",
+          "baudrate": "Vitesse (bauds, ex. 38400)",
+          "timeout": "Timeout (secondes, ex. 0.03)"
         }
       }
     },
     "error": {
       "connection_error": "Erreur de connexion Modbus.",
-      "invalid_json": "JSON invalide."
+      "invalid_port": "Port série invalide."
     },
     "abort": {
       "already_configured": "iSMART Modbus est déjà configuré."
-    }
-  }
-}
-    "step": {
-      "init": {
-        "title": "Options iSMART Modbus",
-        "description": "Modifiez les paramètres de l'intégration",
-        "data": {
-          "host": "Adresse du serveur",
-          "port": "Port",
-          "lights": "Configuration des lampes (JSON)"
-        }
-      }
     }
   }
 }

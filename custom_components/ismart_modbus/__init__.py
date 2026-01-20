@@ -7,7 +7,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, DEVICE_TO_SLAVE, ALL_ROOMS
+from .const import DOMAIN, CONF_SERIAL_PORT, CONF_BAUDRATE, CONF_TIMEOUT
+from .modbus_interface import ModbusInterface
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -20,10 +21,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info(f"Initialisation iSMART Modbus: {entry.title}")
     
     hass.data.setdefault(DOMAIN, {})
+    
+    # Créer l'interface Modbus
+    modbus_interface = ModbusInterface(
+        port=entry.data[CONF_SERIAL_PORT],
+        baudrate=entry.data.get(CONF_BAUDRATE, 38400),
+        timeout=entry.data.get(CONF_TIMEOUT, 0.03)
+    )
+    
+    # Connecter à l'interface
+    if not await modbus_interface.async_connect():
+        _LOGGER.error("Impossible de se connecter à l'interface Modbus")
+        return False
+    
     hass.data[DOMAIN][entry.entry_id] = {
         "config": entry.data,
-        "device_to_slave": DEVICE_TO_SLAVE,
-        "rooms": ALL_ROOMS,
+        "modbus": modbus_interface,
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -35,7 +48,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Décharger l'intégration."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unload_ok:
+        entry_data = hass.data[DOMAIN].pop(entry.entry_id)
+        # Déconnecter l'interface Modbus
+        if "modbus" in entry_data:
+            entry_data["modbus"].disconnect()
+    return unload_ok
 
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
