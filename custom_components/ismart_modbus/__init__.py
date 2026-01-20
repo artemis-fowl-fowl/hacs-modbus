@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN, CONF_SERIAL_PORT, CONF_BAUDRATE, CONF_TIMEOUT
 from .modbus_interface import ModbusInterface
+from .coordinator import ISmartModbusCoordinator
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -34,9 +35,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.error("Impossible de se connecter à l'interface Modbus")
         return False
     
+    # Créer le coordinateur pour le polling périodique
+    coordinator = ISmartModbusCoordinator(hass, modbus_interface)
+    
+    # Première mise à jour
+    await coordinator.async_config_entry_first_refresh()
+    
     hass.data[DOMAIN][entry.entry_id] = {
         "config": entry.data,
         "modbus": modbus_interface,
+        "coordinator": coordinator,
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

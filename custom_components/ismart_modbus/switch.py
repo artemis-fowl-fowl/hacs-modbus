@@ -4,6 +4,7 @@ from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, GABRIEL_DEVICES
 
@@ -18,11 +19,13 @@ async def async_setup_entry(
     """Set up iSMART Modbus switches."""
     entry_data = hass.data[DOMAIN][config_entry.entry_id]
     modbus_interface = entry_data["modbus"]
+    coordinator = entry_data["coordinator"]
 
     entities = []
     for device_info in GABRIEL_DEVICES:
         entities.append(
             ISmartModbusSwitch(
+                coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
                 coil=device_info["coil"],
@@ -34,17 +37,17 @@ async def async_setup_entry(
     async_add_entities(entities)
 
 
-class ISmartModbusSwitch(SwitchEntity):
+class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, name, device_id, coil, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, coil, device_class, modbus_interface):
         """Initialize the switch."""
+        super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
         self._coil = coil
         self._device_class = device_class
         self._modbus = modbus_interface
-        self._state = None
 
     @property
     def name(self):
@@ -59,7 +62,14 @@ class ISmartModbusSwitch(SwitchEntity):
     @property
     def is_on(self):
         """Return true if switch is on."""
-        return self._state
+        # Récupérer l'état depuis le coordinateur
+        state = self.coordinator.get_coil_state(self._device_id, self._coil)
+        return state if state is not None else False
+
+    @property
+    def available(self):
+        """Return if entity is available."""
+        return self.coordinator.is_device_available(self._device_id)
 
     @property
     def icon(self):
@@ -81,8 +91,9 @@ class ISmartModbusSwitch(SwitchEntity):
                 1
             )
             if result == 0:
-                self._state = True
                 _LOGGER.info("Switch %s turned on", self._name)
+                # Rafraîchir immédiatement l'état
+                await self.coordinator.async_request_refresh()
             else:
                 _LOGGER.error("Failed to turn on %s", self._name)
         except Exception as e:
@@ -98,8 +109,9 @@ class ISmartModbusSwitch(SwitchEntity):
                 0
             )
             if result == 0:
-                self._state = False
                 _LOGGER.info("Switch %s turned off", self._name)
+                # Rafraîchir immédiatement l'état
+                await self.coordinator.async_request_refresh()
             else:
                 _LOGGER.error("Failed to turn off %s", self._name)
         except Exception as e:
