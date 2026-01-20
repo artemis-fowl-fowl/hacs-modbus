@@ -6,7 +6,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=5)  # Lecture toutes les 5 secondes
+SCAN_INTERVAL = timedelta(seconds=2)  # Lecture toutes les 2 secondes (plus réactif)
 
 
 class ISmartModbusCoordinator(DataUpdateCoordinator):

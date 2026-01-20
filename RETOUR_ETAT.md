@@ -17,7 +17,7 @@ L'extension dispose maintenant d'un **retour d'état automatique** qui synchroni
 │  └─────┬─────┘  │
 │        │        │
 │  ┌─────▼──────┐ │
-│  │Coordinator │ │ ← Polling toutes les 5s
+│  │Coordinator │ │ ← Polling toutes les 2s
 │  └─────┬──────┘ │
 │        │        │
 └────────┼────────┘
@@ -37,12 +37,12 @@ L'extension dispose maintenant d'un **retour d'état automatique** qui synchroni
 
 Le coordinateur **ISmartModbusCoordinator** :
 - Hérite de `DataUpdateCoordinator`
-- Lance une lecture Modbus toutes les **5 secondes**
+- Lance une lecture Modbus toutes les **2 secondes**
 - Appelle `modbus_interface.readstate()` pour lire les 5 automates
 - Stocke les données dans `self.data`
 
 ```python
-SCAN_INTERVAL = timedelta(seconds=5)
+SCAN_INTERVAL = timedelta(seconds=2)
 
 async def _async_update_data(self):
     outvalid, outstate, memstate = await self.hass.async_add_executor_job(
@@ -139,14 +139,14 @@ async def async_turn_on(self, **kwargs):
 2. **Switch** appelle `async_turn_on()`
 3. **Modbus** envoie `writecoil(slave=1, coil=0x2C02, value=1)`
 4. **Automate** exécute la commande
-5. **Coordinateur** rafraîchit immédiatement (pas d'attente 5s)
+5. **Coordinateur** rafraîchit immédiatement (pas d'attente 2s)
 6. **readstate()** lit l'état réel depuis l'automate
 7. **get_coil_state()** extrait le bit 2 de outstate[0]
 8. **Switch** met à jour l'affichage avec l'état réel
 
 ### Mise à jour périodique
 
-Toutes les 5 secondes :
+Toutes les 2 secondes :
 1. **Coordinateur** lance `_async_update_data()`
 2. **readstate()** interroge les 5 automates
 3. Données stockées dans `coordinator.data`
@@ -160,7 +160,7 @@ Toutes les 5 secondes :
 |----------------|----------|
 | **Synchronisation** | État HA = État réel automate |
 | **Détection hors ligne** | Automate défaillant → entité "unavailable" |
-| **Changements manuels** | Interrupteur physique détecté dans les 5s |
+| **Changements manuels** | Interrupteur physique détecté en ~2s |
 | **Feedback immédiat** | Commande HA → rafraîchissement instantané |
 | **Multi-instance** | Plusieurs clients HA voient le même état |
 
@@ -168,17 +168,17 @@ Toutes les 5 secondes :
 
 ### Intervalle de polling
 
-Par défaut : **5 secondes**
+Par défaut : **2 secondes**
 
 Pour modifier, éditer [coordinator.py](custom_components/ismart_modbus/coordinator.py) :
 
 ```python
-SCAN_INTERVAL = timedelta(seconds=5)  # Changer ici
+SCAN_INTERVAL = timedelta(seconds=2)  # Changer ici
 ```
 
 **Recommandations** :
-- ✅ 5s : Bon compromis performance/réactivité
-- ⚠️ 2s : Plus réactif, charge RS485 moyenne
+- ✅ 2s : Bon compromis performance/réactivité
+- ⚠️ 5s : Faible charge RS485
 - ❌ 1s : Très réactif, charge RS485 élevée
 - ❌ 10s : Faible charge, retour d'état lent
 
@@ -227,16 +227,16 @@ INFO Switch gabriel_lumiere turned on
 
 ### Charge Modbus
 
-- **5 automates** × **18 registres** × **1 lecture/5s**
-- = **90 registres/5s** = **18 registres/s**
+- **5 automates** × **18 registres** × **1 lecture/2s**
+- = **90 registres/2s** = **45 registres/s**
 - Temps par transaction : ~50ms
-- Charge bus : < 1%
+- Charge bus : ~2-3%
 
 ### Charge HA
 
 - 1 coordinator
 - 4 switches (Gabriel)
-- Mise à jour : ~100ms toutes les 5s
+- Mise à jour : ~100ms toutes les 2s
 - Impact CPU : négligeable
 
 ## ✨ Résultat
@@ -244,7 +244,7 @@ INFO Switch gabriel_lumiere turned on
 🎯 **État en temps réel fonctionnel !**
 
 - ✅ L'état dans HA reflète l'état réel
-- ✅ Changements physiques détectés (5s max)
+- ✅ Changements physiques détectés (~2s)
 - ✅ Feedback immédiat après commande
 - ✅ Détection automates hors ligne
 - ✅ Performance optimale

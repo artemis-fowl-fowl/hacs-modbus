@@ -6,7 +6,7 @@ Extension Home Assistant (HACS) pour contrôler directement les automates iSMART
 
 - **Communication directe RS485** : Plus besoin de serveur Python intermédiaire
 - **Protocole Modbus RTU natif** : Implémentation complète avec CRC16
-- **Retour d'état automatique** : Lecture périodique (toutes les 5s) de l'état réel des automates
+- **Retour d'état automatique** : Lecture périodique (toutes les 2s) de l'état réel des automates
 - **Configuration simple** : Interface graphique pour configurer le port série
 - **Solution tout-en-un** : Toute la logique centralisée dans l'extension
 - **Disponibilité en temps réel** : Détection automatique des automates hors ligne
@@ -71,11 +71,11 @@ L'extension implémente nativement le protocole Modbus RTU :
 - **Fonction 03H** : Lecture de registres (`readreg`) - État des automates
 - **Fonction 05H** : Écriture de bobine (`writecoil`) - Commandes
 - **CRC16** : Calcul avec polynôme Modbus (0xA001)
-- **Polling périodique** : Lecture automatique toutes les 5 secondes
+- **Polling périodique** : Lecture automatique toutes les 2 secondes
 
 ### Retour d'état en temps réel
 
-Le coordinateur interroge les automates toutes les 5 secondes :
+Le coordinateur interroge les automates toutes les 2 secondes :
 - Lit les registres 0x0608-0x061A de chaque automate (fonction 03H)
 - Extrait l'état des sorties (outstate) pour chaque bobine
 - Met à jour automatiquement l'état des entités dans Home Assistant
@@ -140,7 +140,7 @@ logger:
 - [ ] Entités cover pour les volets
 - [ ] Entités binary_sensor pour le feedback d'état
 - [ ] Support des capteurs de température DS1820
-- [ ] Configuration de l'intervalle de polling
+- [ ] Configuration de l'intervalle de polling via options UI
 
 ## 📝 Licence
 
