@@ -1,0 +1,448 @@
+---
+title: iSMART Modbus
+views:
+  # ============================================================================
+  # CHAMBRE PARENTS
+  # ============================================================================
+  - title: 👨‍👩‍👧‍👦 Parents
+    path: parents
+    cards:
+      - type: heading
+        heading: Chambre Parents
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.parents_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: tile
+            entity: cover.volet_parents
+            name: Volet
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+
+  # ============================================================================
+  # CHAMBRE GABRIEL
+  # ============================================================================
+  - title: 👦 Gabriel
+    path: gabriel
+    cards:
+      - type: heading
+        heading: Chambre Gabriel
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.gabriel_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.gabriel_lit
+            name: Lit
+            icon: mdi:bed
+          - type: tile
+            entity: cover.volet_gabriel
+            name: Volet
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+
+  # ============================================================================
+  # CHAMBRE PAUL
+  # ============================================================================
+  - title: 👦 Paul
+    path: paul
+    cards:
+      - type: heading
+        heading: Chambre Paul
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.paul_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.paul_lit
+            name: Lit
+            icon: mdi:bed
+          - type: tile
+            entity: cover.volet_paul_w
+            name: Volet W
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+          - type: tile
+            entity: cover.volet_paul_s
+            name: Volet S
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+
+  # ============================================================================
+  # CHAMBRE SOPHIE
+  # ============================================================================
+  - title: 👧 Sophie
+    path: sophie
+    cards:
+      - type: heading
+        heading: Chambre Sophie
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.sophie_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sophie_lit
+            name: Lit
+            icon: mdi:bed
+          - type: tile
+            entity: cover.volet_sophie
+            name: Volet
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+
+  # ============================================================================
+  # DRESSING
+  # ============================================================================
+  - title: 👗 Dressing
+    path: dressing
+    cards:
+      - type: heading
+        heading: Dressing
+      - type: grid
+        columns: 1
+        cards:
+          - type: button
+            entity: switch.dressing_lumiere
+            name: Lumière
+
+  # ============================================================================
+  # SALLE DE BAIN
+  # ============================================================================
+  - title: 🚿 Salle de Bain
+    path: sdb
+    cards:
+      - type: heading
+        heading: Salle de Bain
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.sdb_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sdb_miroir
+            name: Miroir
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sdb_douche
+            name: Douche
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sdb_radiateur
+            name: Radiateur
+            icon: mdi:radiator
+
+  # ============================================================================
+  # MEZZANINE
+  # ============================================================================
+  - title: 🛏️ Mezzanine
+    path: mezzanine
+    cards:
+      - type: heading
+        heading: Mezzanine
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.mezzanine_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: tile
+            entity: cover.volet_mezzanine
+            name: Volet
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+          - type: button
+            entity: switch.lit_aurel
+            name: Lit Aurel
+            icon: mdi:bed
+          - type: button
+            entity: switch.lit_aline
+            name: Lit Aline
+            icon: mdi:bed
+
+  # ============================================================================
+  # ESPACES COMMUNS ETAGE
+  # ============================================================================
+  - title: 🏠 Espaces Étage
+    path: espaces_etage
+    cards:
+      - type: heading
+        heading: Espaces Communs Étage
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.couloir_lumiere
+            name: Couloir
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.grenier_lumiere
+            name: Grenier
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.wc_etage_lumiere
+            name: WC Étage
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.pass_s_lumiere
+            name: Pass. S
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sdj_lumiere
+            name: SDJ
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sejour_lumiere
+            name: Séjour
+            icon: mdi:lightbulb
+
+  # ============================================================================
+  # SALON RDC
+  # ============================================================================
+  - title: 🛋️ Salon
+    path: salon
+    cards:
+      - type: heading
+        heading: Salon
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.salon1_lumiere
+            name: Salon 1
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.salon2_lumiere
+            name: Salon 2
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.salon_a_lumiere
+            name: Salon A
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.ampli
+            name: Ampli
+            icon: mdi:amplifier
+          - type: button
+            entity: switch.sejour_a_lumiere
+            name: Séjour A
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.sejour_b_lumiere
+            name: Séjour B
+            icon: mdi:lightbulb
+
+  # ============================================================================
+  # CUISINE
+  # ============================================================================
+  - title: 👨‍🍳 Cuisine
+    path: cuisine
+    cards:
+      - type: heading
+        heading: Cuisine
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.cuisine_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.ilot_lumiere
+            name: Îlot
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.evier_lumiere
+            name: Évier
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.terrasse_lumiere
+            name: Terrasse
+            icon: mdi:lightbulb
+
+  # ============================================================================
+  # BUANDERIE
+  # ============================================================================
+  - title: 🧺 Buanderie
+    path: buanderie
+    cards:
+      - type: heading
+        heading: Buanderie
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.buanderie_lumiere
+            name: Lumière
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.buanderie_miroir
+            name: Miroir
+            icon: mdi:lightbulb
+
+  # ============================================================================
+  # AUTRES RDC
+  # ============================================================================
+  - title: 🏠 Autres RDC
+    path: autres_rdc
+    cards:
+      - type: heading
+        heading: Autres Espaces RDC
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.wc_rdc_lumiere
+            name: WC RDC
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.hall_lumiere
+            name: Hall
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.cellier_lumiere
+            name: Cellier
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.atelier_lumiere
+            name: Atelier
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.preau_lumiere
+            name: Préau
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.garage_lumiere
+            name: Garage
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.cave_lumiere
+            name: Cave
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.cour_lumiere
+            name: Cour
+            icon: mdi:lightbulb
+
+  # ============================================================================
+  # VOLETS
+  # ============================================================================
+  - title: 🪟 Volets
+    path: volets
+    cards:
+      - type: heading
+        heading: Tous les Volets
+      - type: grid
+        columns: 2
+        cards:
+          - type: tile
+            entity: cover.volet_parents
+            name: Volet Parents
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_gabriel
+            name: Volet Gabriel
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_paul_w
+            name: Volet Paul W
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_paul_s
+            name: Volet Paul S
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_sophie
+            name: Volet Sophie
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_mezzanine
+            name: Volet Mezzanine
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_velux
+            name: Volet Velux
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+          - type: tile
+            entity: cover.volet_cathedrale
+            name: Volet Cathédrale
+            icon: mdi:window-shutter
+            features:
+              - type: cover-open-close
+              - type: cover-position
+
+  # ============================================================================
+  # ÉQUIPEMENTS
+  # ============================================================================
+  - title: ⚙️ Équipements
+    path: equipements
+    cards:
+      - type: heading
+        heading: Équipements
+      - type: grid
+        columns: 2
+        cards:
+          - type: button
+            entity: switch.cabanon_lumiere
+            name: Cabanon
+            icon: mdi:lightbulb
+          - type: button
+            entity: switch.pompe
+            name: Pompe
+            icon: mdi:water-pump
+          - type: button
+            entity: switch.electrovanne_1
+            name: Électrovanne 1
+            icon: mdi:pipe
+          - type: button
+            entity: switch.electrovanne_2
+            name: Électrovanne 2
+            icon: mdi:pipe

@@ -13,7 +13,7 @@ CONF_TIMEOUT = "timeout"
 # Valeurs par défaut
 DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
 DEFAULT_BAUDRATE = 38400
-DEFAULT_TIMEOUT = 0.03
+DEFAULT_TIMEOUT = 0.1  # Augmenté à 100ms pour éviter collisions RS485
 
 # Tous les dispositifs de la maison
 GABRIEL_DEVICES = [

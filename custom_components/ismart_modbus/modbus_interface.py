@@ -195,6 +195,8 @@ class ModbusInterface:
         Returns:
             Tuple (outvalid, outstate, memstate)
         """
+        import time  # Pour délais entre requêtes
+        
         outvalid = [0, 0, 0, 0, 0]
         outstate = [0, 0, 0, 0, 0]
         memstate = [0, 0, 0, 0, 0]
@@ -212,6 +214,10 @@ class ModbusInterface:
                 outvalid[i] = 1
                 memstate[i] = data[1] + 0x100 * data[0]
                 outstate[i] = data[23] + 0x100 * data[21]
+            
+            # Délai 50ms entre chaque automate pour éviter saturation RS485
+            if i < 4:
+                time.sleep(0.05)
         
         _LOGGER.debug("outvalid: %s", outvalid)
         _LOGGER.debug("outstate: %s", outstate)
