@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, GABRIEL_DEVICES
+from .const import DOMAIN, ALL_DEVICES, GABRIEL_DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,13 +22,15 @@ async def async_setup_entry(
     coordinator = entry_data["coordinator"]
 
     entities = []
-    for device_info in GABRIEL_DEVICES:
+    for device_info in ALL_DEVICES:
         entities.append(
             ISmartModbusSwitch(
                 coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
                 coil=device_info["coil"],
+                state_reg=device_info["state_reg"],
+                position=device_info["position"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
@@ -40,12 +42,14 @@ async def async_setup_entry(
 class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, coordinator, name, device_id, coil, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, coil, state_address, position, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
         self._coil = coil
+        self._state_address = state_address
+        self._position = position
         self._device_class = device_class
         self._modbus = modbus_interface
 
