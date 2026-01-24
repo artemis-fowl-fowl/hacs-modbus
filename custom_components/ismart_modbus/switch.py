@@ -42,13 +42,13 @@ async def async_setup_entry(
 class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, coordinator, name, device_id, coil, state_address, position, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, coil, state_reg, position, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
         self._coil = coil
-        self._state_address = state_address
+        self._state_reg = state_reg
         self._position = position
         self._device_class = device_class
         self._modbus = modbus_interface

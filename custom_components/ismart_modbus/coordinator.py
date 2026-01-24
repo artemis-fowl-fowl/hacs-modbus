@@ -46,6 +46,42 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Error fetching Modbus data: %s", err)
             raise UpdateFailed(f"Error communicating with Modbus: {err}")
 
+    def get_bit(self, device_id: int, address: int, bit_position: int) -> bool | None:
+        """
+        Get a bit from coordinator data.
+        
+        Args:
+            device_id: Slave ID (1-5)
+            address: Register address
+            bit: Bit position in the register (1-32)
+            
+        Returns:
+            True if bit 1, False if 0, None if unavailable
+        """
+        if not self.data:
+            return None
+        
+        # Vérifier que l'automate est valide
+        if device_id not in [1,2,3,4,5]:        ### A améliorer!!!!
+            return None
+        
+        outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
+        if not outvalid[device_id - 1]:
+            return None
+        
+        # Récupérer l'état des sorties (outstate)
+        # ICI ON TRICHE ON NE PREND PAS EN COMPTE L'ADDRESSE DU REGISTRE
+        outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
+        state_word = outstate[device_id - 1]
+        
+        if bit_position not in (0,16):
+            _LOGGER.warning(f"bit postion {bit_position} out of range for state reading")
+            return None
+        
+        # Tester le bit
+        bit_value = (state_word >> bit_position) & 1
+        return bool(bit_value)
+
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
         """
         Get the state of a specific coil from coordinator data.
