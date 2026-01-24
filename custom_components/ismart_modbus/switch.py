@@ -67,7 +67,7 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     def is_on(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_coil_state(self._device_id, self._coil)
+        state = self.coordinator.get_bit(self._device_id, self._state_reg, self._position)
         return state if state is not None else False
 
     @property

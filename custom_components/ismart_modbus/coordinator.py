@@ -6,7 +6,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=10)  # Lecture toutes les 10 secondes pour éviter saturation RS485
+SCAN_INTERVAL = timedelta(seconds=2)  # Lecture toutes les 10 secondes pour éviter saturation RS485
 
 
 class ISmartModbusCoordinator(DataUpdateCoordinator):
