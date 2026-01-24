@@ -29,7 +29,7 @@ async def async_setup_entry(
                 name=device_info["name"],
                 device_id=device_info["device_id"],
                 coil=device_info["coil"],
-                bit_pos=device_info["bit_pos"],
+                bit_position=device_info["bit_position"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
@@ -41,13 +41,13 @@ async def async_setup_entry(
 class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, coordinator, name, device_id, coil, bit_pos, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, coil, bit_position, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
         self._coil = coil
-        self._bit_pos = bit_pos
+        self._bit_position = bit_position
         self._device_class = device_class
         self._modbus = modbus_interface
 
@@ -65,7 +65,7 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     def is_on(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(device_id = self._device_id, bit_position = self._bit_pos)
+        state = self.coordinator.get_bit(device_id = self._device_id, bit_position = self._bit_position)
         return state if state is not None else False
 
     @property
