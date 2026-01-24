@@ -15,7 +15,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, modbus_interface):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
-        
+        _LOGGER.warning(f"Init coordinator 25")
         super().__init__(
             hass,
             _LOGGER,
@@ -65,7 +65,10 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         if device_id not in [1,2,3,4,5]:        ### A améliorer!!!!
             return None
         
+        # Je ne comprends pas trop cette méthode. outvalid est crée dans modbus interface, mais data n'apparait nul part.
+        # Est-ce que self.data.get est un fonction spécifique qui permet d'aller chercher la variable outvalid ??
         outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
+        
         if not outvalid[device_id - 1]:
             return None
         
@@ -75,13 +78,12 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         state_word = outstate[device_id - 1]
         
         if bit_position not in range (0,16):
-            _LOGGER.warning(f"bit position {bit_position} out of range for state reading")
+            _LOGGER.warning(f"bit position {bit_position} out of range (0,16) for state reading")
             return None
         
         # Tester le bit
         bit_value = (state_word >> bit_position) & 1
-        #return bool(bit_value)
-        return bool(True)
+        return bool(bit_value)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
         """
