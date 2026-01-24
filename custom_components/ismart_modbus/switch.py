@@ -29,7 +29,7 @@ async def async_setup_entry(
                 name=device_info["name"],
                 device_id=device_info["device_id"],
                 coil=device_info["coil"],
-                bit_position=device_info["bit_pos"],
+                bit_pos=device_info["bit_pos"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
