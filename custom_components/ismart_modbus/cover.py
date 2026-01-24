@@ -1,12 +1,12 @@
-"""Switch platform for iSMART Modbus."""
+"""Shutter platform for iSMART Modbus."""
 import logging
-from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.cover import CoverEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, LIGHT_DEVICES
+from .const import DOMAIN, COVER_DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,14 +22,16 @@ async def async_setup_entry(
     coordinator = entry_data["coordinator"]
 
     entities = []
-    for device_info in LIGHT_DEVICES:
+    for device_info in COVER_DEVICES:
         entities.append(
-            ISmartModbusSwitch(
+            ISmartModbusCover(
                 coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
-                coil=device_info["coil"],
-                bit_position=device_info["bit_pos"],
+                up_coil=device_info["up_coil"],
+                down_coil=device_info["down_coil"],
+                up_bit_position=device_info["up_bit_pos"],
+                down_bit_pos=device_info["down_bit_pos"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
@@ -38,16 +40,18 @@ async def async_setup_entry(
     async_add_entities(entities)
 
 
-class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
-    """Representation of an iSMART Modbus Switch."""
+class ISmartModbusCover(CoordinatorEntity, CoverEntity):
+    """Representation of an iSMART Modbus Cover."""
 
-    def __init__(self, coordinator, name, device_id, coil, bit_pos, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, up_coil, down_coil, up_bit_pos, down_bit_pos, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
-        self._coil = coil
-        self._bit_pos = bit_pos
+        self._up_coil = up_coil
+        self._down_coil = down_coil
+        self._up_bit_pos = up_bit_pos
+        self._down_bit_pos = down_bit_pos
         self._device_class = device_class
         self._modbus = modbus_interface
 
@@ -59,13 +63,34 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def unique_id(self):
         """Return a unique ID."""
-        return f"ismart_{self._device_id}_{self._coil}"
+        return f"ismart_{self._device_id}_{self._up_coil}"
 
     @property
-    def is_on(self):
+    def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._bit_pos, self._position)
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
+        return state if state is not None else False
+
+    @property
+    def is_closing(self):
+        """Return true if switch is on."""
+        # Récupérer l'état depuis le coordinateur
+        state = self.coordinator.get_bit(self._device_id, self._down_bit_pos, self._position)
+        return state if state is not None else False
+
+    @property
+    def is_open(self):
+        """Return true if the shutter is up."""
+        # Récupérer l'état depuis le coordinateur
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
+        return state if state is not None else False
+
+    @property
+    def is_closed(self):
+        """Return true if the shutter is up."""
+        # Récupérer l'état depuis le coordinateur
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
         return state if state is not None else False
 
     @property
@@ -83,13 +108,13 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
         else:
             return "mdi:lightbulb"
 
-    async def async_turn_on(self, **kwargs):
-        """Turn the switch on."""
+    async def async_open_cover(self, **kwargs):
+        """Open the cover."""
         try:
             result = await self.hass.async_add_executor_job(
                 self._modbus.writecoil_device,
                 self._device_id,
-                self._coil,
+                self._up_coil,
                 1
             )
             if result == 0:
@@ -101,13 +126,13 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
         except Exception as e:
             _LOGGER.error("Error turning on %s: %s", self._name, e)
 
-    async def async_turn_off(self, **kwargs):
+    async def async_close_cover(self, **kwargs):
         """Turn the switch off."""
         try:
             result = await self.hass.async_add_executor_job(
                 self._modbus.writecoil_device,
                 self._device_id,
-                self._coil,
+                self._down_coil,
                 1  # Les automates attendent une impulsion (1) meme pour "off"
             )
             if result == 0:
