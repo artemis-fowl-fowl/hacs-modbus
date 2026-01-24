@@ -80,7 +80,8 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         
         # Tester le bit
         bit_value = (state_word >> bit_position) & 1
-        return bool(bit_value)
+        #return bool(bit_value)
+        return bool(True)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
         """
