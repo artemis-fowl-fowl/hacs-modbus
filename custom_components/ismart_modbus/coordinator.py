@@ -74,8 +74,8 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
         state_word = outstate[device_id - 1]
         
-        if bit_position not in (0,16):
-            _LOGGER.warning(f"bit postion {bit_position} out of range for state reading")
+        if bit_position not in range (0,16):
+            _LOGGER.warning(f"bit position {bit_position} out of range for state reading")
             return None
         
         # Tester le bit
