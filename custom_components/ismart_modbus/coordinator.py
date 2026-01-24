@@ -16,22 +16,20 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
         _LOGGER.warning(f"Init coordinator 25")
-        super().__init__(
-            hass,
-            _LOGGER,
-            name="iSMART Modbus",
-            update_interval=SCAN_INTERVAL,
-        )
+        super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Fetch data from Modbus."""
+        _LOGGER.debug(f"update_data is executed")
+        _LOGGER.info(f"update_data is executed")
+        _LOGGER.warning(f"update_data is executed")
         try:
             # Lecture d'état sur les 5 automates
             outvalid, outstate, memstate = await self.hass.async_add_executor_job(
                 self.modbus_interface.readstate
             )
             
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "Modbus state updated - valid: %s, outstate: %s, memstate: %s",
                 outvalid, outstate, memstate
             )

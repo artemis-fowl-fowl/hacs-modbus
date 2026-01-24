@@ -21,7 +21,7 @@ ALL_DEVICES = [
     {"name": "parents_lumiere", "device_id": 1, "coil": 0x0550, "state_reg": 0x0613, "position": 0, "device_class": "light"},
         
     # ===== LUMIERES RDC (Device 2) =====
-    {"name": "atelier_lumiere", "device_id": 2, "coil": 0x0563, "state_reg": 0x0612, "position": 1, "device_class": "light"},
+    {"name": "atelier_lumiere", "device_id": 2, "coil": 0x0563, "state_reg": 0x0612, "position": 11, "device_class": "light"},
   
     # ===== VOLETS ROULANTS (Device 3) =====
     #{"name": "volet_parents_down", "device_id": 3, "coil": 0x2C00, "device_class": "shutter"},
