@@ -69,28 +69,28 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos)
         return state if state is not None else False
 
     @property
     def is_closing(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._down_bit_pos, self._position)
+        state = self.coordinator.get_bit(self._device_id, self._down_bit_pos)
         return state if state is not None else False
 
     @property
     def is_open(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos)
         return state if state is not None else False
 
     @property
     def is_closed(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos, self._position)
+        state = self.coordinator.get_bit(self._device_id, self._up_bit_pos)
         return state if state is not None else False
 
     @property
