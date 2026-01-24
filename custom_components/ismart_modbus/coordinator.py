@@ -44,7 +44,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Error fetching Modbus data: %s", err)
             raise UpdateFailed(f"Error communicating with Modbus: {err}")
 
-    def get_bit(self, device_id: int, address: int, bit_position: int) -> bool | None:
+    def get_bit(self, device_id: int, bit_position: int) -> bool | None:
         """
         Get a bit from coordinator data.
         
