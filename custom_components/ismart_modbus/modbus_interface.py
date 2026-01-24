@@ -205,7 +205,9 @@ class ModbusInterface:
             _LOGGER.error('RS485 non connecté')
             return (outvalid, outstate, memstate)
         
+        # Pour chacun des 5 automates
         for i in range(0, 5):
+            # On lit les registres 0x0608 à 0x0613
             data = readreg(self.rs485, i + 1, 0x0608, 0x0012)
             if data == [-1] or data[0] == -1:
                 outvalid[i] = 0
@@ -213,7 +215,7 @@ class ModbusInterface:
             else:
                 outvalid[i] = 1
                 memstate[i] = data[1] + 0x100 * data[0]
-                outstate[i] = data[23] + 0x100 * data[21]
+                outstate[i] = data[23] + 0x100 * data[21]       #
             
             # Délai 50ms entre chaque automate pour éviter saturation RS485
             if i < 4:
