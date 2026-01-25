@@ -121,21 +121,21 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bitget_bit("outstate", self._device_id, self._opening_flag_pos)
+        state = self.coordinator.get_bit("outstate", self._device_id, self._opening_flag_pos)
         return state if state is not None else False
 
     @property
     def is_closing(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bitget_bit("outstate", self._device_id, self._closing_flag_pos)
+        state = self.coordinator.get_bit("outstate", self._device_id, self._closing_flag_pos)
         return state if state is not None else False
 
     @property
     def is_closed(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bitget_bit("memstate", self._device_id,  self._closed_flag_pos)
+        state = self.coordinator.get_bit("memstate", self._device_id,  self._closed_flag_pos)
         return state if state is not None else False
 
     # is_open n'est pas une propriété native des entity cover.
@@ -144,7 +144,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_open(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bitget_bit("memstate", self._device_id, self._opened_flag_pos)
+        state = self.coordinator.get_bit("memstate", self._device_id, self._opened_flag_pos)
         return state if state is not None else False
     
 
