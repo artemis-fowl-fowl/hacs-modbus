@@ -80,7 +80,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     @staticmethod
     def decode_output(string):
         """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
-        if string.startswith("Q" or "M"):
+        if string.startswith(("Q", "M")):
             return int(string[1:]) - 1
         elif string.startswith("Y"):
             return 8 + int(string[1:]) - 1
