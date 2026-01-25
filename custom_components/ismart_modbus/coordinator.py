@@ -59,12 +59,10 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         if device_id not in [1,2,3,4,5]:        ### A améliorer!!!!
             return None
         
-        if register == "outstate":
-
-        elif register == "memstate":
-
-        else:
+        if register not in ("outstate", "memstate"):
+            _LOGGER.warning(f"get_bit called with invalid register: {register}")
             return None
+
         # Je ne comprends pas trop cette méthode. outvalid est crée dans modbus interface, mais data n'apparait nul part.
         # Est-ce que self.data.get est un fonction spécifique qui permet d'aller chercher la variable outvalid ??
         outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
