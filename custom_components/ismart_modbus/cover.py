@@ -105,12 +105,17 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     @property
     def icon(self):
         """Return the icon."""
-        if self._device_class == "shutter":
+        #if self._device_class == "cover":
+        if self.is_opening:
+            return "mdi:window-cog"
+        if self.is_closing:
+            return "mdi:window-cog"
+        if self.is_closed:
             return "mdi:window-shutter"
-        elif "lit" in self._name.lower():
-            return "mdi:bed"
-        else:
-            return "mdi:lightbulb"
+        if self.is_open:
+            return "mdi:window-shutte-open"
+    
+
 
     async def async_open_cover(self, **kwargs):
         """Open the cover."""

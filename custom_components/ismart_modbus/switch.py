@@ -76,9 +76,9 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def icon(self):
         """Return the icon."""
-        if self._device_class == "shutter":
-            return "mdi:window-shutter"
-        elif "lit" in self._name.lower():
+        #if self._device_class == "shutter":
+        #    return "mdi:window-shutter"
+        if "lit" in self._name.lower():
             return "mdi:bed"
         else:
             return "mdi:lightbulb"
