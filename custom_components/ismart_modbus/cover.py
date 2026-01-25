@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.components.cover import CoverEntity, CoverState
 
 from .const import DOMAIN, COVER_DEVICES
 
@@ -87,6 +88,13 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         state = self.coordinator.get_bit(self._device_id, self._down_bit)
         return state if state is not None else False
 
+    @property
+    def is_closed(self):
+        """Return true if the shutter is up."""
+        # Récupérer l'état depuis le coordinateur
+        state = self.coordinator.get_bit(self._device_id, self._closed_bit)
+        return state if state is not None else False
+
     #Il semble que is_open ne soit pas une propriété native des entity cover.
     #Du coup il n'est pas pris en compte et HA considère le cover "open" dès que l'on a pas "is_closed"
     #C'est facheux car car dans l'état indéterminé (quand même visualisé par l'icone !), on ne peut pas ouvrir. 
@@ -96,13 +104,28 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         # Récupérer l'état depuis le coordinateur
         state = self.coordinator.get_bit(self._device_id, self._open_bit)
         return state if state is not None else False
+    
 
+    # Il est possible de forcer directement la variable state mais cela n'est pas très utile
+    # Cela serait plus propre car on aurait pas l'indication open au lieu de unknow dans l'UI
+    # Mais cela n'améliorera rien au niveau des boutons car HA assimile l'état unknow à open
     @property
-    def is_closed(self):
-        """Return true if the shutter is up."""
-        # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._closed_bit)
-        return state if state is not None else False
+    def state(self):
+        """Return the state of the cover."""
+        if self.is_opening:
+            return CoverState.OPENING
+        if self.is_closing:
+            return CoverState.CLOSING
+        if self.is_closed:
+            return CoverState.CLOSED
+        if self.is_open:
+            return CoverState.OPEN
+
+        # On force closing en cas indeterminé comme hack pour forcé l'affichage des deux bouttons
+        #return None
+        #return CoverState.STOPPED
+        return CoverState.CLOSING
+ 
 
     @property
     def available(self):
