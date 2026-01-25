@@ -15,21 +15,17 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, modbus_interface):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
-        _LOGGER.warning(f"Init coordinator 26")
         super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Fetch data from Modbus."""
-        #_LOGGER.debug(f"update_data is executed")
-        #_LOGGER.info(f"update_data is executed")
-        #_LOGGER.warning(f"update_data is executed")
         try:
             # Lecture d'état sur les 5 automates
             outvalid, outstate, memstate = await self.hass.async_add_executor_job(
                 self.modbus_interface.readstate
             )
             
-            _LOGGER.warning(
+            _LOGGER.debug(
                 "Modbus state updated - valid: %s, outstate: %s, memstate: %s",
                 outvalid, outstate, memstate
             )
@@ -89,7 +85,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         
         # Tester le bit
         bit_value = (state_word >> bit_position) & 1
-        _LOGGER.warning(f"get_bit {device_id}.{bit_position} returns {bool(bit_value)}")
+        _LOGGER.debug(f"get_bit {device_id}.{bit_position} returns {bool(bit_value)}")
         return bool(bit_value)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:

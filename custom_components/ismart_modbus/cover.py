@@ -113,17 +113,19 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def state(self):
         """Return the state of the cover."""
         if self.is_opening:
-            return CoverState.OPENING
-        if self.is_closing:
-            return CoverState.CLOSING
-        if self.is_closed:
-            return CoverState.CLOSED
-        if self.is_open:
-            return CoverState.OPEN
-
-        # On force closing en cas indeterminé comme hack pour forcé l'affichage des deux bouttons
-        #return None
-        return CoverState.STOPPED
+            state = CoverState.OPENING
+        elif self.is_closing:
+            state = CoverState.CLOSING
+        elif self.is_closed:
+            state = CoverState.CLOSED
+        elif self.is_open:
+            state = CoverState.OPEN
+        else:
+            # On force closing en cas indeterminé comme hack pour forcé l'affichage des deux bouttons
+            #return None
+            state = CoverState.STOPPED
+        _LOGGER.warning(f"volet {self.name} state is {str(state)}")
+        return state
         #return CoverState.CLOSING
  
 
