@@ -154,3 +154,21 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
                 _LOGGER.error("Failed to turn off %s", self._name)
         except Exception as e:
             _LOGGER.error("Error turning off %s: %s", self._name, e)
+
+   async def async_stop_cover(self, **kwargs):
+        """Stop the cover using the up_coil or the down_coil."""
+        try:
+            #await self.coordinator.async_request_refresh()
+            if self.is_opening:
+                coil = self._up_coil
+            elif self.is_closing:
+                coil = self._down_coil
+            else:   #Si on est pas en mouvement il n'y a pas lieu de faire un stop
+                return
+            if await self.hass.async_add_executor_job(self._modbus.writecoil_device, self._device_id, coil, 1) == 0:
+                _LOGGER.info("Cover %s stopped", self._name)
+                await self.coordinator.async_request_refresh()  # Rafraîchir immédiatement l'état
+            else:
+                _LOGGER.error("Failed to stop cover %s", self._name)
+        except Exception as e:
+            _LOGGER.error("Error stopping %s: %s", self._name, e)
