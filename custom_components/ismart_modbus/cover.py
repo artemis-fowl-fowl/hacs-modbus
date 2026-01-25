@@ -123,8 +123,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
         # On force closing en cas indeterminé comme hack pour forcé l'affichage des deux bouttons
         #return None
-        #return CoverState.STOPPED
-        return CoverState.CLOSING
+        return CoverState.STOPPED
+        #return CoverState.CLOSING
  
 
     @property
