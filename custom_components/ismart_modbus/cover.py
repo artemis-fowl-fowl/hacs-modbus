@@ -116,7 +116,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             return "mdi:window-shutter"
         if self.is_open:
             return "mdi:window-shutter-open"
-    
+        return "mdi:window-shutter-alert"
 
 
     async def async_open_cover(self, **kwargs):

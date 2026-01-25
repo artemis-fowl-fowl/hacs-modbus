@@ -81,7 +81,7 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
             return "mdi:lightbulb-alert"
         if self.is_on:
             return "mdi:lightbulb-on"
-        return "mdi:lightbulb"
+        return "mdi:lightbulb-off"
 
 
     async def async_turn_on(self, **kwargs):
