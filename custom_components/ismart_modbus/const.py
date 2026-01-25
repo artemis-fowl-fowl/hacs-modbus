@@ -25,8 +25,8 @@ LIGHT_DEVICES = [
 ]
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    {"name": "volet_parents", "device_id": 3, "up_coil": 0x2C00, "down_coil": 0x2C01, "up_bit_position": 0,  "down_bit_position": 1,"device_class": "cover"},
-    {"name": "volet_buanderie", "device_id": 4, "up_coil": 0x2C02, "down_coil": 0x2C04, "up_bit_position": 2,  "down_bit_position": 3,"device_class": "cover"},
+    {"name": "volet_parents", "device_id": 3, "up_coil": 0x2C01, "down_coil": 0x2C00, "up_bit_position": 1,  "down_bit_position": 0,"device_class": "cover"},
+    {"name": "volet_buanderie", "device_id": 4, "up_coil": 0x2C03, "down_coil": 0x2C02, "up_bit_position": 3,  "down_bit_position": 2,"device_class": "cover"},
 ]
 
 GABRIEL_DEVICES = [
