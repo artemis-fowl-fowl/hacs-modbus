@@ -31,10 +31,10 @@ def decode_input(input_str):
 # Tous les dispositifs de la maison
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
-    {"name": "parents", "device_id": 1, "input": "I1", "bit_position": 0, "device_class": "light"},
+    {"name": "parents", "device_id": 1, "input": "I1", "output": "Q1", "device_class": "light"},
         
     # ===== LUMIERES RDC (Device 2) =====
-    {"name": "atelier", "device_id": 2, "input": "X12", "bit_position": 11, "device_class": "light"},
+    {"name": "atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
 ]
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====

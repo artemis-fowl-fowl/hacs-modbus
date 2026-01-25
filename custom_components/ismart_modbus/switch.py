@@ -41,24 +41,22 @@ async def async_setup_entry(
 class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, coordinator, name, device_id, input, bit_position, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, input, output, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
-        self._input = input
-        self._bit_position = bit_position
         self._device_class = device_class
         self._modbus = modbus_interface
-        self._coil = self.decode_input(input)   # Trouve l'addresse du coil correspondant à l'entrée
-
+        self._coil = self.decode_input(input)           # Trouve l'addresse du coil correspondant à l'entrée
+        self._bit_position =self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
     @staticmethod
     def decode_input(string):
         """Return the Ismart coil address of an input string like "I1" or "X1" """
         if string.startswith("I"):
-            return 0x550 + int(string[1:]) - 1
+            return 0x0550 + int(string[1:]) - 1
         elif string.startswith("X"):
-            return 0x560 + int(string[1:]) - 1
+            return 0x0560 + int(string[1:]) - 1
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 
