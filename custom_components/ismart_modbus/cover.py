@@ -53,9 +53,14 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._device_id = device_id
         self._up_coil = self.decode_input(up)         # Trouve l'addresse du coil correspondant à l'entrée
         self._down_coil = self.decode_input(down)     # Trouve l'addresse du coil correspondant à l'entrée
-
-        self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
-        self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
+        if opening is None:
+            self._opening_flag_pos = self.guess_output(up)
+        else:
+            self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
+        if closing is None:
+            self._closing_flag_pos = self.guess_output(down)
+        else:
+            self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
         if opened is None:
             self._opened_flag_pos = self._opening_flag_pos        # Si la position du flag de position "Mn" n'est pas définie on suppose qu'il est aligné avec la sortie "Qn" ou "Yn"
         else:
@@ -76,6 +81,17 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             return 0x560 + int(string[1:]) - 1
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
+
+    @staticmethod
+    def guess_output(string):
+        """Returns the bit position in the OUT_STATE value assuming that
+           the output is in line with the input (I1 -> Q1, X4 -> Y4). """
+        if string.startswith("I"):
+            return int(string[1:]) - 1
+        elif string.startswith("X   "):
+            return 8 + int(string[1:]) - 1
+        else:
+            raise ValueError(f"output string '{string}' is invalid.")
 
     @staticmethod
     def decode_output(string):
@@ -105,21 +121,21 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_state_bit(self._device_id, self._opening_flag_pos)
+        state = self.coordinator.get_bitget_bit("outstate", self._device_id, self._opening_flag_pos)
         return state if state is not None else False
 
     @property
     def is_closing(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_state_bit(self._device_id, self._closing_flag_pos)
+        state = self.coordinator.get_bitget_bit("outstate", self._device_id, self._closing_flag_pos)
         return state if state is not None else False
 
     @property
     def is_closed(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_mem_bit(self._device_id, self._closed_flag_pos)
+        state = self.coordinator.get_bitget_bit("memstate", self._device_id,  self._closed_flag_pos)
         return state if state is not None else False
 
     # is_open n'est pas une propriété native des entity cover.
@@ -128,7 +144,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_open(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_mem_bit(self._device_id, self._opened_flag_pos)
+        state = self.coordinator.get_bitget_bit("memstate", self._device_id, self._opened_flag_pos)
         return state if state is not None else False
     
 

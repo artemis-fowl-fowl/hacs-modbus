@@ -40,7 +40,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Error fetching Modbus data: %s", err)
             raise UpdateFailed(f"Error communicating with Modbus: {err}")
 
-    def get_bit(self, device_id: int, bit_position: int) -> bool | None:
+    def get_bit(self, register: str, device_id: int, bit_position: int) -> bool | None:
         """
         Get a bit from coordinator data.
         
@@ -59,25 +59,22 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         if device_id not in [1,2,3,4,5]:        ### A améliorer!!!!
             return None
         
+        if register == "outstate":
+
+        elif register == "memstate":
+
+        else:
+            return None
         # Je ne comprends pas trop cette méthode. outvalid est crée dans modbus interface, mais data n'apparait nul part.
         # Est-ce que self.data.get est un fonction spécifique qui permet d'aller chercher la variable outvalid ??
         outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
         
         if not outvalid[device_id - 1]:
-            _LOGGER.warning(f"get_bit {device_id}.{bit_position} returns None")
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None")
             return None
         
-        # Récupérer l'état des sorties (outstate)
-        # ICI ON TRICHE ON NE PREND PAS EN COMPTE L'ADDRESSE DU REGISTRE
-        
-        if bit_position > 100:
-            # Arnaque temporaire pour acceder aux registres M
-            bit_position -= 100
-            memstate = self.data.get("memstate", [0, 0, 0, 0, 0])
-            state_word = memstate[device_id - 1]
-        else:
-            outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
-            state_word = outstate[device_id - 1]
+        # Récupérer l'état des sorties (outstate) ou mémoires (memstate) correspondant à l'automate
+        state_word = self.data.get(register, [0, 0, 0, 0, 0])[device_id - 1]
         
         if bit_position not in range (0,16):
             _LOGGER.warning(f"bit position {bit_position} out of range (0,16) for state reading")
@@ -85,7 +82,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         
         # Tester le bit
         bit_value = (state_word >> bit_position) & 1
-        _LOGGER.debug(f"get_bit {device_id}.{bit_position} returns {bool(bit_value)}")
+        _LOGGER.debug(f"get_bit {register}.{device_id}.{bit_position} returns {bool(bit_value)}")
         return bool(bit_value)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
