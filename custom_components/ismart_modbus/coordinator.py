@@ -73,8 +73,15 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         
         # Récupérer l'état des sorties (outstate)
         # ICI ON TRICHE ON NE PREND PAS EN COMPTE L'ADDRESSE DU REGISTRE
-        outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
-        state_word = outstate[device_id - 1]
+        
+        if bit_position > 100:
+            # Arnaque temporaire pour acceder aux registres M
+            bit_position -= 100
+            memstate = self.data.get("memstate", [0, 0, 0, 0, 0])
+            state_word = memstate[device_id - 1]
+        else:
+            outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
+            state_word = outstate[device_id - 1]
         
         if bit_position not in range (0,16):
             _LOGGER.warning(f"bit position {bit_position} out of range (0,16) for state reading")
