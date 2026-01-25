@@ -107,13 +107,13 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         """Return the icon."""
         #if self._device_class == "cover":
         if self.is_opening:
-            return "mdi:window-cog"
+            return "mdi:window-shutter-cog"
         if self.is_closing:
-            return "mdi:window-cog"
+            return "mdi:window-shutter-cog"
         if self.is_closed:
             return "mdi:window-shutter"
         if self.is_open:
-            return "mdi:window-shutte-open"
+            return "mdi:window-shutter-open"
     
 
 
