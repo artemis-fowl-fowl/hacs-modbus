@@ -30,8 +30,10 @@ async def async_setup_entry(
                 device_id=device_info["device_id"],
                 up_coil=device_info["up_coil"],
                 down_coil=device_info["down_coil"],
-                up_bit_position=device_info["up_bit_position"],
-                down_bit_position=device_info["down_bit_position"],
+                up_bit=device_info["up_bit"],
+                down_bit=device_info["down_bit"],
+                open_bit=device_info["open_bit"],
+                closed_bit=device_info["closed_bit"]
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
