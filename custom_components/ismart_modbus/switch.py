@@ -49,7 +49,9 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
         self._device_class = device_class
         self._modbus = modbus_interface
         self._coil = self.decode_input(input)           # Trouve l'addresse du coil correspondant à l'entrée
-        self._bit_position =self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
+        if output is None:
+            self._bit_position = self.guess_output(input)
+        self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
     @staticmethod
     def decode_input(string):
         """Return the Ismart coil address of an input string like "I1" or "X1" """
@@ -63,9 +65,20 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     @staticmethod
     def decode_output(string):
         """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
-        if string.startswith("Q"):
+        if string.startswith("Q"):       # On prend en charge le I 
             return int(string[1:]) - 1
         elif string.startswith("Y"):
+            return 8 + int(string[1:]) - 1
+        else:
+            raise ValueError(f"output string '{string}' is invalid.")
+
+    @staticmethod
+    def guess_output(string):
+        """Returns the bit position in the OUT_STATE value assuming that
+           the output is in line with the input (I1 -> Q1, X4 -> Y4). """
+        if string.startswith("I"):
+            return int(string[1:]) - 1
+        elif string.startswith("X   "):
             return 8 + int(string[1:]) - 1
         else:
             raise ValueError(f"output string '{string}' is invalid.")

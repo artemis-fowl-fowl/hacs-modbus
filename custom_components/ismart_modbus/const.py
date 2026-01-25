@@ -38,8 +38,8 @@ SWITCH_DEVICES = [
 ]
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    {"name": "parents", "device_id": 3, "up_input": "I2", "down_input": "I1", "up_bit": 1, "down_bit": 0, "open_bit": 9, "closed_bit": 8, "device_class": "shade"},
-    {"name": "buanderie", "device_id": 4, "up_input": "X3", "down_input": "X2", "up_bit": 3, "down_bit": 2, "open_bit": 103, "closed_bit": 102, "device_class": "cover"},
+    {"name": "parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1", "device_class": "shade"},
+    {"name": "buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "device_class": "shade"},
 ]
 
 GABRIEL_DEVICES = [
