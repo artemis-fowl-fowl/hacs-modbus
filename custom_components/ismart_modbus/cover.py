@@ -43,15 +43,17 @@ async def async_setup_entry(
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     """Representation of an iSMART Modbus Cover."""
 
-    def __init__(self, coordinator, name, device_id, up_coil, down_coil, up_bit_position, down_bit_position, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, up_coil, down_coil, up_bit, down_bit, open_bit, closed_bit, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
         self._up_coil = up_coil
         self._down_coil = down_coil
-        self._up_bit_position = up_bit_position
-        self._down_bit_position = down_bit_position
+        self._up_bit = up_bit
+        self._down_bit = down_bit
+        self._open_bit = open_bit
+        self._closed_bit = closed_bit
         self._device_class = device_class
         self._modbus = modbus_interface
 
@@ -69,28 +71,28 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_position)
+        state = self.coordinator.get_bit(self._device_id, self._up_bit)
         return state if state is not None else False
 
     @property
     def is_closing(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._down_bit_position)
+        state = self.coordinator.get_bit(self._device_id, self._down_bit)
         return state if state is not None else False
 
     @property
     def is_open(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_position)
+        state = self.coordinator.get_bit(self._device_id, self._open_bit)
         return state if state is not None else False
 
     @property
     def is_closed(self):
         """Return true if the shutter is up."""
         # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit(self._device_id, self._up_bit_position)
+        state = self.coordinator.get_bit(self._device_id, self._closed_bit)
         return state if state is not None else False
 
     @property
