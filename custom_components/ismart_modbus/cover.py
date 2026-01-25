@@ -33,7 +33,7 @@ async def async_setup_entry(
                 up_bit=device_info["up_bit"],
                 down_bit=device_info["down_bit"],
                 open_bit=device_info["open_bit"],
-                closed_bit=device_info["closed_bit"]
+                closed_bit=device_info["closed_bit"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
             )
