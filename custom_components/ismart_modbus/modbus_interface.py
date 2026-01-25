@@ -1,6 +1,7 @@
 """Interface Modbus pour iSMART."""
 import logging
 import serial
+import threading
 from typing import List, Tuple, Optional
 
 _LOGGER = logging.getLogger(__name__)
@@ -106,6 +107,7 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
     
     crc = crc16(trame, 6)
     trame.extend((crc & 0x00FF, crc >> 8))
+    
     link.flushInput()
     link.readline()
 
@@ -154,7 +156,8 @@ class ModbusInterface:
         self.baudrate = baudrate
         self.timeout = timeout
         self.rs485: Optional[serial.Serial] = None
-        
+        self._lock = threading.Lock()  
+
     async def async_connect(self) -> bool:
         """Connect to Modbus interface."""
         try:
@@ -186,7 +189,8 @@ class ModbusInterface:
         if not self.rs485:
             _LOGGER.error('RS485 non connecté')
             return -1
-        return writecoil(self.rs485, slave, coil, value)
+        with self._lock:
+            return writecoil(self.rs485, slave, coil, value)
     
     def readstate(self) -> Tuple[List[int], List[int], List[int]]:
         """
@@ -208,7 +212,8 @@ class ModbusInterface:
         # Pour chacun des 5 automates
         for i in range(0, 5):
             # On lit les registres 0x0608 à 0x0613
-            data = readreg(self.rs485, i + 1, 0x0608, 0x0012)
+            with self._lock:
+                data = readreg(self.rs485, i + 1, 0x0608, 0x0012)
             if data == [-1] or data[0] == -1:
                 outvalid[i] = 0
                 _LOGGER.warning('Echec lecture automate %s', i + 1)
