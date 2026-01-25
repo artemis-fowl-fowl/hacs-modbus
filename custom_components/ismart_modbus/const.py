@@ -32,13 +32,13 @@ def decode_input(input_str):
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
     {"name": "parents", "device_id": 1, "input": "I1", "output": "Q1", "device_class": "light"},
-    #{"name": "dressing_lumiere", "device_id": 1, "input": "I2", "device_class": "light"},
-    #{"name": "gabriel_lumiere", "device_id": 1, "input": "I3", "device_class": "light"},
-    #{"name": "paul_lumiere", "device_id": 1, "input": "I4", "device_class": "light"},
-    #{"name": "sophie_lumiere", "device_id": 1, "input": "I5", "device_class": "light"},
-    #{"name": "sdb_lumiere", "device_id": 1, "input": "I6", "device_class": "light"},
-    #{"name": "sdb_miroir", "device_id": 1, "input": "I7", "device_class": "light"},
-    #{"name": "sdb_douche", "device_id": 1, "input": "I8", "device_class": "light"},
+    {"name": "dressing_lumiere", "device_id": 1, "input": "I2", "output": "Q2", "device_class": "light"},
+    {"name": "gabriel_lumiere", "device_id": 1, "input": "I3", "output": "Q3", "device_class": "light"},
+    {"name": "paul_lumiere", "device_id": 1, "input": "I4", "output": "Q4", "device_class": "light"},
+    {"name": "sophie_lumiere", "device_id": 1, "input": "I5", "output": "Q5", "device_class": "light"},
+    {"name": "sdb_lumiere", "device_id": 1, "input": "I6", "output": "Q6", "device_class": "light"},
+    {"name": "sdb_miroir", "device_id": 1, "input": "I7", "output": "Q7", "device_class": "light"},
+    {"name": "sdb_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
 
     # ===== LUMIERES RDC (Device 2) =====
     {"name": "atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
@@ -49,6 +49,9 @@ COVER_DEVICES = [
     {"name": "parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
     #{"name": "buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "device_class": "shade"},
     {"name": "buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
+    #{"name": "gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
+    #{"name": "paul_w", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
+    #{"name": "paul_s", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
 ]
 
 GABRIEL_DEVICES = [
