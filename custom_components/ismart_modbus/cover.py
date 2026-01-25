@@ -121,9 +121,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         elif self.is_open:
             state = CoverState.OPEN
         else:
-            # On force closing en cas indeterminé comme hack pour forcé l'affichage des deux bouttons
-            #return None
-            state = CoverState.STOPPED
+            # On force closing en cas indeterminé 
+            state = None
         _LOGGER.warning(f"volet {self.name} state is {str(state)}")
         return state
         #return CoverState.CLOSING
