@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, LIGHT_DEVICES
+from .const import DOMAIN, SWITCH_DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ async def async_setup_entry(
     coordinator = entry_data["coordinator"]
 
     entities = []
-    for device_info in LIGHT_DEVICES:
+    for device_info in SWITCH_DEVICES:
         entities.append(
             ISmartModbusSwitch(
                 coordinator=coordinator,
@@ -77,8 +77,8 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     def icon(self):
         """Return the icon."""
         #if self._device_class == "cover":
-        if not self.available:
-            return "mdi:lightbulb-alert"
+        #if not self.available:
+        #    return "mdi:lightbulb-alert"
         if self.is_on:
             return "mdi:lightbulb-on"
         return "mdi:lightbulb-off"

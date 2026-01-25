@@ -16,7 +16,7 @@ DEFAULT_BAUDRATE = 38400
 DEFAULT_TIMEOUT = 0.1  # Augmenté à 100ms pour éviter collisions RS485
 
 # Tous les dispositifs de la maison
-LIGHT_DEVICES = [
+SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
     {"name": "parents", "device_id": 1, "coil": 0x0550, "bit_position": 0, "device_class": "light"},
         

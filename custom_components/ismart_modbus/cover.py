@@ -106,8 +106,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def icon(self):
         """Return the icon."""
         #if self._device_class == "cover":
-        if not self.available:
-            return "mdi:window-shutter-alert"
+        #if not self.available:
+        #    return "mdi:window-shutter-alert"
         if self.is_opening:
             return "mdi:window-shutter-cog"
         if self.is_closing:
@@ -155,7 +155,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         except Exception as e:
             _LOGGER.error("Error turning off %s: %s", self._name, e)
 
-   async def async_stop_cover(self, **kwargs):
+    async def async_stop_cover(self, **kwargs):
         """Stop the cover using the up_coil or the down_coil."""
         try:
             #await self.coordinator.async_request_refresh()
