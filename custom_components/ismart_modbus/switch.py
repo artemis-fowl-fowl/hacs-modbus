@@ -28,7 +28,7 @@ async def async_setup_entry(
                 coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
-                coil=device_info["coil"],
+                input=device_info["input"],
                 bit_position=device_info["bit_position"],
                 device_class=device_info["device_class"],
                 modbus_interface=modbus_interface,
@@ -41,15 +41,26 @@ async def async_setup_entry(
 class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an iSMART Modbus Switch."""
 
-    def __init__(self, coordinator, name, device_id, coil, bit_position, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, input, bit_position, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
-        self._coil = coil
+        self._input = input
         self._bit_position = bit_position
         self._device_class = device_class
         self._modbus = modbus_interface
+        self._coil = self.decode_input(input)   # Trouve l'addresse du coil correspondant à l'entrée
+
+    @staticmethod
+    def decode_input(input_str):
+        """Decode the input string to its corresponding address."""
+        if input_str.startswith("I"):
+            return 0x550 + int(input_str[1:]) - 1
+        elif input_str.startswith("X"):
+            return 0x560 + int(input_str[1:]) - 1
+        else:
+            raise ValueError(f"Input string '{input_str}' is invalid.")
 
     @property
     def name(self):

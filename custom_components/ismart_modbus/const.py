@@ -15,18 +15,31 @@ DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
 DEFAULT_BAUDRATE = 38400
 DEFAULT_TIMEOUT = 0.1  # Augmenté à 100ms pour éviter collisions RS485
 
+# Fonction pour décoder les chaînes en adresses
+def decode_input(input_str):
+    if input_str.startswith("I"):
+        return 0x550 + int(input_str[1:]) - 1
+    elif input_str.startswith("X"):
+        return 0x560 + int(input_str[1:]) - 1
+    else:
+        raise ValueError(f"Input string '{input_str}' non valide.")
+        
+# Exemple d'utilisation
+# print(decode_input("I1"))  # Renvoie 0x550
+# print(decode_input("X12"))  # Renvoie 0x56B
+
 # Tous les dispositifs de la maison
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
-    {"name": "parents", "device_id": 1, "coil": 0x0550, "bit_position": 0, "device_class": "light"},
+    {"name": "parents", "device_id": 1, "input": "I1", "bit_position": 0, "device_class": "light"},
         
     # ===== LUMIERES RDC (Device 2) =====
-    {"name": "atelier", "device_id": 2, "coil": 0x0563, "bit_position": 11, "device_class": "light"},
+    {"name": "atelier", "device_id": 2, "input": "X12", "bit_position": 11, "device_class": "light"},
 ]
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    {"name": "parents", "device_id": 3, "up_coil": 0x2C01, "down_coil": 0x2C00, "up_bit": 1, "down_bit": 0, "open_bit": 9, "closed_bit": 8, "device_class": "shade"},
-    {"name": "buanderie", "device_id": 4, "up_coil": 0x2C03, "down_coil": 0x2C02, "up_bit": 3, "down_bit": 2, "open_bit": 103, "closed_bit": 102, "device_class": "cover"},
+    {"name": "parents", "device_id": 3, "up_input": "I2", "down_input": "I1", "up_bit": 1, "down_bit": 0, "open_bit": 9, "closed_bit": 8, "device_class": "shade"},
+    {"name": "buanderie", "device_id": 4, "up_input": "X3", "down_input": "X2", "up_bit": 3, "down_bit": 2, "open_bit": 103, "closed_bit": 102, "device_class": "cover"},
 ]
 
 GABRIEL_DEVICES = [

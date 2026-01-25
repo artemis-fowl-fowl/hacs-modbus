@@ -29,8 +29,8 @@ async def async_setup_entry(
                 coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
-                up_coil=device_info["up_coil"],
-                down_coil=device_info["down_coil"],
+                up_input=device_info["up_input"],
+                down_input=device_info["down_input"],
                 up_bit=device_info["up_bit"],
                 down_bit=device_info["down_bit"],
                 open_bit=device_info["open_bit"],
@@ -46,13 +46,13 @@ async def async_setup_entry(
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     """Representation of an iSMART Modbus Cover."""
 
-    def __init__(self, coordinator, name, device_id, up_coil, down_coil, up_bit, down_bit, open_bit, closed_bit, device_class, modbus_interface):
+    def __init__(self, coordinator, name, device_id, up_input, down_input, up_bit, down_bit, open_bit, closed_bit, device_class, modbus_interface):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._name = name
         self._device_id = device_id
-        self._up_coil = up_coil
-        self._down_coil = down_coil
+        self._up_coil = self.decode_input(up_input)     # Trouve l'addresse du coil correspondant à l'entrée
+        self._down_coil = self.decode_input(down_input)     # Trouve l'addresse du coil correspondant à l'entrée
         self._up_bit = up_bit
         self._down_bit = down_bit
         self._open_bit = open_bit
@@ -95,9 +95,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         state = self.coordinator.get_bit(self._device_id, self._closed_bit)
         return state if state is not None else False
 
-    #Il semble que is_open ne soit pas une propriété native des entity cover.
-    #Du coup il n'est pas pris en compte et HA considère le cover "open" dès que l'on a pas "is_closed"
-    #C'est facheux car car dans l'état indéterminé (quand même visualisé par l'icone !), on ne peut pas ouvrir. 
+    # is_open n'est pas une propriété native des entity cover.
+    # J'ai ajouté cette propriété pour pouvoir détecté l'état unknow
     @property
     def is_open(self):
         """Return true if the shutter is up."""
@@ -106,9 +105,10 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         return state if state is not None else False
     
 
-    # Il est possible de forcer directement la variable state mais cela n'est pas très utile
-    # Cela serait plus propre car on aurait pas l'indication open au lieu de unknow dans l'UI
-    # Mais cela n'améliorera rien au niveau des boutons car HA assimile l'état unknow à open
+    # Par défaut le front end se charge de calculer state en fonction de is_opening, is_closing et is_close
+    # Mais il impose l'état OPEN par défaut.
+    # On gère donc ici la propriété "state" pour pouvoir imposer un état inconnu avec state = None quand la position est inconnue
+    # Cela permet entre autre de conserver la commande down qui se retrouve grisée si on est en état "OPEN"
     @property
     def state(self):
         """Return the state of the cover."""
@@ -121,7 +121,6 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         elif self.is_open:
             state = CoverState.OPEN
         else:
-            # On force closing en cas indeterminé 
             state = None
         _LOGGER.warning(f"volet {self.name} state is {str(state)}")
         return state
