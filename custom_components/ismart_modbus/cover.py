@@ -70,6 +70,10 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         return f"ismart_{self._device_id}_{self._up_coil}"
 
     @property
+    def assumed_state(self) -> bool:
+        return False
+
+    @property
     def is_opening(self):
         """Return true if switch is on."""
         # Récupérer l'état depuis le coordinateur
@@ -83,6 +87,9 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         state = self.coordinator.get_bit(self._device_id, self._down_bit)
         return state if state is not None else False
 
+    #Il semble que is_open ne soit pas une propriété native des entity cover.
+    #Du coup il n'est pas pris en compte et HA considère le cover "open" dès que l'on a pas "is_closed"
+    #C'est facheux car car dans l'état indéterminé (quand même visualisé par l'icone !), on ne peut pas ouvrir. 
     @property
     def is_open(self):
         """Return true if the shutter is up."""
@@ -103,7 +110,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         return self.coordinator.is_device_available(self._device_id)
 
     @property
-    def icon(self):
+    def icon(self) -> str | None:
         """Return the icon."""
         #if self._device_class == "cover":
         #if not self.available:
