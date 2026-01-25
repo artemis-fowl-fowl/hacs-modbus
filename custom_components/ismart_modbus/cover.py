@@ -60,6 +60,26 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._device_class = device_class
         self._modbus = modbus_interface
 
+    @staticmethod
+    def decode_input(string):
+        """Return the Ismart coil address of an input string like "I1" or "X1" """
+        if string.startswith("I"):
+            return 0x550 + int(string[1:]) - 1
+        elif string.startswith("X"):
+            return 0x560 + int(string[1:]) - 1
+        else:
+            raise ValueError(f"Input string '{string}' is invalid.")
+
+    @staticmethod
+    def decode_output(string):
+        """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
+        if string.startswith("Q"):
+            return int(string[1:]) - 1
+        elif string.startswith("Y"):
+            return 8 + int(string[1:]) - 1
+        else:
+            raise ValueError(f"output string '{string}' is invalid.")
+
     @property
     def name(self):
         """Return the name of the switch."""
