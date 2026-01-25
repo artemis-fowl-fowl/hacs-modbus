@@ -117,6 +117,10 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def assumed_state(self) -> bool:
         return False
 
+#2026-01-25 19:05:57.994 ERROR (MainThread) [homeassistant.components.cover] Error adding entity None for domain cover with platform ismart_modbus
+#  File "/config/custom_components/ismart_modbus/cover.py", line 184, in icon
+#  File "/config/custom_components/ismart_modbus/cover.py", line 124, in is_opening
+
     @property
     def is_opening(self):
         """Return true if switch is on."""
@@ -167,9 +171,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             state = None
         _LOGGER.warning(f"volet {self.name} state is {str(state)}")
         return state
-        #return CoverState.CLOSING
  
-
     @property
     def available(self):
         """Return if entity is available."""

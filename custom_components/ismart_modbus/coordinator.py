@@ -52,27 +52,38 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         Returns:
             True if bit 1, False if 0, None if unavailable
         """
-        if not self.data:
-            return None
-        
-        # Vérifier que l'automate est valide
-        if device_id not in [1,2,3,4,5]:        ### A améliorer!!!!
-            return None
-        
         if register not in ("outstate", "memstate"):
             _LOGGER.warning(f"get_bit called with invalid register: {register}")
             return None
-
-        # Je ne comprends pas trop cette méthode. outvalid est crée dans modbus interface, mais data n'apparait nul part.
-        # Est-ce que self.data.get est un fonction spécifique qui permet d'aller chercher la variable outvalid ??
-        outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
         
-        if not outvalid[device_id - 1]:
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None")
+        if not self.data:
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because data is None")
             return None
         
-        # Récupérer l'état des sorties (outstate) ou mémoires (memstate) correspondant à l'automate
-        state_word = self.data.get(register, [0, 0, 0, 0, 0])[device_id - 1]
+        outvalid = self.data.get("outvalid")
+        if not isinstance(outvalid, (list, tuple)):
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because outvalid is invalid")
+            return None
+        
+        index = device_id - 1
+        if not 0 <= index < len(outvalid):
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because device_id is out of range")
+            return None
+        
+        if not outvalid[index]:
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because device is not valid")
+            return None
+        
+        states = self.data.get(register)
+        if not isinstance(states, (list, tuple)):
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because states is invalid")
+            return None
+        
+        if index >= len(states):
+            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because index out of range")
+            return None
+
+        state_word = states[index]  # Récupérer l'état des sorties (outstate) ou mémoires (memstate) correspondant à l'automate
         
         if bit_position not in range (0,16):
             _LOGGER.warning(f"bit position {bit_position} out of range (0,16) for state reading")
