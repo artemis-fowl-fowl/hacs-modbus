@@ -72,16 +72,17 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
     def available(self):
         """Return if entity is available."""
         return self.coordinator.is_device_available(self._device_id)
-
+ 
     @property
     def icon(self):
         """Return the icon."""
-        #if self._device_class == "shutter":
-        #    return "mdi:window-shutter"
-        if "lit" in self._name.lower():
-            return "mdi:bed"
-        else:
-            return "mdi:lightbulb"
+        #if self._device_class == "cover":
+        if not self.available:
+            return "mdi:lightbulb-alert"
+        if self.is_on:
+            return "mdi:lightbulb-on"
+        return "mdi:lightbulb"
+
 
     async def async_turn_on(self, **kwargs):
         """Turn the switch on."""

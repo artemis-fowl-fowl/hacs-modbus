@@ -106,6 +106,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     def icon(self):
         """Return the icon."""
         #if self._device_class == "cover":
+        if not self.available:
+            return "mdi:window-shutter-alert"
         if self.is_opening:
             return "mdi:window-shutter-cog"
         if self.is_closing:
