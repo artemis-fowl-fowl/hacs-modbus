@@ -32,14 +32,14 @@ def decode_input(input_str):
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
     {"name": "parents", "device_id": 1, "input": "I1", "output": "Q1", "device_class": "light"},
-    {"name": "dressing_lumiere", "device_id": 1, "input": "I2", "device_class": "light"},
-    {"name": "gabriel_lumiere", "device_id": 1, "input": "I3", "device_class": "light"},
-    {"name": "paul_lumiere", "device_id": 1, "input": "I4", "device_class": "light"},
-    {"name": "sophie_lumiere", "device_id": 1, "input": "I5", "device_class": "light"},
-    {"name": "sdb_lumiere", "device_id": 1, "input": "I6", "device_class": "light"},
-    {"name": "sdb_miroir", "device_id": 1, "input": "I7", "device_class": "light"},
-    {"name": "sdb_douche", "device_id": 1, "input": "I8", "device_class": "light"},
-    
+    #{"name": "dressing_lumiere", "device_id": 1, "input": "I2", "device_class": "light"},
+    #{"name": "gabriel_lumiere", "device_id": 1, "input": "I3", "device_class": "light"},
+    #{"name": "paul_lumiere", "device_id": 1, "input": "I4", "device_class": "light"},
+    #{"name": "sophie_lumiere", "device_id": 1, "input": "I5", "device_class": "light"},
+    #{"name": "sdb_lumiere", "device_id": 1, "input": "I6", "device_class": "light"},
+    #{"name": "sdb_miroir", "device_id": 1, "input": "I7", "device_class": "light"},
+    #{"name": "sdb_douche", "device_id": 1, "input": "I8", "device_class": "light"},
+
     # ===== LUMIERES RDC (Device 2) =====
     {"name": "atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
 ]
