@@ -150,4 +150,9 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
             else:
                 _LOGGER.error("Failed to turn off %s", self._name)
         except Exception as e:
+            # Déjà vu ici:
+            # Error turning off atelier: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+            # C'est un peu embêtant ça va donner un fonctionnement pas très fiable des commandes
+            # Il y a des erreurs de communication sur le bus Modbus
+            # C'est vraiment embétant: il semble que le coordinator se permet de faire plusieurs communications en parallèle, c'est grave.
             _LOGGER.error("Error turning off %s: %s", self._name, e)
