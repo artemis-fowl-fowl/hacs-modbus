@@ -29,8 +29,8 @@ async def async_setup_entry(
                 name=device_info["name"],
                 device_id=device_info["device_id"],
                 input=device_info["input"],
-                output=device_info["output"],
-                device_class=device_info["device_class"],
+                output=device_info.get("output"),
+                device_class=device_info.get("device_class"),
                 modbus_interface=modbus_interface,
             )
         )
