@@ -40,13 +40,13 @@ SWITCH_DEVICES = [
     {"name": "SDB_miroir", "device_id": 1, "input": "I7", "output": "Q7", "device_class": "light"},
     {"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
 
-    #{"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "device_class": "light"},
-    #{"name": "couloir_lumiere", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},
-    #{"name": "mezzanine_lumiere", "device_id": 1, "input": "X3", "output": "Y3", "device_class": "light"},
-    #{"name": "sejour_lumiere", "device_id": 1, "input": "X4", "output": "Y4", "device_class": "light"},
-    #{"name": "pass_s_lumiere", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
-    #{"name": "sdj_lumiere", "device_id": 1, "input": "X6", "output": "Y6", "device_class": "light"},
-    #{"name": "wc_etage_lumiere", "device_id": 1, "input": "X7", "output": "Y7", "device_class": "light"},
+    {"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "device_class": "light"},
+    {"name": "couloir_lumiere", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},
+    {"name": "mezzanine_lumiere", "device_id": 1, "input": "X3", "output": "Y3", "device_class": "light"},
+    {"name": "sejour_lumiere", "device_id": 1, "input": "X4", "output": "Y4", "device_class": "light"},
+    {"name": "pass_s_lumiere", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
+    {"name": "sdj_lumiere", "device_id": 1, "input": "X6", "output": "Y6", "device_class": "light"},
+    {"name": "wc_etage_lumiere", "device_id": 1, "input": "X7", "output": "Y7", "device_class": "light"},
 
     # ===== LUMIERES RDC (Device 2) =====
     #{"name": "Salon1", "device_id": 2, "input": "I1", "output": "Q1", "device_class": "light"},
