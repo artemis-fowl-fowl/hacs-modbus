@@ -86,13 +86,13 @@ SWITCH_DEVICES = [
 
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    #{"name": "parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1", "device_class": "shade"},
-    {"name": "parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
-    #{"name": "buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "device_class": "shade"},
-    {"name": "buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
-    #{"name": "gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
-    #{"name": "paul_w", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
-    #{"name": "paul_s", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
+    {"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
+    {"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
+    {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
+    {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
+
+    # ===== VOLETS ROULANTS (Device 4) =====
+    {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
 ]
 
 GABRIEL_DEVICES = [
