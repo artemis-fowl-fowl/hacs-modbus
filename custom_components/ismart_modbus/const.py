@@ -62,7 +62,7 @@ SWITCH_DEVICES = [
     {"name": "Hall", "device_id": 2, "input": "X2", "output": "Y2", "device_class": "light"},
     {"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "device_class": "light"},
     {"name": "Atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
-    #{"name": "Préau", "device_id": 2, "input": "X5", "output": "Y5", "device_class": "light"},
+    {"name": "Préau", "device_id": 2, "input": "X5", "output": "Y5", "device_class": "light"},
     {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "device_class": "light"},
     {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "device_class": "light"},
     {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
