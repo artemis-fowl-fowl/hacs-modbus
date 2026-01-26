@@ -32,10 +32,10 @@ def decode_input(input_str):
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
     {"name": "Parents", "device_id": 1, "input": "I1", "output": "Q1", "device_class": "light"},
-    #{"name": "Dressing", "device_id": 1, "input": "I2", "output": "Q2", "device_class": "light"},
-    #{"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "device_class": "light"},
-    #{"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "device_class": "light"},
-    #{"name": "Sophie", "device_id": 1, "input": "I5", "output": "Q5", "device_class": "light"},
+    {"name": "Dressing", "device_id": 1, "input": "I2", "output": "Q2", "device_class": "light"},
+    {"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "device_class": "light"},
+    {"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "device_class": "light"},
+    {"name": "Sophie", "device_id": 1, "input": "I5", "output": "Q5", "device_class": "light"},
     #{"name": "SDB", "device_id": 1, "input": "I6", "output": "Q6", "device_class": "light"},
     #{"name": "SDB_miroir", "device_id": 1, "input": "I7", "output": "Q7", "device_class": "light"},
     #{"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
