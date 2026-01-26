@@ -41,11 +41,11 @@ SWITCH_DEVICES = [
     {"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
 
     {"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "device_class": "light"},
-    {"name": "couloir_lumiere", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},
-    {"name": "mezzanine_lumiere", "device_id": 1, "input": "X3", "output": "Y3", "device_class": "light"},
-    {"name": "sejour_lumiere", "device_id": 1, "input": "X4", "output": "Y4", "device_class": "light"},
-    {"name": "pass_s_lumiere", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
-    {"name": "sdj_lumiere", "device_id": 1, "input": "X6", "output": "Y6", "device_class": "light"},
+    {"name": "Couloir", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},
+    {"name": "Mezzanine", "device_id": 1, "input": "X3", "output": "Y3", "device_class": "light"},
+    {"name": "Sejour", "device_id": 1, "input": "X4", "output": "Y4", "device_class": "light"},
+    {"name": "Passerelle Sud", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
+    {"name": "SDJ", "device_id": 1, "input": "X6", "output": "Y6", "device_class": "light"},
     {"name": "wc_etage_lumiere", "device_id": 1, "input": "X7", "output": "Y7", "device_class": "light"},
 
     # ===== LUMIERES RDC (Device 2) =====
@@ -58,14 +58,14 @@ SWITCH_DEVICES = [
     {"name": "Buanderie", "device_id": 2, "input": "I7", "output": "Q7", "device_class": "light"},
     {"name": "Buanderie_miroir", "device_id": 2, "input": "I8", "output": "Q8", "device_class": "light"},
 
-    #{"name": "WC_rdc", "device_id": 2, "input": "X1", "output": "Y1", "device_class": "light"},
-    #{"name": "Hall", "device_id": 2, "input": "X2", "output": "Y2", "device_class": "light"},
-    #{"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "device_class": "light"},
+    {"name": "WC_rdc", "device_id": 2, "input": "X1", "output": "Y1", "device_class": "light"},
+    {"name": "Hall", "device_id": 2, "input": "X2", "output": "Y2", "device_class": "light"},
+    {"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "device_class": "light"},
     {"name": "Atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
     #{"name": "Préau", "device_id": 2, "input": "X5", "output": "Y5", "device_class": "light"},
-    #{"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "device_class": "light"},
-    #{"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "device_class": "light"},
-    #{"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
+    {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "device_class": "light"},
+    {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "device_class": "light"},
+    {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
     #{"name": "Séjour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
