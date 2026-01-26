@@ -68,11 +68,11 @@ SWITCH_DEVICES = [
     {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
-    {"name": "Séjour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
-    {"name": "Séjour_2", "device_id": 4, "input": "X4", "output": "Y4", "device_class": "light"},
-    {"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "device_class": "light"},
-    {"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "device_class": "light"},
-    {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
+    #{"name": "Séjour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
+    #{"name": "Séjour_2", "device_id": 4, "input": "X4", "output": "Y4", "device_class": "light"},
+    #{"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "device_class": "light"},
+    #{"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "device_class": "light"},
+    #{"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
 
     # ===== DIVERS (Device 5) =====
     #{"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
