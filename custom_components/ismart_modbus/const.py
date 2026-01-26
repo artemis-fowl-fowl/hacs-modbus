@@ -66,6 +66,10 @@ SWITCH_DEVICES = [
     {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "device_class": "light"},
     {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "device_class": "light"},
     {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
+    
+    # ===== LUMIERES DIVERS (Device 3) =====
+    {"name": "Aurélien", "device_id": 3, "input": "X7", "output": "Y5", "device_class": "light"},
+    {"name": "Aline", "device_id": 3, "input": "X8", "output": "Y8", "device_class": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
     {"name": "Sejour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
@@ -78,9 +82,10 @@ SWITCH_DEVICES = [
     {"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
     {"name": "Ampli", "device_id": 5, "input": "X2", "output": "Y2", "device_class": "switch"},
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "device_class": "light"},
-    {"name": "Pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
-    {"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
-    {"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
+    # A vérifier il y a le portail sur Pompe ??!!
+    #{"name": "Pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
+    #{"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
+    #{"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
     {"name": "SDB_radiateur", "device_id": 4, "input": "X8", "output": "Y8", "device_class": "switch"},
 ]
 
@@ -92,25 +97,12 @@ COVER_DEVICES = [
     {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
     {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
     {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
+    {"name": "Velux", "device_id": 3, "up": "X6", "down": "X5", "opening": "Y6", "closing": "Y5", "device_class": "shade"},
     # ===== VOLETS ROULANTS (Device 4) =====
+    {"name": "Cathedrale", "device_id": 4, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
     {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
-]
-
-GABRIEL_DEVICES = [
- 
-    
-    # ===== VOLETS ROULANTS (Device 3) =====
-
-    {"name": "volet_sophie_down", "device_id": 3, "coil": 0x2C08, "device_class": "shutter"},
-    {"name": "volet_sophie_up", "device_id": 3, "coil": 0x2C09, "device_class": "shutter"},
-    {"name": "volet_mezz_down", "device_id": 3, "coil": 0x2C12, "device_class": "shutter"},
-    {"name": "volet_mezz_up", "device_id": 3, "coil": 0x2C13, "device_class": "shutter"},
-    {"name": "volet_velux_down", "device_id": 3, "coil": 0x2C14, "device_class": "shutter"},
-    {"name": "volet_velux_up", "device_id": 3, "coil": 0x2C15, "device_class": "shutter"},
-    {"name": "lit_aurel", "device_id": 3, "coil": 0x2C16, "device_class": "light"},
-    {"name": "lit_aline", "device_id": 3, "coil": 0x2C17, "device_class": "light"},
-    
-    # ===== AUTRES (Device 4) =====
-    {"name": "volet_cathedrale_down", "device_id": 4, "coil": 0x2C00, "device_class": "shutter"},
-    {"name": "volet_cathedrale_up", "device_id": 4, "coil": 0x2C01, "device_class": "shutter"},
+    {"name": "Cuisine", "device_id": 4, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
+    {"name": "Sejour W", "device_id": 4, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
+    {"name": "Sejour S1", "device_id": 4, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
+    {"name": "Sejour S2", "device_id": 4, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
 ]
