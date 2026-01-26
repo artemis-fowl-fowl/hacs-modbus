@@ -86,11 +86,12 @@ SWITCH_DEVICES = [
 
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    #{"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
+    {"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
     {"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
     {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
     {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
-
+    {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
+    {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
     # ===== VOLETS ROULANTS (Device 4) =====
     {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
 ]
@@ -99,14 +100,7 @@ GABRIEL_DEVICES = [
  
     
     # ===== VOLETS ROULANTS (Device 3) =====
-    {"name": "volet_parents_down", "device_id": 3, "coil": 0x2C00, "device_class": "shutter"},
-    {"name": "volet_parents_up", "device_id": 3, "coil": 0x2C01, "device_class": "shutter"},
-    {"name": "volet_gabriel_down", "device_id": 3, "coil": 0x2C02, "device_class": "shutter"},
-    {"name": "volet_gabriel_up", "device_id": 3, "coil": 0x2C03, "device_class": "shutter"},
-    {"name": "volet_paul_w_down", "device_id": 3, "coil": 0x2C04, "device_class": "shutter"},
-    {"name": "volet_paul_w_up", "device_id": 3, "coil": 0x2C05, "device_class": "shutter"},
-    {"name": "volet_paul_s_down", "device_id": 3, "coil": 0x2C06, "device_class": "shutter"},
-    {"name": "volet_paul_s_up", "device_id": 3, "coil": 0x2C07, "device_class": "shutter"},
+
     {"name": "volet_sophie_down", "device_id": 3, "coil": 0x2C08, "device_class": "shutter"},
     {"name": "volet_sophie_up", "device_id": 3, "coil": 0x2C09, "device_class": "shutter"},
     {"name": "volet_mezz_down", "device_id": 3, "coil": 0x2C12, "device_class": "shutter"},
