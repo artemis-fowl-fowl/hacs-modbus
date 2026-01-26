@@ -29,10 +29,10 @@ async def async_setup_entry(
                 coordinator=coordinator,
                 name=device_info["name"],
                 device_id=device_info["device_id"],
-                up=device_info.get("up"),
-                down=device_info.get("down"),
-                opening=device_info.get("opening"),
-                closing=device_info.get("closing"),
+                up=device_info["up"],
+                down=device_info["down"],
+                opening=device_info["opening"],
+                closing=device_info["closing"],
                 opened=device_info.get("opened"),
                 closed=device_info.get("closed"),
                 device_class=device_info.get("device_class"),
@@ -53,18 +53,25 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._device_id = device_id
         self._up_coil = self.decode_input(up)         # Trouve l'addresse du coil correspondant à l'entrée
         self._down_coil = self.decode_input(down)     # Trouve l'addresse du coil correspondant à l'entrée
+        self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
+        """
         if opening is None:
             self._opening_flag_pos = self.guess_output(up)
         else:
             self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
+        """
+        self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
+        """
         if closing is None:
             self._closing_flag_pos = self.guess_output(down)
         else:
             self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
+        """
         if opened is None:
             self._opened_flag_pos = self._opening_flag_pos        # Si la position du flag de position "Mn" n'est pas définie on suppose qu'il est aligné avec la sortie "Qn" ou "Yn"
         else:
             self._opened_flag_pos = self.decode_output(opened)        # Trouve la position du bit dans MEM_STATE
+        
         if closed is None:
             self._closed_flag_pos = self._closing_flag_pos        # Si la position du flag de position "Mn" n'est pas définie on suppose qu'il est aligné avec la sortie "Qn" ou "Yn"
         else:
