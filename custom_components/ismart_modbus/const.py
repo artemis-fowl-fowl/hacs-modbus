@@ -36,9 +36,9 @@ SWITCH_DEVICES = [
     {"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "device_class": "light"},
     {"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "device_class": "light"},
     {"name": "Sophie", "device_id": 1, "input": "I5", "output": "Q5", "device_class": "light"},
-    #{"name": "SDB", "device_id": 1, "input": "I6", "output": "Q6", "device_class": "light"},
-    #{"name": "SDB_miroir", "device_id": 1, "input": "I7", "output": "Q7", "device_class": "light"},
-    #{"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
+    {"name": "SDB", "device_id": 1, "input": "I6", "output": "Q6", "device_class": "light"},
+    {"name": "SDB_miroir", "device_id": 1, "input": "I7", "output": "Q7", "device_class": "light"},
+    {"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "device_class": "light"},
 
     #{"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "device_class": "light"},
     #{"name": "couloir_lumiere", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},

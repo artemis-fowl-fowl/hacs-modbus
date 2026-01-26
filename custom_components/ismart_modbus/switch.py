@@ -49,9 +49,14 @@ class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
         self._device_class = device_class
         self._modbus = modbus_interface
         self._coil = self.decode_input(input)           # Trouve l'addresse du coil correspondant à l'entrée
+        
+        self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
+        """
         if output is None:
             self._bit_position = self.guess_output(input)
-        self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
+        else:
+            self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
+        """
     @staticmethod
     def decode_input(string):
         """Return the Ismart coil address of an input string like "I1" or "X1" """
