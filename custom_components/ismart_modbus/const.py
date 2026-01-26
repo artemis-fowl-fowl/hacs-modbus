@@ -75,13 +75,13 @@ SWITCH_DEVICES = [
     {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
 
     # ===== DIVERS (Device 5) =====
-    {"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
-    {"name": "Ampli", "device_id": 5, "input": "X2", "output": "Y2", "device_class": "switch"},
-    {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "device_class": "light"},
-    {"name": "pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
-    {"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
-    {"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
-    {"name": "SDB_radiateur", "device_id": 4, "input": "X8", "output": "Y8", "device_class": "switch"},
+    #{"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
+    #{"name": "Ampli", "device_id": 5, "input": "X2", "output": "Y2", "device_class": "switch"},
+    #{"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "device_class": "light"},
+    #{"name": "pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
+    #{"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
+    #{"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
+    #{"name": "SDB_radiateur", "device_id": 4, "input": "X8", "output": "Y8", "device_class": "switch"},
 ]
 
 COVER_DEVICES = [
