@@ -169,7 +169,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             state = CoverState.OPEN
         else:
             state = None
-        _LOGGER.warning(f"volet {self.name} state is {str(state)}")
+        _LOGGER.debug(f"volet {self.name} state is {str(state)}")
         return state
  
     @property
