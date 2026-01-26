@@ -31,7 +31,7 @@ def decode_input(input_str):
 # Tous les dispositifs de la maison
 SWITCH_DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
-    {"name": "Parents", "device_id": 1, "input": "I1", "output": "Q1", "device_class": "light"},
+    {"name": "Parents", "device_id": 1, "input": "I1", "device_class": "light"},
     {"name": "Dressing", "device_id": 1, "input": "I2", "output": "Q2", "device_class": "light"},
     {"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "device_class": "light"},
     {"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "device_class": "light"},
@@ -65,7 +65,23 @@ SWITCH_DEVICES = [
     {"name": "Préau", "device_id": 2, "input": "X5", "output": "Y5", "device_class": "light"},
     {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "device_class": "light"},
     {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "device_class": "light"},
-    {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y5", "device_class": "light"},
+    {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "device_class": "light"},
+
+    # ===== LUMIERES DIVERS (Device 4) =====
+    {"name": "Séjour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
+    {"name": "Séjour_2", "device_id": 4, "input": "X4", "output": "Y4", "device_class": "light"},
+    {"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "device_class": "light"},
+    {"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "device_class": "light"},
+    {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
+
+    # ===== DIVERS (Device 5) =====
+    {"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
+    {"name": "Ampli", "device_id": 5, "input": "X2", "output": "Y2", "device_class": "switch"},
+    {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "device_class": "light"},
+    {"name": "pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
+    {"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
+    {"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
+    {"name": "SDB_radiateur", "device_id": 4, "input": "X8", "output": "Y8", "device_class": "switch"},
 ]
 
 COVER_DEVICES = [
@@ -80,33 +96,7 @@ COVER_DEVICES = [
 ]
 
 GABRIEL_DEVICES = [
-    # ===== LUMIERES ETAGE (Device 1) =====
-
-    {"name": "grenier_lumiere", "device_id": 1, "coil": 0x2C08, "device_class": "light"},
-    {"name": "couloir_lumiere", "device_id": 1, "coil": 0x2C11, "device_class": "light"},
-    {"name": "mezzanine_lumiere", "device_id": 1, "coil": 0x2C12, "device_class": "light"},
-    {"name": "sejour_lumiere", "device_id": 1, "coil": 0x2C13, "device_class": "light"},
-    {"name": "pass_s_lumiere", "device_id": 1, "coil": 0x2C14, "device_class": "light"},
-    {"name": "sdj_lumiere", "device_id": 1, "coil": 0x2C16, "device_class": "light"},
-    {"name": "wc_etage_lumiere", "device_id": 1, "coil": 0x2C17, "device_class": "light"},
-    
-    # ===== LUMIERES RDC (Device 2) =====
-    {"name": "salon1_lumiere", "device_id": 2, "coil": 0x2C00, "device_class": "light"},
-    {"name": "salon2_lumiere", "device_id": 2, "coil": 0x2C01, "device_class": "light"},
-    {"name": "cuisine_lumiere", "device_id": 2, "coil": 0x2C02, "device_class": "light"},
-    {"name": "ilot_lumiere", "device_id": 2, "coil": 0x2C03, "device_class": "light"},
-    {"name": "evier_lumiere", "device_id": 2, "coil": 0x2C04, "device_class": "light"},
-    {"name": "terrasse_lumiere", "device_id": 2, "coil": 0x2C05, "device_class": "light"},
-    {"name": "buanderie_lumiere", "device_id": 2, "coil": 0x2C06, "device_class": "light"},
-    {"name": "buanderie_miroir", "device_id": 2, "coil": 0x2C07, "device_class": "light"},
-    {"name": "wc_rdc_lumiere", "device_id": 2, "coil": 0x2C08, "device_class": "light"},
-    {"name": "hall_lumiere", "device_id": 2, "coil": 0x2C11, "device_class": "light"},
-    {"name": "cellier_lumiere", "device_id": 2, "coil": 0x2C12, "device_class": "light"},
-    {"name": "atelier_lumiere", "device_id": 2, "coil": 0x2C13, "device_class": "light"},
-    {"name": "preau_lumiere", "device_id": 2, "coil": 0x2C14, "device_class": "light"},
-    {"name": "garage_lumiere", "device_id": 2, "coil": 0x2C15, "device_class": "light"},
-    {"name": "cave_lumiere", "device_id": 2, "coil": 0x2C16, "device_class": "light"},
-    {"name": "cour_lumiere", "device_id": 2, "coil": 0x2C17, "device_class": "light"},
+ 
     
     # ===== VOLETS ROULANTS (Device 3) =====
     {"name": "volet_parents_down", "device_id": 3, "coil": 0x2C00, "device_class": "shutter"},
@@ -129,18 +119,4 @@ GABRIEL_DEVICES = [
     # ===== AUTRES (Device 4) =====
     {"name": "volet_cathedrale_down", "device_id": 4, "coil": 0x2C00, "device_class": "shutter"},
     {"name": "volet_cathedrale_up", "device_id": 4, "coil": 0x2C01, "device_class": "shutter"},
-    {"name": "sejour_a_lumiere", "device_id": 4, "coil": 0x2C12, "device_class": "light"},
-    {"name": "sejour_b_lumiere", "device_id": 4, "coil": 0x2C13, "device_class": "light"},
-    {"name": "gabriel_lit", "device_id": 4, "coil": 0x2C14, "device_class": "light"},
-    {"name": "paul_lit", "device_id": 4, "coil": 0x2C15, "device_class": "light"},
-    {"name": "sophie_lit", "device_id": 4, "coil": 0x2C16, "device_class": "light"},
-    {"name": "sdb_radiateur", "device_id": 4, "coil": 0x2C17, "device_class": "switch"},
-    
-    # ===== EXTERIEURS ET EQUIPEMENTS (Device 5) =====
-    {"name": "salon_a_lumiere", "device_id": 5, "coil": 0x2C00, "device_class": "light"},
-    {"name": "ampli", "device_id": 5, "coil": 0x2C01, "device_class": "switch"},
-    {"name": "cabanon_lumiere", "device_id": 5, "coil": 0x2C02, "device_class": "light"},
-    {"name": "pompe", "device_id": 5, "coil": 0x2C03, "device_class": "switch"},
-    {"name": "electrovanne_1", "device_id": 5, "coil": 0x2C04, "device_class": "switch"},
-    {"name": "electrovanne_2", "device_id": 5, "coil": 0x2C05, "device_class": "switch"},
 ]
