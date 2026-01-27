@@ -10,5 +10,6 @@ MIT License - Voir [LICENSE](LICENSE)
 
 Artemisfowl - [@artemis-fowl-fowl](https://github.com/artemis-fowl-fowl)
 
-AurelienP - [aurelienP](https://github.com/aurelienp69)
+AurelienP - [@aurelienP](https://github.com/aurelienp69)
+
 
