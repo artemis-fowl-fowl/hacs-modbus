@@ -44,9 +44,10 @@ SWITCH_DEVICES = [
     {"name": "Couloir", "device_id": 1, "input": "X2", "output": "Y2", "device_class": "light"},
     {"name": "Mezzanine", "device_id": 1, "input": "X3", "output": "Y3", "device_class": "light"},
     {"name": "Sejour", "device_id": 1, "input": "X4", "output": "Y4", "device_class": "light"},
-    {"name": "Passerelle Sud", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
+
+    {"name": "Passerelle", "device_id": 1, "input": "X5", "output": "Y5", "device_class": "light"},
     {"name": "SDJ", "device_id": 1, "input": "X6", "output": "Y6", "device_class": "light"},
-    {"name": "wc_etage_lumiere", "device_id": 1, "input": "X7", "output": "Y7", "device_class": "light"},
+    {"name": "WC_etage", "device_id": 1, "input": "X7", "output": "Y7", "device_class": "light"},
 
     # ===== LUMIERES RDC (Device 2) =====
     {"name": "Salon1", "device_id": 2, "input": "I1", "output": "Q1", "device_class": "light"},
@@ -58,7 +59,7 @@ SWITCH_DEVICES = [
     {"name": "Buanderie", "device_id": 2, "input": "I7", "output": "Q7", "device_class": "light"},
     {"name": "Buanderie_miroir", "device_id": 2, "input": "I8", "output": "Q8", "device_class": "light"},
 
-    {"name": "WC_rdc", "device_id": 2, "input": "X1", "output": "Y1", "device_class": "light"},
+    {"name": "WC_RDC", "device_id": 2, "input": "X1", "output": "Y1", "device_class": "light"},
     {"name": "Hall", "device_id": 2, "input": "X2", "output": "Y2", "device_class": "light"},
     {"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "device_class": "light"},
     {"name": "Atelier", "device_id": 2, "input": "X4", "output": "Y4", "device_class": "light"},
@@ -72,21 +73,29 @@ SWITCH_DEVICES = [
     {"name": "Aline", "device_id": 3, "input": "X8", "output": "Y8", "device_class": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
-    {"name": "Sejour_1", "device_id": 4, "input": "X3", "output": "Y3", "device_class": "light"},
-    {"name": "Sejour_2", "device_id": 4, "input": "X4", "output": "Y4", "device_class": "light"},
     {"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "device_class": "light"},
     {"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "device_class": "light"},
     {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
+    {"name": "Sejour ?", "device_id": 4, "input": "X7", "output": "Y7", "device_class": "light"},
+
 
     # ===== DIVERS (Device 5) =====
-    {"name": "Salon_lampe", "device_id": 5, "input": "X1", "output": "Y1", "device_class": "light"},
-    {"name": "Ampli", "device_id": 5, "input": "X2", "output": "Y2", "device_class": "switch"},
+    {"name": "Apoint", "device_id": 5, "input": "I1", "output": "Q1", "device_class": "light"},
+    {"name": "Ampli", "device_id": 5, "input": "I2", "output": "Q2", "device_class": "switch"},
+    {"name": "Electrovanne_1", "device_id": 5, "input": "I3", "output": "Q3", "device_class": "switch"},
+    {"name": "Electrovanne_2", "device_id": 5, "input": "I4", "output": "Q4", "device_class": "switch"},
+    {"name": "SDB_radiateur", "device_id": 5, "input": "I7", "output": "Q7", "device_class": "switch"},
+
+    # ### input sur MemState non pris en charge pour le moment
+    #{"name": "Scooter", "device_id": 5, "input": "M8", "output": "Q5", "device_class": "switch"},
+    #{"name": "Zoé", "device_id": 5, "input": "M9", "output": "Q6", "device_class": "switch"},
+    #{"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M10", "device_class": "switch"},
+
+
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "device_class": "light"},
-    # A vérifier il y a le portail sur Pompe ??!!
-    #{"name": "Pompe", "device_id": 5, "input": "X4", "output": "Y4", "device_class": "switch"},
-    #{"name": "Electrovanne_1", "device_id": 5, "input": "X5", "output": "Y5", "device_class": "switch"},
-    #{"name": "Electrovanne_2", "device_id": 5, "input": "X6", "output": "Y6", "device_class": "switch"},
-    {"name": "SDB_radiateur", "device_id": 4, "input": "X8", "output": "Y8", "device_class": "switch"},
+    
+    # ### Output sur MemState non pris en charge pour le moment
+    #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "device_class": "switch"},
 ]
 
 COVER_DEVICES = [
@@ -98,11 +107,20 @@ COVER_DEVICES = [
     {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
     {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
     {"name": "Velux", "device_id": 3, "up": "X6", "down": "X5", "opening": "Y6", "closing": "Y5", "device_class": "shade"},
+
     # ===== VOLETS ROULANTS (Device 4) =====
     {"name": "Cathedrale", "device_id": 4, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
     {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
     {"name": "Cuisine", "device_id": 4, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
     {"name": "Sejour W", "device_id": 4, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
-    {"name": "Sejour S1", "device_id": 4, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
-    {"name": "Sejour S2", "device_id": 4, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
+    {"name": "Sejour S", "device_id": 4, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
+    {"name": "Escalier", "device_id": 4, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
+    
+    # ===== DIVERS (Device 5) =====
+    # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
+    {"name": "Garage", "device_id": 5, "up": "I5", "down": "I5", "opening": "Y2", "closing": "Y2", "opened": "M6", "closed": "M7", "device_class": "garage"},
+
+    # Portail: commandes: Y4 ouverture partielle, Y3 ouvre / stop / ferme, demande vérouillage: X3
+    #          retours: Run sur M01, Closed sur M2, Locked sur M3
+
 ]
