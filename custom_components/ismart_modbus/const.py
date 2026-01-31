@@ -100,25 +100,25 @@ DEVICES = [
 
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
-    {"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
-    {"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
-    {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
-    {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
-    {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
-    {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
-    {"name": "Velux", "device_id": 3, "up": "X6", "down": "X5", "opening": "Y6", "closing": "Y5", "device_class": "shade"},
+    {"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "type": "shade"},
+    {"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "type": "shade"},
+    {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "type": "shade"},
+    {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "type": "shade"},
+    {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "type": "shade"},
+    {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "type": "shade"},
+    {"name": "Velux", "device_id": 3, "up": "X6", "down": "X5", "opening": "Y6", "closing": "Y5", "type": "shade"},
 
     # ===== VOLETS ROULANTS (Device 4) =====
-    {"name": "Cathedrale", "device_id": 4, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "device_class": "shade"},
-    {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "device_class": "shade"},
-    {"name": "Cuisine", "device_id": 4, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "device_class": "shade"},
-    {"name": "Sejour W", "device_id": 4, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "device_class": "shade"},
-    {"name": "Sejour S", "device_id": 4, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "device_class": "shade"},
-    {"name": "Escalier", "device_id": 4, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "device_class": "shade"},
+    {"name": "Cathedrale", "device_id": 4, "up": "I2", "down": "I1", "opening": "Q2", "closing": "Q1", "type": "shade"},
+    {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "opening": "Q4", "closing": "Q3", "type": "shade"},
+    {"name": "Cuisine", "device_id": 4, "up": "I6", "down": "I5", "opening": "Q6", "closing": "Q5", "type": "shade"},
+    {"name": "Sejour W", "device_id": 4, "up": "I8", "down": "I7", "opening": "Q8", "closing": "Q7", "type": "shade"},
+    {"name": "Sejour S", "device_id": 4, "up": "X2", "down": "X1", "opening": "Y2", "closing": "Y1", "type": "shade"},
+    {"name": "Escalier", "device_id": 4, "up": "X4", "down": "X3", "opening": "Y4", "closing": "Y3", "type": "shade"},
     
     # ===== DIVERS (Device 5) =====
     # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
-    {"name": "Garage", "device_id": 5, "up": "I5", "down": "I5", "opening": "Y2", "closing": "Y2", "opened": "M6", "closed": "M7", "device_class": "garage"},
+    {"name": "Garage", "device_id": 5, "up": "I5", "down": "I5", "opening": "Y2", "closing": "Y2", "opened": "M6", "closed": "M7", "type": "garage"},
 
     # Portail: commandes: Y4 ouverture partielle, Y3 ouvre / stop / ferme, demande vérouillage: X3
     #          retours: Run sur M01, Closed sur M2, Locked sur M3

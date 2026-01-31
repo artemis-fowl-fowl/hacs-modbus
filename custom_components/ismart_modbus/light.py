@@ -31,9 +31,13 @@ class ISmartModbusLight(ISmartModbusBitEntity, LightEntity):
     _attr_color_mode = ColorMode.ONOFF
 
     async def async_turn_on(self, **kwargs):
+        if self.is_on:
+            return
         await self._write_coil(self._coil, 1)
 
     async def async_turn_off(self, **kwargs):
+        if not self.is_on:
+            return
         await self._write_coil(self._coil, 1)
 
     @property

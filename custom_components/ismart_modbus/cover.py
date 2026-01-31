@@ -35,7 +35,6 @@ async def async_setup_entry(
                 closing=device_info["closing"],
                 opened=device_info.get("opened"),
                 closed=device_info.get("closed"),
-                device_class=device_info.get("device_class"),
                 modbus_interface=modbus_interface,
             )
         )
