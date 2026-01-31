@@ -1,4 +1,8 @@
 from homeassistant.components.light import LightEntity
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .base import ISmartModbusBitEntity
 from .const import DOMAIN, DEVICES
@@ -35,3 +39,7 @@ class ISmartModbusLight(ISmartModbusBitEntity, LightEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._write_coil(self._coil, 1)
+
+    @property
+    def icon(self):
+        return "mdi:lightbulb-on" if self.is_on else "mdi:lightbulb-outline"
