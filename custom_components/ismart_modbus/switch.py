@@ -6,216 +6,234 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .base import ISmartModbusBitEntity
 from .const import DOMAIN, SWITCH_DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(
-    hass: HomeAssistant,
-    config_entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-) -> None:
-    """Set up iSMART Modbus switches."""
+async def async_setup_entry(hass, config_entry, async_add_entities):
     entry_data = hass.data[DOMAIN][config_entry.entry_id]
-    modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
+    modbus = entry_data["modbus"]
 
-    entities = []
-    for device_info in SWITCH_DEVICES:
-        entities.append(
-            ISmartModbusSwitch(
-                coordinator=coordinator,
-                name=device_info["name"],
-                device_id=device_info["device_id"],
-                input=device_info["input"],
-                output=device_info.get("output"),
-                device_class=device_info.get("device_class"),
-                modbus_interface=modbus_interface,
-            )
+    entities = [
+        ISmartModbusSwitch(
+            coordinator,
+            dev["name"],
+            dev["device_id"],
+            dev["input"],
+            dev["output"],
+            modbus,
         )
+        for dev in SWITCH_DEVICES
+    ]
 
     async_add_entities(entities)
 
+# async def async_setup_entry(
+#     hass: HomeAssistant,
+#     config_entry: ConfigEntry,
+#     async_add_entities: AddEntitiesCallback,
+# ) -> None:
+#     """Set up iSMART Modbus switches."""
+#     entry_data = hass.data[DOMAIN][config_entry.entry_id]
+#     modbus_interface = entry_data["modbus"]
+#     coordinator = entry_data["coordinator"]
 
-class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
-    """Representation of an iSMART Modbus Switch."""
+#     entities = []
+#     for device_info in SWITCH_DEVICES:
+#         entities.append(
+#             ISmartModbusSwitch(
+#                 coordinator=coordinator,
+#                 name=device_info["name"],
+#                 device_id=device_info["device_id"],
+#                 input=device_info["input"],
+#                 output=device_info.get("output"),
+#                 device_class=device_info.get("device_class"),
+#                 modbus_interface=modbus_interface,
+#             )
+#         )
 
-    def __init__(self, coordinator, name, device_id, input, output, device_class, modbus_interface):
-        """Initialize the switch."""
-        super().__init__(coordinator)
-        self._name = name
-        self._device_id = device_id
-        self._device_class = device_class
-        self._modbus = modbus_interface
-        self._coil = self.decode_input(input)           # Trouve l'addresse du coil correspondant à l'entrée
-        self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
-        """
-        if output is None:
-            self._bit_position = self.guess_output(input)
-        else:
-            self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
-        """
-    @staticmethod
-    def decode_input(string):
-        """Return the Ismart coil address of an input string like "I1" or "X1" """
-        if string.startswith("I"):
-            return 0x0550 + int(string[1:]) - 1
-        elif string.startswith("X"):
-            return 0x0560 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"Input string '{string}' is invalid.")
+#     async_add_entities(entities)
 
-    @staticmethod
-    def decode_output(string):
-        """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
-        if string.startswith("Q"):       # On prend en charge le I 
-            return int(string[1:]) - 1
-        elif string.startswith("Y"):
-            return 8 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"output string '{string}' is invalid.")
 
-    @staticmethod
-    def guess_output(string):
-        """Returns the bit position in the OUT_STATE value assuming that
-           the output is in line with the input (I1 -> Q1, X4 -> Y4). """
-        if string.startswith("I"):
-            return int(string[1:]) - 1
-        elif string.startswith("X   "):
-            return 8 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"output string '{string}' is invalid.")
-
-    @property
-    def name(self):
-        """Return the name of the switch."""
-        return self._name
-
-    @property
-    def unique_id(self):
-        """Return a unique ID."""
-        return f"ismart_{self._device_id}_{self._coil}"
-
-    @property
-    def is_on(self):
-        """Return true if switch is on."""
-        # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit("outstate", self._device_id, self._bit_position)
-        return state if state is not None else False
-
-    @property
-    def available(self):
-        """Return if entity is available."""
-        return self.coordinator.is_device_available(self._device_id)
- 
-    @property
-    def icon(self):
-        """Return the icon."""
-        #if self._device_class == "cover":
-        #if not self.available:
-        #    return "mdi:lightbulb-alert"
-        if self.is_on:
-            return "mdi:lightbulb-on"
-        #return "mdi:lightbulb-off"
-        return "mdi:lightbulb-outline"
-
+class ISmartModbusSwitch(ISmartModbusBitEntity, SwitchEntity):
+    """iSMART Modbus Switch."""
 
     async def async_turn_on(self, **kwargs):
-        """Turn the switch on."""
-        try:
-            if self.is_on:
-                _LOGGER.info("Switch %s is already on", self._name)
-            else:
-                result = await self.hass.async_add_executor_job(
-                    self._modbus.writecoil_device,
-                    self._device_id, self._coil, 1)
-                if result == 0:
-                    _LOGGER.info("Switch %s turned on", self._name)
-                    # Rafraîchir immédiatement l'état
-                    await self.coordinator.async_request_refresh()
-                else:
-                    _LOGGER.error("Failed to turn on %s", self._name)
-        except Exception as e:
-            _LOGGER.error("Error turning on %s: %s", self._name, e)
+        await self._write_coil(self._coil, 1)
 
     async def async_turn_off(self, **kwargs):
-        """Turn the switch off."""
-        try:
-            if not self.is_on:
-                _LOGGER.info("Switch %s is already off", self._name)
-            else:
-                result = await self.hass.async_add_executor_job(
-                    self._modbus.writecoil_device,
-                    self._device_id, self._coil, 1)
-                if result == 0:
-                    _LOGGER.info("Switch %s turned off", self._name)
-                    # Rafraîchir immédiatement l'état
-                    await self.coordinator.async_request_refresh()
-                else:
-                    _LOGGER.error("Failed to turn off %s", self._name)
-        except Exception as e:
-            # Déjà vu ici:
-            # Error turning off atelier: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
-            # C'est un peu embêtant ça va donner un fonctionnement pas très fiable des commandes
-            # Il y a des erreurs de communication sur le bus Modbus
-            # C'est vraiment embétant: il semble que le coordinator se permet de faire plusieurs communications en parallèle, c'est grave.
-            _LOGGER.error("Error turning off %s: %s", self._name, e)
+        await self._write_coil(self._coil, 1)
 
-class ISmartModbusGeneralSwitch(CoordinatorEntity, SwitchEntity):
-    """Representation of an iSMART Modbus Switch."""
+    @property
+    def icon(self):
+        return "mdi:lightbulb-on" if self.is_on else "mdi:lightbulb-outline"
 
-    def __init__(self, coordinator, name, device_id, input, output, device_class, modbus_interface):
-        """Initialize the switch."""
-        super().__init__(coordinator)
-        self._name = name
-        self._device_class = device_class
-        self._modbus = modbus_interface
+
+# class ISmartModbusSwitch(CoordinatorEntity, SwitchEntity):
+#     """Representation of an iSMART Modbus Switch."""
+
+#     def __init__(self, coordinator, name, device_id, input, output, device_class, modbus_interface):
+#         """Initialize the switch."""
+#         super().__init__(coordinator)
+#         self._name = name
+#         self._device_id = device_id
+#         self._device_class = device_class
+#         self._modbus = modbus_interface
+#         self._coil = self.decode_input(input)           # Trouve l'addresse du coil correspondant à l'entrée
+#         self._bit_position = self.decode_output(output)  # Trouve la position du bit dans OUT_STATE
+
+#     @staticmethod
+#     def decode_input(string):
+#         """Return the Ismart coil address of an input string like "I1" or "X1" """
+#         if string.startswith("I"):
+#             return 0x0550 + int(string[1:]) - 1
+#         elif string.startswith("X"):
+#             return 0x0560 + int(string[1:]) - 1
+#         else:
+#             raise ValueError(f"Input string '{string}' is invalid.")
+
+#     @staticmethod
+#     def decode_output(string):
+#         """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
+#         if string.startswith("Q"):       # On prend en charge le I 
+#             return int(string[1:]) - 1
+#         elif string.startswith("Y"):
+#             return 8 + int(string[1:]) - 1
+#         else:
+#             raise ValueError(f"output string '{string}' is invalid.")
+
+#     @property
+#     def name(self):
+#         """Return the name of the switch."""
+#         return self._name
+
+#     @property
+#     def unique_id(self):
+#         """Return a unique ID."""
+#         return f"ismart_{self._device_id}_{self._coil}"
+
+#     @property
+#     def is_on(self):
+#         """Return true if switch is on."""
+#         # Récupérer l'état depuis le coordinateur
+#         state = self.coordinator.get_bit("outstate", self._device_id, self._bit_position)
+#         return state if state is not None else False
+
+#     @property
+#     def available(self):
+#         """Return if entity is available."""
+#         return self.coordinator.is_device_available(self._device_id)
+ 
+#     @property
+#     def icon(self):
+#         """Return the icon."""
+#         #if self._device_class == "cover":
+#         #if not self.available:
+#         #    return "mdi:lightbulb-alert"
+#         if self.is_on:
+#             return "mdi:lightbulb-on"
+#         #return "mdi:lightbulb-off"
+#         return "mdi:lightbulb-outline"
+
+
+#     async def async_turn_on(self, **kwargs):
+#         """Turn the switch on."""
+#         try:
+#             if self.is_on:
+#                 _LOGGER.info("Switch %s is already on", self._name)
+#             else:
+#                 result = await self.hass.async_add_executor_job(
+#                     self._modbus.writecoil_device,
+#                     self._device_id, self._coil, 1)
+#                 if result == 0:
+#                     _LOGGER.info("Switch %s turned on", self._name)
+#                     # Rafraîchir immédiatement l'état
+#                     await self.coordinator.async_request_refresh()
+#                 else:
+#                     _LOGGER.error("Failed to turn on %s", self._name)
+#         except Exception as e:
+#             _LOGGER.error("Error turning on %s: %s", self._name, e)
+
+#     async def async_turn_off(self, **kwargs):
+#         """Turn the switch off."""
+#         try:
+#             if not self.is_on:
+#                 _LOGGER.info("Switch %s is already off", self._name)
+#             else:
+#                 result = await self.hass.async_add_executor_job(
+#                     self._modbus.writecoil_device,
+#                     self._device_id, self._coil, 1)
+#                 if result == 0:
+#                     _LOGGER.info("Switch %s turned off", self._name)
+#                     # Rafraîchir immédiatement l'état
+#                     await self.coordinator.async_request_refresh()
+#                 else:
+#                     _LOGGER.error("Failed to turn off %s", self._name)
+#         except Exception as e:
+#             # Déjà vu ici:
+#             # Error turning off atelier: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+#             # C'est un peu embêtant ça va donner un fonctionnement pas très fiable des commandes
+#             # Il y a des erreurs de communication sur le bus Modbus
+#             # C'est vraiment embétant: il semble que le coordinator se permet de faire plusieurs communications en parallèle, c'est grave.
+#             _LOGGER.error("Error turning off %s: %s", self._name, e)
+
+# class ISmartModbusGeneralSwitch(CoordinatorEntity, SwitchEntity):
+#     """Representation of an iSMART Modbus Switch."""
+
+#     def __init__(self, coordinator, name, device_id, input, output, device_class, modbus_interface):
+#         """Initialize the switch."""
+#         super().__init__(coordinator)
+#         self._name = name
+#         self._device_class = device_class
+#         self._modbus = modbus_interface
      
-    @property
-    def name(self):
-        """Return the name of the switch."""
-        return self._name
+#     @property
+#     def name(self):
+#         """Return the name of the switch."""
+#         return self._name
 
-    @property
-    def unique_id(self):
-        """Return a unique ID."""
-        return f"ismart_{self._device_id}_{self._coil}"
+#     @property
+#     def unique_id(self):
+#         """Return a unique ID."""
+#         return f"ismart_{self._device_id}_{self._coil}"
 
-    @property
-    def is_on(self):
-        """Return true if switch is on."""
-        # Récupérer l'état depuis le coordinateur
-        #state = self.coordinator.get_bit("outstate", self._device_id, self._bit_position)
-        #return state if state is not None else False
-        return False
+#     @property
+#     def is_on(self):
+#         """Return true if switch is on."""
+#         # Récupérer l'état depuis le coordinateur
+#         #state = self.coordinator.get_bit("outstate", self._device_id, self._bit_position)
+#         #return state if state is not None else False
+#         return False
     
-    @property
-    def available(self):
-        """Return if entity is available."""
-        return self.coordinator.is_device_available(self._device_id)
+#     @property
+#     def available(self):
+#         """Return if entity is available."""
+#         return self.coordinator.is_device_available(self._device_id)
  
-    @property
-    def icon(self):
-        """Return the icon."""
-        if self.is_on:
-            return "mdi:lightbulb-on"
-        return "mdi:lightbulb-outline"
+#     @property
+#     def icon(self):
+#         """Return the icon."""
+#         if self.is_on:
+#             return "mdi:lightbulb-on"
+#         return "mdi:lightbulb-outline"
 
 
-    async def async_turn_on(self, **kwargs):
-        """Turn the switch on."""
-        _LOGGER.warning("Failed to turn on %s", self._name)
+#     async def async_turn_on(self, **kwargs):
+#         """Turn the switch on."""
+#         _LOGGER.warning("Failed to turn on %s", self._name)
 
-    async def async_turn_off(self, **kwargs):
-        """Turn the switch off."""
-        try:
-            result = await self.hass.async_add_executor_job(self._modbus.writecoil_device, 1 , 0x0558, 1)   # Automate 1 entrée 9 extinction générale 
-            result |= await self.hass.async_add_executor_job(self._modbus.writecoil_device, 2 , 0x0558, 1)
-            if result == 0:
-                # Rafraîchir immédiatement l'état
-                await self.coordinator.async_request_refresh()
-            else:
-                _LOGGER.error("Failed to turn on %s", self._name)
-        except Exception as e:
-            _LOGGER.error("Error turning on %s: %s", self._name, e)
+#     async def async_turn_off(self, **kwargs):
+#         """Turn the switch off."""
+#         try:
+#             result = await self.hass.async_add_executor_job(self._modbus.writecoil_device, 1 , 0x0558, 1)   # Automate 1 entrée 9 extinction générale 
+#             result |= await self.hass.async_add_executor_job(self._modbus.writecoil_device, 2 , 0x0558, 1)
+#             if result == 0:
+#                 # Rafraîchir immédiatement l'état
+#                 await self.coordinator.async_request_refresh()
+#             else:
+#                 _LOGGER.error("Failed to turn on %s", self._name)
+#         except Exception as e:
+#             _LOGGER.error("Error turning on %s: %s", self._name, e)

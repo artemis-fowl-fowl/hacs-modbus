@@ -1,0 +1,72 @@
+import logging
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+_LOGGER = logging.getLogger(__name__)
+
+class ISmartModbusBitEntity(ISmartModbusBase):
+    """Base class for bit-based Modbus entities."""
+
+    def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
+        super().__init__(coordinator, name, device_id, modbus_interface)
+        self._coil = self.decode_input(input)
+        self._bit_position = self.decode_output(output)
+
+    @property
+    def is_on(self):
+        state = self.coordinator.get_bit(
+            "outstate",
+            self._device_id,
+            self._bit_position,
+        )
+        return bool(state)
+
+class ISmartModbusBase(CoordinatorEntity):
+    """Base class for all iSMART Modbus entities."""
+
+    def __init__(self, coordinator, name, device_id, modbus_interface):
+        super().__init__(coordinator)
+        self._name = name
+        self._device_id = device_id
+        self._modbus = modbus_interface
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def available(self):
+        return self.coordinator.is_device_available(self._device_id)
+
+    async def _write_coil(self, coil, value):
+        """Write a Modbus coil and refresh state."""
+        try:
+            result = await self.hass.async_add_executor_job(
+                self._modbus.writecoil_device,
+                self._device_id,
+                coil,
+                value,
+            )
+            if result == 0:
+                await self.coordinator.async_request_refresh()
+            else:
+                _LOGGER.error("Modbus write failed on %s", self._name)
+        except Exception as e:
+            _LOGGER.error("Modbus error on %s: %s", self._name, e)
+
+    @staticmethod
+    def decode_input(string):
+        """Decode input like I1 / X1 to Modbus coil address."""
+        if string.startswith("I"):
+            return 0x0550 + int(string[1:]) - 1
+        if string.startswith("X"):
+            return 0x0560 + int(string[1:]) - 1
+        raise ValueError(f"Invalid input '{string}'")
+
+    @staticmethod
+    def decode_output(string):
+        """Decode output like Q1 / Y1 to bit position."""
+        if string.startswith("Q"):
+            return int(string[1:]) - 1
+        if string.startswith("Y"):
+            return 8 + int(string[1:]) - 1
+        raise ValueError(f"Invalid output '{string}'")
