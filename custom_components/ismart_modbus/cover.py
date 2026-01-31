@@ -1,13 +1,11 @@
 """Shutter platform for iSMART Modbus."""
 import logging
-from homeassistant.components.cover import CoverEntity
+from homeassistant.components.cover import CoverEntity, CoverDeviceClass, CoverState
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.components.cover import CoverEntity, CoverState
-
 from .const import DOMAIN, COVER_DEVICES
+from .base import ISmartModbusBitEntity  # base commune avec switch/light
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -17,181 +15,93 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up iSMART Modbus switches."""
+    """Set up iSMART Modbus covers."""
     entry_data = hass.data[DOMAIN][config_entry.entry_id]
     modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
 
-    entities = []
-    for device_info in COVER_DEVICES:
-        entities.append(
-            ISmartModbusCover(
-                coordinator=coordinator,
-                name=device_info["name"],
-                device_id=device_info["device_id"],
-                up=device_info["up"],
-                down=device_info["down"],
-                opening=device_info["opening"],
-                closing=device_info["closing"],
-                opened=device_info.get("opened"),
-                closed=device_info.get("closed"),
-                modbus_interface=modbus_interface,
-            )
+    entities = [
+        ISmartModbusCover(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev.get("opening"),
+            closing=dev.get("closing"),
+            opened=dev.get("opened"),
+            closed=dev.get("closed"),
+            modbus_interface=modbus_interface,
         )
+        for dev in COVER_DEVICES
+    ]
 
     async_add_entities(entities)
 
 
-class ISmartModbusCover(CoordinatorEntity, CoverEntity):
-    """Representation of an iSMART Modbus Cover."""
+class ISmartModbusCover(ISmartModbusBitEntity, CoverEntity):
+    """Representation of an iSMART Modbus cover (shutter)."""
 
-    def __init__(self, coordinator, name, device_id, up, down, opening, closing, opened, closed, device_class, modbus_interface):
-        """Initialize the switch."""
-        super().__init__(coordinator)
-        self._name = name
-        self._device_id = device_id
-        self._up_coil = self.decode_input(up)         # Trouve l'addresse du coil correspondant à l'entrée
-        self._down_coil = self.decode_input(down)     # Trouve l'addresse du coil correspondant à l'entrée
-        self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
-        """
-        if opening is None:
-            self._opening_flag_pos = self.guess_output(up)
-        else:
-            self._opening_flag_pos = self.decode_output(opening)    # Trouve la position du bit dans OUT_STATE
-        """
-        self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
-        """
-        if closing is None:
-            self._closing_flag_pos = self.guess_output(down)
-        else:
-            self._closing_flag_pos = self.decode_output(closing)    # Trouve la position du bit dans OUT_STATE
-        """
-        if opened is None:
-            self._opened_flag_pos = self._opening_flag_pos        # Si la position du flag de position "Mn" n'est pas définie on suppose qu'il est aligné avec la sortie "Qn" ou "Yn"
-        else:
-            self._opened_flag_pos = self.decode_output(opened)        # Trouve la position du bit dans MEM_STATE
-        
-        if closed is None:
-            self._closed_flag_pos = self._closing_flag_pos        # Si la position du flag de position "Mn" n'est pas définie on suppose qu'il est aligné avec la sortie "Qn" ou "Yn"
-        else:
-            self._closed_flag_pos = self.decode_output(closed)    # Trouve la position du bit dans MEM_STATE
-        self._device_class = device_class
-        self._modbus = modbus_interface
+    _attr_device_class = CoverDeviceClass.SHUTTER  # par défaut, peut être changé
 
-    @staticmethod
-    def decode_input(string):
-        """Return the Ismart coil address of an input string like "I1" or "X1" """
-        if string.startswith("I"):
-            return 0x550 + int(string[1:]) - 1
-        elif string.startswith("X"):
-            return 0x560 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"Input string '{string}' is invalid.")
+    def __init__(
+        self, coordinator, name, device_id, up, down,
+        opening=None, closing=None, opened=None, closed=None,
+        modbus_interface=None
+    ):
+        """Initialize the cover."""
+        super().__init__(coordinator, name, device_id, modbus_interface)
+        # Coils pour commandes
+        self._up_coil = self.decode_input(up)
+        self._down_coil = self.decode_input(down)
 
-    @staticmethod
-    def guess_output(string):
-        """Returns the bit position in the OUT_STATE value assuming that
-           the output is in line with the input (I1 -> Q1, X4 -> Y4). """
-        if string.startswith("I"):
-            return int(string[1:]) - 1
-        elif string.startswith("X   "):
-            return 8 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"output string '{string}' is invalid.")
-
-    @staticmethod
-    def decode_output(string):
-        """Returns the bit position in the OUT_STATE value for output string like "Q1" or "Y1" """
-        if string.startswith(("Q", "M")):
-            return int(string[1:]) - 1
-        elif string.startswith("Y"):
-            return 8 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"output string '{string}' is invalid.")
-
-    @property
-    def name(self):
-        """Return the name of the switch."""
-        return self._name
-
-    @property
-    def unique_id(self):
-        """Return a unique ID."""
-        return f"ismart_{self._device_id}_{self._up_coil}"
-
-    @property
-    def assumed_state(self) -> bool:
-        return False
-
-#2026-01-25 19:05:57.994 ERROR (MainThread) [homeassistant.components.cover] Error adding entity None for domain cover with platform ismart_modbus
-#  File "/config/custom_components/ismart_modbus/cover.py", line 184, in icon
-#  File "/config/custom_components/ismart_modbus/cover.py", line 124, in is_opening
+        # Flags pour état
+        self._opening_flag_pos = self.decode_output(opening) if opening else self._up_coil
+        self._closing_flag_pos = self.decode_output(closing) if closing else self._down_coil
+        self._opened_flag_pos = self.decode_output(opened) if opened else self._opening_flag_pos
+        self._closed_flag_pos = self.decode_output(closed) if closed else self._closing_flag_pos
 
     @property
     def is_opening(self):
-        """Return true if switch is on."""
-        # Récupérer l'état depuis le coordinateur
+        """Return True if the cover is opening."""
         state = self.coordinator.get_bit("outstate", self._device_id, self._opening_flag_pos)
-        return state if state is not None else False
+        return bool(state)
 
     @property
     def is_closing(self):
-        """Return true if switch is on."""
-        # Récupérer l'état depuis le coordinateur
+        """Return True if the cover is closing."""
         state = self.coordinator.get_bit("outstate", self._device_id, self._closing_flag_pos)
-        return state if state is not None else False
+        return bool(state)
+
+    @property
+    def is_open(self):
+        """Return True if cover is open."""
+        state = self.coordinator.get_bit("memstate", self._device_id, self._opened_flag_pos)
+        return bool(state)
 
     @property
     def is_closed(self):
-        """Return true if the shutter is up."""
-        # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit("memstate", self._device_id,  self._closed_flag_pos)
-        return state if state is not None else False
+        """Return True if cover is closed."""
+        state = self.coordinator.get_bit("memstate", self._device_id, self._closed_flag_pos)
+        return bool(state)
 
-    # is_open n'est pas une propriété native des entity cover.
-    # J'ai ajouté cette propriété pour pouvoir détecté l'état unknow
-    @property
-    def is_open(self):
-        """Return true if the shutter is up."""
-        # Récupérer l'état depuis le coordinateur
-        state = self.coordinator.get_bit("memstate", self._device_id, self._opened_flag_pos)
-        return state if state is not None else False
-    
-
-    # Par défaut le front end se charge de calculer state en fonction de is_opening, is_closing et is_close
-    # Mais il impose l'état OPEN par défaut.
-    # On gère donc ici la propriété "state" pour pouvoir imposer un état inconnu avec state = None quand la position est inconnue
-    # Cela permet entre autre de conserver la commande down qui se retrouve grisée si on est en état "OPEN"
     @property
     def state(self):
-        """Return the state of the cover."""
+        """Return the HA cover state."""
         if self.is_opening:
-            state = CoverState.OPENING
-        elif self.is_closing:
-            state = CoverState.CLOSING
-        elif self.is_closed:
-            state = CoverState.CLOSED
-        elif self.is_open:
-            state = CoverState.OPEN
-        else:
-            state = None
-        _LOGGER.debug(f"volet {self.name} state is {str(state)}")
-        return state
- 
-    @property
-    def available(self):
-        """Return if entity is available."""
-        return self.coordinator.is_device_available(self._device_id)
+            return CoverState.OPENING
+        if self.is_closing:
+            return CoverState.CLOSING
+        if self.is_closed:
+            return CoverState.CLOSED
+        if self.is_open:
+            return CoverState.OPEN
+        return None
 
     @property
     def icon(self) -> str | None:
-        """Return the icon."""
-        #if self._device_class == "cover":
-        #if not self.available:
-        #    return "mdi:window-shutter-alert"
-        if self.is_opening:
-            return "mdi:window-shutter-cog"
-        if self.is_closing:
+        """Return the icon for the cover."""
+        if self.is_opening or self.is_closing:
             return "mdi:window-shutter-cog"
         if self.is_closed:
             return "mdi:window-shutter"
@@ -199,57 +109,21 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             return "mdi:window-shutter-open"
         return "mdi:window-shutter-alert"
 
-
     async def async_open_cover(self, **kwargs):
-        """Open the cover."""
-        try:
-            result = await self.hass.async_add_executor_job(
-                self._modbus.writecoil_device,
-                self._device_id,
-                self._up_coil,
-                1
-            )
-            if result == 0:
-                _LOGGER.info("Switch %s turned on", self._name)
-                # Rafraîchir immédiatement l'état
-                await self.coordinator.async_request_refresh()
-            else:
-                _LOGGER.error("Failed to turn on %s", self._name)
-        except Exception as e:
-            _LOGGER.error("Error turning on %s: %s", self._name, e)
+        await self._write_coil(self._up_coil)
 
     async def async_close_cover(self, **kwargs):
-        """Turn the switch off."""
-        try:
-            result = await self.hass.async_add_executor_job(
-                self._modbus.writecoil_device,
-                self._device_id,
-                self._down_coil,
-                1  # Les automates attendent une impulsion (1) meme pour "off"
-            )
-            if result == 0:
-                _LOGGER.info("Switch %s turned off", self._name)
-                # Rafraîchir immédiatement l'état
-                await self.coordinator.async_request_refresh()
-            else:
-                _LOGGER.error("Failed to turn off %s", self._name)
-        except Exception as e:
-            _LOGGER.error("Error turning off %s: %s", self._name, e)
+        await self._write_coil(self._down_coil)
 
     async def async_stop_cover(self, **kwargs):
-        """Stop the cover using the up_coil or the down_coil."""
-        try:
-            #await self.coordinator.async_request_refresh()
-            if self.is_opening:
-                coil = self._up_coil
-            elif self.is_closing:
-                coil = self._down_coil
-            else:   #Si on est pas en mouvement il n'y a pas lieu de faire un stop
-                return
-            if await self.hass.async_add_executor_job(self._modbus.writecoil_device, self._device_id, coil, 1) == 0:
-                _LOGGER.info("Cover %s stopped", self._name)
-                await self.coordinator.async_request_refresh()  # Rafraîchir immédiatement l'état
-            else:
-                _LOGGER.error("Failed to stop cover %s", self._name)
-        except Exception as e:
-            _LOGGER.error("Error stopping %s: %s", self._name, e)
+        """Stop the cover by pulsing the active coil."""
+        coil = None
+        if self.is_opening:
+            coil = self._up_coil
+        elif self.is_closing:
+            coil = self._down_coil
+
+        if coil is None:
+            return  # pas de mouvement → rien à faire
+
+        await self._write_coil(coil)
