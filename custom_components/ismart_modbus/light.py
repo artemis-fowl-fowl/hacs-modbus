@@ -1,8 +1,5 @@
 from homeassistant.components.light import LightEntity
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.components.light import ColorMode
 
 from .base import ISmartModbusBitEntity
 from .const import DOMAIN, DEVICES
@@ -30,9 +27,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 class ISmartModbusLight(ISmartModbusBitEntity, LightEntity):
     """iSMART Modbus Light (on/off)."""
 
-    @property
-    def supported_features(self):
-        return 0  # On/Off only
+    _attr_supported_color_modes = {ColorMode.ONOFF}
+    _attr_color_mode = ColorMode.ONOFF
 
     async def async_turn_on(self, **kwargs):
         await self._write_coil(self._coil, 1)
