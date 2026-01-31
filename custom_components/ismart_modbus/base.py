@@ -3,22 +3,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-class ISmartModbusBitEntity(ISmartModbusBase):
-    """Base class for bit-based Modbus entities."""
-
-    def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
-        super().__init__(coordinator, name, device_id, modbus_interface)
-        self._coil = self.decode_input(input)
-        self._bit_position = self.decode_output(output)
-
-    @property
-    def is_on(self):
-        state = self.coordinator.get_bit(
-            "outstate",
-            self._device_id,
-            self._bit_position,
-        )
-        return bool(state)
 
 class ISmartModbusBase(CoordinatorEntity):
     """Base class for all iSMART Modbus entities."""
@@ -70,3 +54,20 @@ class ISmartModbusBase(CoordinatorEntity):
         if string.startswith("Y"):
             return 8 + int(string[1:]) - 1
         raise ValueError(f"Invalid output '{string}'")
+
+class ISmartModbusBitEntity(ISmartModbusBase):
+    """Base class for bit-based Modbus entities."""
+
+    def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
+        super().__init__(coordinator, name, device_id, modbus_interface)
+        self._coil = self.decode_input(input)
+        self._bit_position = self.decode_output(output)
+
+    @property
+    def is_on(self):
+        state = self.coordinator.get_bit(
+            "outstate",
+            self._device_id,
+            self._bit_position,
+        )
+        return bool(state)
