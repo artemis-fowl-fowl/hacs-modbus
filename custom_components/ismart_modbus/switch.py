@@ -7,7 +7,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .base import ISmartModbusBitEntity
-from .const import DOMAIN, SWITCH_DEVICES
+from .const import DOMAIN, DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +26,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             dev["output"],
             modbus,
         )
-        for dev in SWITCH_DEVICES
+        for dev in DEVICES
+        if dev["type"] == "switch"
     ]
 
     async_add_entities(entities)
