@@ -8,6 +8,16 @@ _LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(seconds=2)  # Lecture toutes les 10 secondes pour éviter saturation RS485
 
+# EM111 parameters
+START_ADDRESS = 0x04
+REGISTER_COUNT = 14
+
+POWER_ADDR = 0x04
+ENERGY_ADDR = 0x10
+
+
+def decode_uint32(registers: list[int], index: int) -> int:
+    return (registers[index] << 16) | registers[index + 1]
 
 class ISmartModbusCoordinator(DataUpdateCoordinator):
     """Coordinator to manage data updates from Modbus."""
@@ -15,30 +25,45 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, modbus_interface):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
+
+        self._em111_units = [10, 11, 12]
+        self._em111_index = 0
+        self._em111_data: dict[int, dict | None] = {uid: None for uid in self._em111_units}
+        
         super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
-        """Fetch data from Modbus."""
         try:
-            # Lecture d'état sur les 5 automates
+            # --- Lecture automates (TOUJOURS) ---
             outvalid, outstate, memstate = await self.hass.async_add_executor_job(
                 self.modbus_interface.readstate
             )
-            
-            _LOGGER.debug(
-                "Modbus state updated - valid: %s, outstate: %s, memstate: %s",
-                outvalid, outstate, memstate
-            )
-            
+
+            # --- Lecture EM111 (UN SEUL PAR CYCLE) ---
+            unit_id = self._em111_units[self._em111_index]
+
+            try:
+                em_data = await self.read_em111(unit_id)
+                self._em111_data[unit_id] = em_data
+                _LOGGER.debug("EM111 %s updated: %s", unit_id, em_data)
+            except Exception as err:
+                self._em111_data[unit_id] = None
+                _LOGGER.warning("EM111 %s unavailable: %s", unit_id, err)
+
+            # Rotation
+            self._em111_index = (self._em111_index + 1) % len(self._em111_units)
+
             return {
                 "outvalid": outvalid,
                 "outstate": outstate,
                 "memstate": memstate,
+                "em111": dict(self._em111_data),
             }
-            
+
         except Exception as err:
-            _LOGGER.error("Error fetching Modbus data: %s", err)
-            raise UpdateFailed(f"Error communicating with Modbus: {err}")
+            _LOGGER.error("Error fetching Modbus automates data: %s", err)
+            raise UpdateFailed(f"Automate Modbus failure: {err}")
+
 
     def get_bit(self, register: str, device_id: int, bit_position: int) -> bool | None:
         """
@@ -142,3 +167,23 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         
         outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
         return bool(outvalid[device_id - 1])
+
+    async def read_em111(self, unit_id: int) -> dict:
+        result = await self._modbus.read_holding_registers(
+            unit=unit_id,
+            address=START_ADDRESS,
+            count=REGISTER_COUNT,
+        )
+
+        regs = result.registers
+
+        power_index = POWER_ADDR - START_ADDRESS
+        energy_index = ENERGY_ADDR - START_ADDRESS
+
+        power_raw = decode_uint32(regs, power_index)
+        energy_raw = decode_uint32(regs, energy_index)
+
+        return {
+            "power_w": power_raw / 10,
+            "energy_kwh": energy_raw / 10,
+    }
