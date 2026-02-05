@@ -169,10 +169,11 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         return bool(outvalid[device_id - 1])
 
     async def read_em111(self, unit_id: int) -> dict:
-        result = await self._modbus.read_holding_registers(
-            unit=unit_id,
-            address=START_ADDRESS,
-            count=REGISTER_COUNT,
+        result = await self.hass.async_add_executor_job(
+            self.modbus_interface.read_holding_registers,
+            unit_id,
+            START_ADDRESS,
+            REGISTER_COUNT,
         )
 
         regs = result.registers
@@ -186,4 +187,5 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         return {
             "power_w": power_raw / 10,
             "energy_kwh": energy_raw / 10,
-    }
+        }
+
