@@ -232,6 +232,24 @@ class ModbusInterface:
         
         return (outvalid, outstate, memstate)
 
+    def readEM111(self) -> None:
+        """
+        Lit un EM111
+        """
+        import time  # Pour délais entre requêtes
+        
+        if not self.rs485:
+            _LOGGER.error('RS485 non connecté')
+            return None
+              
+        with self._lock:
+            data = readreg(self.rs485, 11, 0x00, 2)
+            if data == [-1]:
+                _LOGGER.warning('Echec lecture device 11')
+            else:
+                _LOGGER.warning(f'Device 11, address 0: {data}')
+        return None
+
     def read_holding_registers(self, unit_id: int, address: int, count: int) -> list[int] | None:
         """
         Read holding registers from EM111.

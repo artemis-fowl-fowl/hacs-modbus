@@ -3,6 +3,7 @@ import logging
 from datetime import timedelta
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+import time
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -32,6 +33,10 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
                 self.modbus_interface.readstate
             )
 
+            time.sleep(0.05)
+            await self.hass.async_add_executor_job(self.modbus_interface.readEM111)
+         
+            """
             # --- Lecture EM111 (UN SEUL PAR CYCLE) ---
             unit_id = self._em111_units[self._em111_index]
 
@@ -45,6 +50,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
 
             # Rotation
             self._em111_index = (self._em111_index + 1) % len(self._em111_units)
+            """
 
             return {
                 "outvalid": outvalid,
