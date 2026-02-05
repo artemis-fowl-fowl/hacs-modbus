@@ -238,6 +238,7 @@ class ModbusInterface:
         """
         import time  # Pour délais entre requêtes
         
+        time.sleep(0.05)
         if not self.rs485:
             _LOGGER.error('RS485 non connecté')
             return None
