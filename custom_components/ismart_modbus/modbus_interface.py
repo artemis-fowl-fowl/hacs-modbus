@@ -154,7 +154,7 @@ class ModbusInterface:
         """Initialize Modbus interface."""
         self.port = port
         self.baudrate = baudrate
-        self.timeout = 0.50                             # !!! Test !!
+        self.timeout = 0.1                             # !!! Test !!
         self.rs485: Optional[serial.Serial] = None
         self._lock = threading.Lock()  
 
@@ -244,12 +244,13 @@ class ModbusInterface:
             return None
               
         with self._lock:
-            data = readreg(self.rs485, 11, 0x00, 2)
+            data = readreg(self.rs485, 11, 0x04, 16)
             if data == [-1]:
                 _LOGGER.warning('Echec lecture device 11')
+                return None
             else:
                 _LOGGER.warning(f'Device 11, address 0: {data}')
-        return None
+        return data
 
     def read_holding_registers(self, unit_id: int, address: int, count: int) -> list[int] | None:
         """

@@ -32,8 +32,10 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
                 self.modbus_interface.readstate
             )
 
-            await self.hass.async_add_executor_job(self.modbus_interface.readEM111)
-         
+            data = await self.hass.async_add_executor_job(self.modbus_interface.readEM111)
+            self._em111_data[0] = data
+            self._em111_data[1] = data
+            self._em111_data[2] = data
             """
             # --- Lecture EM111 (UN SEUL PAR CYCLE) ---
             unit_id = self._em111_units[self._em111_index]
@@ -49,6 +51,9 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             # Rotation
             self._em111_index = (self._em111_index + 1) % len(self._em111_units)
             """
+            power = (data[0] <<16 + data[1]) / 10
+            energy = (data[14] <<16 + data[15]) / 10
+            _LOGGER.warning(f"Power: {power} W, Energy: {energy} kWh")
 
             return {
                 "outvalid": outvalid,
