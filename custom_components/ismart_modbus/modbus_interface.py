@@ -150,11 +150,11 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
 class ModbusInterface:
     """Gestion de l'interface Modbus RS485."""
     
-    def __init__(self, port: str, baudrate: int = 38400, timeout: float = 0.03):
+    def __init__(self, port: str, baudrate: int = 38400, timeout: float = 0.03):    
         """Initialize Modbus interface."""
         self.port = port
         self.baudrate = baudrate
-        self.timeout = timeout
+        self.timeout = 0.50                             # !!! Test !!
         self.rs485: Optional[serial.Serial] = None
         self._lock = threading.Lock()  
 
