@@ -231,3 +231,22 @@ class ModbusInterface:
         _LOGGER.debug("memstate: %s", memstate)
         
         return (outvalid, outstate, memstate)
+
+    def read_holding_registers(self, unit_id: int, address: int, count: int) -> list[int] | None:
+        """
+        Read holding registers from EM111.
+
+        Returns:
+            List of 16-bit registers or None if error
+        """
+        raw = readreg(self._link, unit_id, address, count)
+
+        if not raw or raw == [-1]:
+            return None
+
+        # Conversion octets -> mots 16 bits (big endian)
+        regs: list[int] = []
+        for i in range(0, len(raw), 2):
+            regs.append((raw[i] << 8) | raw[i + 1])
+
+        return regs
