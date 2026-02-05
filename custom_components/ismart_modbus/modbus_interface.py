@@ -239,7 +239,7 @@ class ModbusInterface:
         Returns:
             List of 16-bit registers or None if error
         """
-        raw = readreg(self._link, unit_id, address, count)
+        raw = readreg(self.rs485, unit_id, address, count)
 
         if not raw or raw == [-1]:
             return None
