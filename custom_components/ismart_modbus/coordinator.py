@@ -12,13 +12,6 @@ SCAN_INTERVAL = timedelta(seconds=2)  # Lecture toutes les 10 secondes pour évi
 START_ADDRESS = 0x04
 REGISTER_COUNT = 14
 
-POWER_ADDR = 0x04
-ENERGY_ADDR = 0x10
-
-
-def decode_uint32(registers: list[int], index: int) -> int:
-    return (registers[index] << 16) | registers[index + 1]
-
 class ISmartModbusCoordinator(DataUpdateCoordinator):
     """Coordinator to manage data updates from Modbus."""
 
@@ -169,23 +162,18 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         return bool(outvalid[device_id - 1])
 
     async def read_em111(self, unit_id: int) -> dict:
-        result = await self.hass.async_add_executor_job(
+        registers = await self.hass.async_add_executor_job(
             self.modbus_interface.read_holding_registers,
             unit_id,
             START_ADDRESS,
             REGISTER_COUNT,
         )
 
-        regs = result.registers
-
-        power_index = POWER_ADDR - START_ADDRESS
-        energy_index = ENERGY_ADDR - START_ADDRESS
-
-        power_raw = decode_uint32(regs, power_index)
-        energy_raw = decode_uint32(regs, energy_index)
+        power = (registers[0] <<16 + registers[1]) / 10
+        energy = (registers[14] <<16 + registers[15]) / 10
 
         return {
-            "power_w": power_raw / 10,
-            "energy_kwh": energy_raw / 10,
+            "power": power / 10,
+            "energy": energy / 10,
         }
 

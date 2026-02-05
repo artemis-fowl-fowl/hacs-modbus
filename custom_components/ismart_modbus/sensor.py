@@ -91,7 +91,7 @@ class ISmartEM111PowerSensor(ISmartEM111BaseSensor):
         em = data.get(self._unit_id)
         if not em:
             return None
-        return em.get("power_w")
+        return em.get("power")
 
 
 # -------------------------------------------------------------------
@@ -116,4 +116,4 @@ class ISmartEM111EnergySensor(ISmartEM111BaseSensor):
         em = data.get(self._unit_id)
         if not em:
             return None
-        return em.get("energy_kwh")
+        return em.get("energy")
