@@ -168,24 +168,47 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
         return bool(outvalid[device_id - 1])
 
-    async def read_em111(self, unit_id: int) -> dict:
-        result = await self.hass.async_add_executor_job(
-            self.modbus_interface.read_holding_registers,
+async def read_em111(self, unit_id: int) -> dict | None:
+    """
+    Lire les registres EM111 pour un compteur spécifique.
+    
+    Retourne :
+        {
+            "power_w": ...,
+            "energy_kwh": ...
+        } 
+    ou None si le compteur est inaccessible
+    """
+    try:
+        # Lecture en synchro dans un executor (bloquant)
+        regs = await self.hass.async_add_executor_job(
+            readreg,                  # fonction existante
+            self.modbus_interface._link,  # serial link existant
             unit_id,
             START_ADDRESS,
-            REGISTER_COUNT,
+            REGISTER_COUNT
         )
 
-        regs = result.registers
+        if not regs or regs == [-1]:
+            _LOGGER.warning("EM111 %d unavailable", unit_id)
+            return None
 
-        power_index = POWER_ADDR - START_ADDRESS
-        energy_index = ENERGY_ADDR - START_ADDRESS
+        # Conversion octets -> 16-bit
+        words: list[int] = []
+        for i in range(0, len(regs), 2):
+            words.append((regs[i] << 8) | regs[i + 1])
 
-        power_raw = decode_uint32(regs, power_index)
-        energy_raw = decode_uint32(regs, energy_index)
+        # Décodage 32 bits
+        power_raw = decode_uint32(words, POWER_ADDR - START_ADDRESS)
+        energy_raw = decode_uint32(words, ENERGY_ADDR - START_ADDRESS)
 
         return {
             "power_w": power_raw / 10,
-            "energy_kwh": energy_raw / 10,
+            "energy_kwh": energy_raw / 10
         }
+
+    except Exception as err:
+        _LOGGER.error("EM111 %d read failed: %s", unit_id, err)
+        return None
+
 
