@@ -52,7 +52,7 @@ class EM111BaseSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def name(self):
-        return self._name
+        return self._attr_name
 
     @property
     def available(self) -> bool:
