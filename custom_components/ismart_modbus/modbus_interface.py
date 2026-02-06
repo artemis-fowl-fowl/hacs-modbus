@@ -328,7 +328,7 @@ class ModbusInterface:
             return None
 
         voltage = regs[0] / 10
-        current = regs[2] / 100
+        current = regs[2] / 1000
         power = ((regs[5] << 16) + regs[4]) / 10
         power_dmd = ((regs[11] << 16) + regs[10]) / 10
         power_dmd_peak = ((regs[13] <<16) + regs[12]) / 10
