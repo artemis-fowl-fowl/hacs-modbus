@@ -14,7 +14,8 @@ from .coordinator import ISmartModbusCoordinator
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
 # Plates-formes supportées : switches, binary sensors (feedback), covers (template)
-PLATFORMS: Final = [Platform.LIGHT, Platform.SWITCH, Platform.COVER, Platform.SENSOR]
+PLATFORMS: Final = [Platform.LIGHT, Platform.SWITCH, Platform.COVER]
+#PLATFORMS: Final = [Platform.LIGHT, Platform.SWITCH, Platform.COVER, Platform.SENSOR]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Configurer l'intégration à partir d'une config entry."""
