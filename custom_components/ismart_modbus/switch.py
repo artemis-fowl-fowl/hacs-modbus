@@ -24,6 +24,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 class ISmartModbusSwitch(ISmartModbusBitEntity, SwitchEntity):
     """iSMART Modbus Switch."""
 
+    def __init__(self, coordinator, name: str, device_id: int, input_reg, output_reg, modbus):
+        super().__init__(coordinator, name, device_id, input_reg, output_reg, modbus)
+        self._attr_unique_id = f"switch_{device_id}_{name.lower()}"
+        self._attr_name = name
+
     async def async_turn_on(self, **kwargs):
         if self.is_on:
             return

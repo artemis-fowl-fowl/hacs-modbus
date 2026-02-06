@@ -30,6 +30,11 @@ class ISmartModbusLight(ISmartModbusBitEntity, LightEntity):
     _attr_supported_color_modes = {ColorMode.ONOFF}
     _attr_color_mode = ColorMode.ONOFF
 
+    def __init__(self, coordinator, name: str, device_id: int, input_reg, output_reg, modbus):
+        super().__init__(coordinator, name, device_id, input_reg, output_reg, modbus)
+        self._attr_unique_id = f"light_{device_id}_{name.lower()}"
+        self._attr_name = name
+
     async def async_turn_on(self, **kwargs):
         if self.is_on:
             return
