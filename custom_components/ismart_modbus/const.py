@@ -9,24 +9,31 @@ DEFAULT_NAME = "iSMART Modbus"
 CONF_SERIAL_PORT = "serial_port"
 CONF_BAUDRATE = "baudrate"
 CONF_TIMEOUT = "timeout"
-
 # Valeurs par défaut
 DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
 DEFAULT_BAUDRATE = 38400
 DEFAULT_TIMEOUT = 0.1  # Augmenté à 100ms pour éviter collisions RS485
 
-# Fonction pour décoder les chaînes en adresses
-def decode_input(input_str):
-    if input_str.startswith("I"):
-        return 0x550 + int(input_str[1:]) - 1
-    elif input_str.startswith("X"):
-        return 0x560 + int(input_str[1:]) - 1
-    else:
-        raise ValueError(f"Input string '{input_str}' non valide.")
-        
-# Exemple d'utilisation
-# print(decode_input("I1"))  # Renvoie 0x550
-# print(decode_input("X12"))  # Renvoie 0x56B
+""" EM111 registers:
+0x0000: Tension sur 32bits (Volts * 10)     (16bits auraient été suffisants car la tension ne pourra atteindre 6553.5V)
+0x0002: Courant sur 32bits (Ampères * 100)  (16bits auraient été suffisants car le courant ne pourra atteindre 655.35A)
+0x0004: Puissance sur 32bits (Watts * 10)
+0x0006: Puissance apparente sur 32bits (VA * 10)
+0x0008: Puissance réactive sur 32bits (VAR * 10)
+0x000A: Puissance moyenne sur 32bits (Watts * 10)
+0x000C: Puissance moyenne crête sur 32bits (Watts * 10)
+0x000E: Facteur de puissance sur 16bits (PF * 1000)
+0x000F: Fréquence sur 16bits (Hz * 10)
+0x0010: Energie totale sur 32bits (kWh * 10)
+0x0302: Version code sur 16bits (0 -> A)
+0x0303: Revision code sur 16bits (0 -> 0)
+"""
+EM111_DEVICES = [
+    {"name": "Panneaux solaires", "device_id": 10},
+    {"name": "Scooter", "device_id": 11},
+    #{"name": "ECS", "device_id": 12},
+    #{"name": "Zoé", "device_id": 13},
+]
 
 # Tous les dispositifs de la maison
 DEVICES = [

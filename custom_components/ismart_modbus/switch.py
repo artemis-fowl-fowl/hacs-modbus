@@ -14,14 +14,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     modbus = entry_data["modbus"]
 
     entities = [
-        ISmartModbusSwitch(
-            coordinator,
-            dev["name"],
-            dev["device_id"],
-            dev["input"],
-            dev["output"],
-            modbus,
-        )
+        ISmartModbusSwitch(coordinator, dev["name"], dev["device_id"], dev["input"], dev["output"], modbus)
         for dev in DEVICES
         if dev["type"] == "switch"
     ]

@@ -1,16 +1,15 @@
-"""Coordinator for iSMART Modbus integration."""
+"""Coordinator for iSMART Modbus integration (one EM111 per cycle)."""
+
 import logging
 from datetime import timedelta
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
+from .const import EM111_DEVICES
+
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=2)  # Lecture toutes les 10 secondes pour éviter saturation RS485
-
-# EM111 parameters
-START_ADDRESS = 0x04
-REGISTER_COUNT = 14
+SCAN_INTERVAL = timedelta(seconds=2)
 
 class ISmartModbusCoordinator(DataUpdateCoordinator):
     """Coordinator to manage data updates from Modbus."""
@@ -18,192 +17,74 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, modbus_interface):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
-
-        self._em111_units = [10, 11, 12]
-        self._em111_index = 0
-        self._em111_data: dict[int, dict | None] = {uid: None for uid in self._em111_units}
-        
+        self._em111_index = 0  # Pour tourner sur EM111_DEVICES
+        self._em111_data: dict[str, dict | None] = {dev["name"]: None for dev in EM111_DEVICES}
         super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
+        """Fetch data from automates and one EM111 per cycle."""
         try:
-            # --- Lecture automates (TOUJOURS) ---
+            # --- Lecture automates ---
             outvalid, outstate, memstate = await self.hass.async_add_executor_job(
                 self.modbus_interface.readstate
             )
 
-            data = await self.hass.async_add_executor_job(self.modbus_interface.readEM111)
-            self._em111_data[0] = data
-            self._em111_data[1] = data
-            self._em111_data[2] = data
-            """
-            # --- Lecture EM111 (UN SEUL PAR CYCLE) ---
-            unit_id = self._em111_units[self._em111_index]
+            # --- Lecture EM111 (un seul par cycle) ---
+            if EM111_DEVICES:
+                dev = EM111_DEVICES[self._em111_index]
+                name = dev["name"]
+                device_id = dev["device_id"]
 
-            Les données sont:
-            0x0000: Tension sur 32bits (Volts * 10)
-            0x0002: Courant sur 32bits (Ampères * 100)
-            0x0004: Puissance sur 32bits (Watts * 10)
-            0x0006: Puissance apparente sur 32bits (VA * 10)
-            0x0008: Puissance réactive sur 32bits (VAR * 10)
-            0x000A: Puissance moyenne sur 32bits (Watts * 10)
-            0x000C: Puissance moyenne crête sur 32bits (Watts * 10)
-            0x000E: Facteur de puissance sur 16bits (PF * 1000)
-            0x000F: Fréquence sur 16bits (Hz * 10)
-            0x0010: Energie totale sur 32bits (kWh * 10)
-            0x0302: Version code sur 16bits (0 -> A)
-            0x0303: Revision code sur 16bits (0 -> 0)
+                data = await self.hass.async_add_executor_job(
+                    self.modbus_interface.read_em111_device,
+                    device_id
+                )
+                self._em111_data[name] = data
 
-            try:
-                em_data = await self.read_em111(unit_id)
-                self._em111_data[unit_id] = em_data
-                _LOGGER.debug("EM111 %s updated: %s", unit_id, em_data)
-            except Exception as err:
-                self._em111_data[unit_id] = None
-                _LOGGER.warning("EM111 %s unavailable: %s", unit_id, err)
-
-            # Rotation
-            self._em111_index = (self._em111_index + 1) % len(self._em111_units)
-            """
-            _LOGGER.warning(f'Device 11 {data}')
-            voltage = data[0] / 10
-            current = data[2] / 100
-            power = ((data[5] << 16) + data[4]) / 10
-            power_dmd = ((data[11] << 16) + data[10]) / 10
-            power_dmd_peak = ((data[13] <<16) + data[12]) / 10
-            frequency = data[15] / 10
-            energy = ((data[17] << 16) + data[16]) / 10
-            _LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Energy: {energy} kWh")
+                # Rotation de l'index
+                self._em111_index = (self._em111_index + 1) % len(EM111_DEVICES)
 
             return {
                 "outvalid": outvalid,
                 "outstate": outstate,
                 "memstate": memstate,
-                #"em111": dict(self._em111_data),
-                "em111": data,
+                "em111": dict(self._em111_data)  # Tous les EM111 connus, certains peuvent être None
             }
 
         except Exception as err:
-            _LOGGER.error("Error fetching Modbus automates data: %s", err)
-            raise UpdateFailed(f"Automate Modbus failure: {err}")
+            _LOGGER.error("Error fetching Modbus data: %s", err)
+            raise UpdateFailed(f"Modbus failure: {err}")
 
-
+    # --- Méthodes utilitaires pour les automates (inchangées) ---
     def get_bit(self, register: str, device_id: int, bit_position: int) -> bool | None:
-        """
-        Get a bit from coordinator data.
-        
-        Args:
-            device_id: Slave ID (1-5)
-            address: Register address
-            bit: Bit position in the register (1-32)
-            
-        Returns:
-            True if bit 1, False if 0, None if unavailable
-        """
-        if register not in ("outstate", "memstate"):
-            _LOGGER.warning(f"get_bit called with invalid register: {register}")
+        if register not in ("outstate", "memstate") or not self.data:
             return None
-        
-        if not self.data:
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because data is None")
-            return None
-        
-        outvalid = self.data.get("outvalid")
-        if not isinstance(outvalid, (list, tuple)):
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because outvalid is invalid")
-            return None
-        
         index = device_id - 1
-        if not 0 <= index < len(outvalid):
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because device_id is out of range")
-            return None
-        
-        if not outvalid[index]:
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because device is not valid")
-            return None
-        
         states = self.data.get(register)
-        if not isinstance(states, (list, tuple)):
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because states is invalid")
+        if not isinstance(states, (list, tuple)) or index >= len(states):
             return None
-        
-        if index >= len(states):
-            _LOGGER.warning(f"get_bit {register}.{device_id}.{bit_position} returns None because index out of range")
+        state_word = states[index]
+        if bit_position not in range(16):
             return None
-
-        state_word = states[index]  # Récupérer l'état des sorties (outstate) ou mémoires (memstate) correspondant à l'automate
-        
-        if bit_position not in range (0,16):
-            _LOGGER.warning(f"bit position {bit_position} out of range (0,16) for state reading")
-            return None
-        
-        # Tester le bit
-        bit_value = (state_word >> bit_position) & 1
-        _LOGGER.debug(f"get_bit {register}.{device_id}.{bit_position} returns {bool(bit_value)}")
-        return bool(bit_value)
+        return bool((state_word >> bit_position) & 1)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
-        """
-        Get the state of a specific coil from coordinator data.
-        
-        Args:
-            device_id: Slave ID (1-5)
-            coil: Coil address (e.g., 0x2C02)
-            
-        Returns:
-            True if coil is ON, False if OFF, None if unavailable
-        """
         if not self.data:
             return None
-        
-        # Vérifier que l'automate est valide
         if device_id < 1 or device_id > 5:
             return None
-        
-        outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
+        outvalid = self.data.get("outvalid", [0]*5)
         if not outvalid[device_id - 1]:
             return None
-        
-        # Récupérer l'état des sorties (outstate)
-        outstate = self.data.get("outstate", [0, 0, 0, 0, 0])
+        outstate = self.data.get("outstate", [0]*5)
         state_word = outstate[device_id - 1]
-        
-        # Calculer le bit correspondant à la bobine
-        # Les coils 0x2C00-0x2C17 correspondent aux bits 0-23
         coil_offset = coil - 0x2C00
-        
         if coil_offset < 0 or coil_offset > 23:
-            _LOGGER.warning("Coil 0x%04X out of range for state reading", coil)
             return None
-        
-        # Tester le bit
-        bit_value = (state_word >> coil_offset) & 1
-        return bool(bit_value)
+        return bool((state_word >> coil_offset) & 1)
 
     def is_device_available(self, device_id: int) -> bool:
-        """Check if a device is available."""
-        if not self.data:
+        if not self.data or device_id < 1 or device_id > 5:
             return False
-        
-        if device_id < 1 or device_id > 5:
-            return False
-        
-        outvalid = self.data.get("outvalid", [0, 0, 0, 0, 0])
+        outvalid = self.data.get("outvalid", [0]*5)
         return bool(outvalid[device_id - 1])
-
-    async def read_em111(self, unit_id: int) -> dict:
-        registers = await self.hass.async_add_executor_job(
-            self.modbus_interface.read_holding_registers,
-            unit_id,
-            START_ADDRESS,
-            REGISTER_COUNT,
-        )
-
-        power = (registers[0] <<16 + registers[1]) / 10
-        energy = (registers[14] <<16 + registers[15]) / 10
-
-        return {
-            "power": power / 10,
-            "energy": energy / 10,
-        }
-

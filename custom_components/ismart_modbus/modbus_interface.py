@@ -305,35 +305,43 @@ class ModbusInterface:
         
         return (outvalid, outstate, memstate)
 
-    def readEM111(self) -> None:
+    def read_em111_device(self, slave: int) -> dict | None:
         """
-        Lit un EM111
-        Les données sont:
-        0x0000: Tension sur 32bits (Volts * 10)
-        0x0002: Courant sur 32bits (Ampères * 100)
-        0x0004: Puissance sur 32bits (Watts * 10)
-        0x0006: Puissance apparente sur 32bits (VA * 10)
-        0x0008: Puissance réactive sur 32bits (VAR * 10)
-        0x000A: Puissance moyenne sur 32bits (Watts * 10)
-        0x000C: Puissance moyenne crête sur 32bits (Watts * 10)
-        0x000E: Facteur de puissance sur 16bits (PF * 1000)
-        0x000F: Fréquence sur 16bits (Hz * 10)
-        0x0010: Energie totale sur 32bits (kWh * 10)
-        0x0302: Version code sur 16bits (0 -> A)
-        0x0303: Revision code sur 16bits (0 -> 0)
+        Lecture complète d’un compteur EM111
+
+        Args:
+            slave: adresse Modbus du compteur
+
+        Returns:
+            dict avec power (W) et energy (kWh) ou None si erreur
         """
-        import time  # Pour délais entre requêtes
-        
-        time.sleep(0.05)
         if not self.rs485:
-            _LOGGER.error('RS485 non connecté')
+            _LOGGER.error("RS485 non connecté")
             return None
-              
+
         with self._lock:
-            data = read_holding_registers(self.rs485, 11, 0x00, 18)
-            if data == [-1]:
-                _LOGGER.warning('Echec lecture device 11')
-                return None
-            else:
-                _LOGGER.warning(f'Device 11, address 0: {data}')
-        return data
+            regs = read_holding_registers(self.rs485, slave, 0x0000, 18)
+
+        # Le cas regs == [-1]  est à remplacer none dans read_holding_registers pour plus de clarté, mais on gère les deux cas pour l'instant
+        if regs == [-1] or regs == None or len(regs) < 18:
+            _LOGGER.warning("EM111 %s inaccessible", slave)
+            return None
+
+        voltage = regs[0] / 10
+        current = regs[2] / 100
+        power = ((regs[5] << 16) + regs[4]) / 10
+        power_dmd = ((regs[11] << 16) + regs[10]) / 10
+        power_dmd_peak = ((regs[13] <<16) + regs[12]) / 10
+        frequency = regs[15] / 10
+        energy = ((regs[17] << 16) + regs[16]) / 10
+        
+        _LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Frequency: {frequency}, Energy: {energy} kWh")
+
+        return {"voltage": voltage,                 # V
+                "current": current,                 # A
+                "power": power,                     # W
+                "power_dmd": power_dmd,             # W
+                "power_dmd_peak": power_dmd_peak,   # W
+                "frequency": frequency,             # Hz
+                "energy": energy,                   # kWh
+            }
