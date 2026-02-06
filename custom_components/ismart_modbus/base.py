@@ -65,7 +65,6 @@ class ISmartModbusBitEntity(ISmartModbusBase):
 
     @property
     def is_on(self):
-        _LOGGER.warning("Coordinator type: %s", type(self.coordinator))
         state = self.coordinator.get_bit(
             "outstate",
             self._device_id,
