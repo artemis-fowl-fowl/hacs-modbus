@@ -65,13 +65,13 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             # Rotation
             self._em111_index = (self._em111_index + 1) % len(self._em111_units)
             """
-            voltage = (data[0] <<16 + data[1]) / 10
-            current = (data[2] <<16 + data[3]) / 100
-            power = (data[4] <<16 + data[5]) / 10
-            power_dmd = (data[10] <<16 + data[11]) / 10
-            power_dmd_peak = (data[12] <<16 + data[13]) / 10
+            voltage = (data[1] << 16 + data[0]) / 10
+            current = (data[3] << 16 + data[2]) / 100
+            power = (data[5] << 16 + data[4]) / 10
+            power_dmd = (data[11] << 16 + data[10]) / 10
+            power_dmd_peak = (data[13] <<16 + data[12]) / 10
             frequency = data[15] / 10
-            energy = (data[16] <<16 + data[17]) / 10
+            energy = (data[17] << 16 + data[16]) / 10
             _LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Energy: {energy} kWh")
 
             return {
