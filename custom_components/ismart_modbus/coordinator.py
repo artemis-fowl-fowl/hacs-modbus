@@ -23,9 +23,9 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         # Initial data
         self.data = {
             "em111": {dev["name"]: None for dev in EM111_DEVICES},
-            "outvalid": [0][0][0][0][0],
-            "outstate": [0][0][0][0][0],
-            "memstate": [0][0][0][0][0],
+            "outvalid": [0, 0, 0, 0, 0],
+            "outstate": [0, 0, 0, 0, 0],
+            "memstate": [0, 0, 0, 0, 0],
         }
 
     async def _async_update_data(self):
