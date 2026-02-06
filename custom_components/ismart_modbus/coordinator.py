@@ -18,13 +18,11 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
         self._em111_index = 0
-        self._em111_index = 0  # Pour tourner sur EM111_DEVICES
-        self._em111_dict: dict[str, dict | None] = {dev["name"]: None for dev in EM111_DEVICES}
         super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
 
         # Initial data
         self.data = {
-            "em111": em111_dict,
+            "em111": {dev["name"]: None for dev in EM111_DEVICES},
             "outvalid": [0][0][0][0][0],
             "outstate": [0][0][0][0][0],
             "memstate": [0][0][0][0][0],
@@ -34,9 +32,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         """Fetch data from automates and one EM111 per cycle."""
         try:
             # --- Lecture automates ---
-            outvalid, outstate, memstate = await self.hass.async_add_executor_job(
-                self.modbus_interface.readstate
-            )
+            outvalid, outstate, memstate = await self.hass.async_add_executor_job(self.modbus_interface.readstate)
             self.data["outvalid"] = outvalid
             self.data["outstate"] = outstate
             self.data["memstate"] = memstate
