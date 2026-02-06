@@ -90,6 +90,79 @@ def readreg(link: serial.Serial, slave: int, reg: int, length: int) -> List[int]
     return trame[3:3 + 2 * length]
 
 
+def read_holding_registers(
+    link: serial.Serial,
+    slave: int,
+    reg: int,
+    length: int
+) -> list[int]:
+    """
+    Modbus Read Holding Registers (0x03)
+
+    Args:
+        link: lien série Modbus
+        slave: adresse esclave
+        reg: adresse du premier registre
+        length: nombre de registres 16 bits à lire
+
+    Returns:
+        Liste de mots 16 bits (int) ou [-1] en cas d'erreur
+    """
+    trame = [slave, 0x03, reg >> 8, reg & 0xFF, length >> 8, length & 0xFF]
+    crc = crc16(trame, 6)
+    trame.extend((crc & 0xFF, crc >> 8))
+
+    link.readline()
+    link.write(bytes(trame))
+
+    # Lecture en-tête
+    trame = list(link.read(3))
+    if len(trame) != 3:
+        _LOGGER.warning("read_holding_registers: incomplete header")
+        link.readline()
+        return [-1]
+
+    if trame[0] != slave:
+        _LOGGER.warning("read_holding_registers: slave mismatch")
+        link.readline()
+        return [-1]
+
+    if trame[1] != 0x03:
+        if trame[1] == 0x83:
+            _LOGGER.warning(
+                "read_holding_registers: Modbus exception %x", trame[2]
+            )
+        else:
+            _LOGGER.warning("read_holding_registers: function code error")
+        link.readline()
+        return [-1]
+
+    if trame[2] != 2 * length:
+        _LOGGER.warning("read_holding_registers: byte count error")
+        link.readline()
+        return [-1]
+
+    # Lecture données + CRC
+    trame += list(link.read(2 * length + 2))
+    if len(trame) != 2 * length + 5:
+        _LOGGER.warning("read_holding_registers: frame length error")
+        link.readline()
+        return [-1]
+
+    if crc16(trame, len(trame) - 2) != (trame[-1] << 8 | trame[-2]):
+        _LOGGER.warning("read_holding_registers: CRC error")
+        link.readline()
+        return [-1]
+
+    # Conversion octets -> mots 16 bits
+    data_bytes = trame[3:3 + 2 * length]
+    registers = []
+    for i in range(0, len(data_bytes), 2):
+        registers.append((data_bytes[i] << 8) | data_bytes[i + 1])
+
+    return registers
+
+
 def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
     """
     Modbus Write Single Coil (05H) operation.
@@ -235,6 +308,19 @@ class ModbusInterface:
     def readEM111(self) -> None:
         """
         Lit un EM111
+        Les données sont:
+        0x0000: Tension sur 32bits (Volts * 10)
+        0x0002: Courant sur 32bits (Ampères * 100)
+        0x0004: Puissance sur 32bits (Watts * 10)
+        0x0006: Puissance apparente sur 32bits (VA * 10)
+        0x0008: Puissance réactive sur 32bits (VAR * 10)
+        0x000A: Puissance moyenne sur 32bits (Watts * 10)
+        0x000C: Puissance moyenne crête sur 32bits (Watts * 10)
+        0x000E: Facteur de puissance sur 16bits (PF * 1000)
+        0x000F: Fréquence sur 16bits (Hz * 10)
+        0x0010: Energie totale sur 32bits (kWh * 10)
+        0x0302: Version code sur 16bits (0 -> A)
+        0x0303: Revision code sur 16bits (0 -> 0)
         """
         import time  # Pour délais entre requêtes
         
@@ -244,29 +330,10 @@ class ModbusInterface:
             return None
               
         with self._lock:
-            data = readreg(self.rs485, 11, 0x04, 16)
+            data = read_holding_registers(self.rs485, 11, 0x00, 18)
             if data == [-1]:
                 _LOGGER.warning('Echec lecture device 11')
                 return None
             else:
                 _LOGGER.warning(f'Device 11, address 0: {data}')
         return data
-
-    def read_holding_registers(self, unit_id: int, address: int, count: int) -> list[int] | None:
-        """
-        Read holding registers from EM111.
-
-        Returns:
-            List of 16-bit registers or None if error
-        """
-        raw = readreg(self.rs485, unit_id, address, count)
-
-        if not raw or raw == [-1]:
-            return None
-
-        # Conversion octets -> mots 16 bits (big endian)
-        regs: list[int] = []
-        for i in range(0, len(raw), 2):
-            regs.append((raw[i] << 8) | raw[i + 1])
-
-        return regs

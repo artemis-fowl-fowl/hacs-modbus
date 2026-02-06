@@ -40,6 +40,20 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             # --- Lecture EM111 (UN SEUL PAR CYCLE) ---
             unit_id = self._em111_units[self._em111_index]
 
+            Les données sont:
+            0x0000: Tension sur 32bits (Volts * 10)
+            0x0002: Courant sur 32bits (Ampères * 100)
+            0x0004: Puissance sur 32bits (Watts * 10)
+            0x0006: Puissance apparente sur 32bits (VA * 10)
+            0x0008: Puissance réactive sur 32bits (VAR * 10)
+            0x000A: Puissance moyenne sur 32bits (Watts * 10)
+            0x000C: Puissance moyenne crête sur 32bits (Watts * 10)
+            0x000E: Facteur de puissance sur 16bits (PF * 1000)
+            0x000F: Fréquence sur 16bits (Hz * 10)
+            0x0010: Energie totale sur 32bits (kWh * 10)
+            0x0302: Version code sur 16bits (0 -> A)
+            0x0303: Revision code sur 16bits (0 -> 0)
+
             try:
                 em_data = await self.read_em111(unit_id)
                 self._em111_data[unit_id] = em_data
@@ -51,15 +65,21 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             # Rotation
             self._em111_index = (self._em111_index + 1) % len(self._em111_units)
             """
-            power = (data[0] <<16 + data[1]) / 10
-            energy = (data[14] <<16 + data[15]) / 10
-            _LOGGER.warning(f"Power: {power} W, Energy: {energy} kWh")
+            voltage = (data[0] <<16 + data[1]) / 10
+            current = (data[2] <<16 + data[3]) / 100
+            power = (data[4] <<16 + data[5]) / 10
+            power_dmd = (data[10] <<16 + data[11]) / 10
+            power_dmd_peak = (data[12] <<16 + data[13]) / 10
+            frequency = data[15] / 10
+            energy = (data[16] <<16 + data[17]) / 10
+            _LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Energy: {energy} kWh")
 
             return {
                 "outvalid": outvalid,
                 "outstate": outstate,
                 "memstate": memstate,
-                "em111": dict(self._em111_data),
+                #"em111": dict(self._em111_data),
+                "em111": data,
             }
 
         except Exception as err:
