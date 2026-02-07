@@ -324,7 +324,7 @@ class ModbusInterface:
 
         # Le cas regs == [-1]  est à remplacer none dans read_holding_registers pour plus de clarté, mais on gère les deux cas pour l'instant
         if regs == [-1] or regs == None or len(regs) < 18:
-            _LOGGER.warning("EM111 %s inaccessible", slave)
+            #_LOGGER.warning("EM111 %s inaccessible", slave)
             return None
 
         voltage = regs[0] / 10
@@ -335,7 +335,7 @@ class ModbusInterface:
         frequency = regs[15] / 10
         energy = ((regs[17] << 16) + regs[16]) / 10
         
-        _LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Frequency: {frequency}, Energy: {energy} kWh")
+        #_LOGGER.warning(f"Voltage: {voltage}, Current: {current}, Power: {power} W, Frequency: {frequency}, Energy: {energy} kWh")
 
         return {"voltage": voltage,                 # V
                 "current": current,                 # A
