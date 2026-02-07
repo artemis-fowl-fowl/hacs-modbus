@@ -21,6 +21,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         # Initial data
         self.data = {
             "em111": {dev["name"]: None for dev in EM111_DEVICES},
+            "ismart": {i: None for i in [1,2,3,4,5]},
             "outvalid": [0, 0, 0, 0, 0],
             "outstate": [0, 0, 0, 0, 0],
             "memstate": [0, 0, 0, 0, 0],
@@ -34,6 +35,13 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             self.data["outvalid"] = outvalid
             self.data["outstate"] = outstate
             self.data["memstate"] = memstate
+
+            # Pour chacun des 5 automates
+            for i in range(0, 2):
+                ismart_data = await self.hass.async_add_executor_job(self.modbus_interface.read_ismart, i + 1])         # i + 1 est le device address. ON peut imaginer plus tard que celui-ci serait issu d'ailleurs
+                self.data["ismart"][i + 1] = ismart_data  # None si lecture échoue
+                if i == 0:
+                    _LOGGER.warning(f"outputs : {ismart_data["outputs"]}, m_registers : {ismart_data["m_registers"]}")
 
             # --- Lecture EM111 (un seul par cycle) ---
             dev = EM111_DEVICES[self._em111_index]

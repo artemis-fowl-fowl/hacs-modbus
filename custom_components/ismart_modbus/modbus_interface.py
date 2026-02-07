@@ -120,12 +120,12 @@ def read_holding_registers(
     if len(trame) != 3:
         _LOGGER.warning("read_holding_registers: incomplete header")
         link.readline()
-        return [-1]
+        return None
 
     if trame[0] != slave:
         _LOGGER.warning("read_holding_registers: slave mismatch")
         link.readline()
-        return [-1]
+        return None
 
     if trame[1] != 0x03:
         if trame[1] == 0x83:
@@ -135,24 +135,24 @@ def read_holding_registers(
         else:
             _LOGGER.warning("read_holding_registers: function code error")
         link.readline()
-        return [-1]
+        return None
 
     if trame[2] != 2 * length:
         _LOGGER.warning("read_holding_registers: byte count error")
         link.readline()
-        return [-1]
+        return None
 
     # Lecture données + CRC
     trame += list(link.read(2 * length + 2))
     if len(trame) != 2 * length + 5:
         _LOGGER.warning("read_holding_registers: frame length error")
         link.readline()
-        return [-1]
+        return None
 
     if crc16(trame, len(trame) - 2) != (trame[-1] << 8 | trame[-2]):
         _LOGGER.warning("read_holding_registers: CRC error")
         link.readline()
-        return [-1]
+        return None
 
     # Conversion octets -> mots 16 bits
     data_bytes = trame[3:3 + 2 * length]
@@ -305,16 +305,27 @@ class ModbusInterface:
         
         return (outvalid, outstate, memstate)
 
+    def read_ismart(self, slave: int) -> dict | None:
+        if not self.rs485:
+            _LOGGER.error('RS485 non connecté')
+            return None
+           
+        if not self.rs485:
+            _LOGGER.error("RS485 non connecté")
+            return None
+
+        with self._lock:
+            regs = read_holding_registers(self.rs485, slave, 0x0608, 12)
+
+        if regs == None or len(regs) < 18:
+            return None
+
+        m_registers = regs[0]                    # m_registers contient le valeur de tous les bits de mémoire (M1-M16)      
+        outputs = regs[11] + (regs[10] << 8)     # Output contient le valeur de tous les bits de sortie (Q1-Q8, Y1-Y8)
+
+        return {"outputs": outputs, "m_registers": m_registers}
+
     def read_em111_device(self, slave: int) -> dict | None:
-        """
-        Lecture complète d’un compteur EM111
-
-        Args:
-            slave: adresse Modbus du compteur
-
-        Returns:
-            dict avec power (W) et energy (kWh) ou None si erreur
-        """
         if not self.rs485:
             _LOGGER.error("RS485 non connecté")
             return None
@@ -322,9 +333,7 @@ class ModbusInterface:
         with self._lock:
             regs = read_holding_registers(self.rs485, slave, 0x0000, 18)
 
-        # Le cas regs == [-1]  est à remplacer none dans read_holding_registers pour plus de clarté, mais on gère les deux cas pour l'instant
-        if regs == [-1] or regs == None or len(regs) < 18:
-            #_LOGGER.warning("EM111 %s inaccessible", slave)
+        if regs == None or len(regs) < 18:
             return None
 
         voltage = regs[0] / 10
