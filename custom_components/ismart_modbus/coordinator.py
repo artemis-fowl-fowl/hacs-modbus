@@ -38,18 +38,19 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
 
             # Pour chacun des 5 automates
             for i in range(0, 2):
-                ismart_data = await self.hass.async_add_executor_job(self.modbus_interface.read_ismart, i + 1])         # i + 1 est le device address. ON peut imaginer plus tard que celui-ci serait issu d'ailleurs
+                ismart_data = await self.hass.async_add_executor_job(self.modbus_interface.read_ismart, i + 1)         # i + 1 est le device address. ON peut imaginer plus tard que celui-ci serait issu d'ailleurs
                 self.data["ismart"][i + 1] = ismart_data  # None si lecture échoue
                 if i == 0:
-                    _LOGGER.warning(f"outputs : {ismart_data["outputs"]}, m_registers : {ismart_data["m_registers"]}")
+                    _LOGGER.warning(f"outputs : {ismart_data['outputs']}, m_registers : {ismart_data['m_registers']}")
 
             # --- Lecture EM111 (un seul par cycle) ---
-            dev = EM111_DEVICES[self._em111_index]
-            em_data = await self.hass.async_add_executor_job(self.modbus_interface.read_em111_device, dev["device_id"])
-            self.data["em111"][dev["name"]] = em_data  # None si lecture échoue
-            #LOGGER.debug("EM111 %s updated: %s", dev["name"], em_data)
-            # Rotation
-            self._em111_index = (self._em111_index + 1) % len(EM111_DEVICES)
+            if EM111_DEVICES:   # On vérifie si la liste EM111_DEVICES existe et n'est pas vide pour éviter une division par zéro
+                dev = EM111_DEVICES[self._em111_index]
+                em_data = await self.hass.async_add_executor_job(self.modbus_interface.read_em111_device, dev["device_id"])
+                self.data["em111"][dev["name"]] = em_data  # None si lecture échoue
+                #LOGGER.debug("EM111 %s updated: %s", dev["name"], em_data)
+                # Rotation
+                self._em111_index = (self._em111_index + 1) % len(EM111_DEVICES)
 
             return self.data
 
@@ -62,6 +63,8 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         if register not in ("outstate", "memstate") or not self.data:
             return None
         index = device_id - 1
+        if index < 0 or index >= len(states):
+            return None
         states = self.data.get(register)
         if not isinstance(states, (list, tuple)) or index >= len(states):
             return None
