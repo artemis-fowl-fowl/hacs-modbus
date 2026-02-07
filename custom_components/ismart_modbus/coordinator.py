@@ -62,11 +62,9 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def get_bit(self, register: str, device_id: int, bit_position: int) -> bool | None:
         if register not in ("outstate", "memstate") or not self.data:
             return None
-        index = device_id - 1
-        if index < 0 or index >= len(states):
-            return None
         states = self.data.get(register)
-        if not isinstance(states, (list, tuple)) or index >= len(states):
+        index = device_id - 1
+        if not isinstance(states, (list, tuple)) or index < 0 or index >= len(states):
             return None
         state_word = states[index]
         if bit_position not in range(16):
