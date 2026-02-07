@@ -310,14 +310,10 @@ class ModbusInterface:
             _LOGGER.error('RS485 non connecté')
             return None
            
-        if not self.rs485:
-            _LOGGER.error("RS485 non connecté")
-            return None
-
         with self._lock:
             regs = read_holding_registers(self.rs485, slave, 0x0608, 12)
 
-        if regs == None or len(regs) < 18:
+        if regs == None or len(regs) < 12:
             return None
 
         m_registers = regs[0]                    # m_registers contient le valeur de tous les bits de mémoire (M1-M16)      
