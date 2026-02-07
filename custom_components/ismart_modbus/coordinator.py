@@ -5,11 +5,9 @@ from datetime import timedelta
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import EM111_DEVICES
+from .const import SCAN_INTERVAL, EM111_DEVICES
 
 _LOGGER = logging.getLogger(__name__)
-
-SCAN_INTERVAL = timedelta(seconds=2)
 
 class ISmartModbusCoordinator(DataUpdateCoordinator):
     """Coordinator to manage data updates from Modbus."""
@@ -18,7 +16,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         """Initialize the coordinator."""
         self.modbus_interface = modbus_interface
         self._em111_index = 0
-        super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=SCAN_INTERVAL)
+        super().__init__(hass, _LOGGER, name="iSMART Modbus", update_interval=timedelta(seconds=SCAN_INTERVAL))
 
         # Initial data
         self.data = {

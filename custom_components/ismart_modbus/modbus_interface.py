@@ -264,7 +264,7 @@ class ModbusInterface:
             return -1
         with self._lock:
             return writecoil(self.rs485, slave, coil, value)
-    
+
     def readstate(self) -> Tuple[List[int], List[int], List[int]]:
         """
         Lit l'état de tous les automates.

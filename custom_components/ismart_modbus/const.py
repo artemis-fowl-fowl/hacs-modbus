@@ -14,6 +14,8 @@ DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
 DEFAULT_BAUDRATE = 38400
 DEFAULT_TIMEOUT = 0.1  # Augmenté à 100ms pour éviter collisions RS485
 
+SCAN_INTERVAL = 2   # Intervalle de polling pour les automates et EM111
+
 """ EM111 registers:
 0x0000: Tension sur 32bits (Volts * 10)     (16bits auraient été suffisants car la tension ne pourra atteindre 6553.5V)
 0x0002: Courant sur 32bits (Ampères * 100)  (16bits auraient été suffisants car le courant ne pourra atteindre 655.35A)
