@@ -174,7 +174,7 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
         state: Coil state (1 or 0)
         
     Returns:
-        0 en cas de succès, -1 en cas d'erreur
+        True or False depending on the success of the operation
     """
     trame = [slave, 0x05, coil >> 8, coil & 0x00FF, state * 0xFF, 0x00]
     
@@ -191,12 +191,12 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
     ack = list(link.read(3))
     if len(ack) != 3:
         _LOGGER.warning('Cannot read the first three bytes')
-        return -1
+        return False
     
     if ack[0] != slave:
         _LOGGER.warning('Returned slave address error')
         link.readline()
-        return -1
+        return False
         
     if ack[1] != 0x05:
         if ack[1] == 0x85:
@@ -204,20 +204,20 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
         else:
             _LOGGER.warning('Returned function error')
         link.readline()
-        return -1
+        return False
 
     ack += list(link.read(5))
     if len(ack) != 8:
         _LOGGER.warning('Cannot read the entire frame')
         link.readline()
-        return -1
+        return False
     
     if ack != trame:
         _LOGGER.warning('Ack error')
-        return 0
+        return true
         
     _LOGGER.info('Ack OK')
-    return 0
+    return True
 
 
 class ModbusInterface:

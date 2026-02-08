@@ -27,6 +27,15 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             "memstate": [0, 0, 0, 0, 0],
         }
 
+    async def _async_update_ismart(self, device_id):
+        """Fetch data for a specific iSMART device."""
+        try:
+            ismart_data = await self.hass.async_add_executor_job(self.modbus_interface.read_ismart, device_id)
+            self.data["ismart"][device_id] = ismart_data  # None si lecture échoue
+            _LOGGER.info(f"Partial update for iSMART {device_id} -> outputs: {ismart_data['outputs']}, m_registers: {ismart_data['m_registers']}")
+        except Exception as err:
+            _LOGGER.error(f"Error fetching data for iSMART {device_id}: {err}")
+
     async def _async_update_data(self):
         """Fetch data from automates and one EM111 per cycle."""
         try:
@@ -85,8 +94,3 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             return False
         return True
 
-    def is_device_available1(self, device_id: int) -> bool:
-        if not self.data or device_id < 1 or device_id > 5:
-            return False
-        outvalid = self.data.get("outvalid", [0]*5)
-        return bool(outvalid[device_id - 1])

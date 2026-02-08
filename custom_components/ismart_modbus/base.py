@@ -24,14 +24,16 @@ class ISmartModbusBase(CoordinatorEntity):
     async def _write_coil(self, coil, value):
         """Write a Modbus coil and refresh state."""
         try:
-            result = await self.hass.async_add_executor_job(
+            if await self.hass.async_add_executor_job(
                 self._modbus.writecoil_device,
                 self._device_id,
                 coil,
                 value,
-            )
-            if result == 0:
-                await self.coordinator.async_request_refresh()
+            ) == True:
+                #await self.coordinator.async_request_refresh()
+                await self.coordinator._async_update_ismart(self._device_id)
+                # Notifier les entités dépendantes (mise à jour dans home assistant)
+                self.coordinator.async_update_listeners()
             else:
                 _LOGGER.error("Modbus write failed on %s", self._name)
         except Exception as e:
