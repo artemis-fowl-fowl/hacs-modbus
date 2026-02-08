@@ -214,15 +214,18 @@ class ISmartGarage(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-         _LOGGER.warning(f"is_opening computation, moving = {moving}")
-         return bool(moving and self._last_direction == "up")
+        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
+        _LOGGER.warning(f"is_opening computation, moving = {moving}")
+        return bool(moving and self._last_direction == "up")
+
 
     @property
     def is_closing(self) -> bool:
-         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-         _LOGGER.warning(f"is_closing computation, moving = {moving}")
-         return bool(moving and self._last_direction == "down")
+        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
+        _LOGGER.warning(f"is_closing computation, moving = {moving}")
+        #return bool(moving and self._last_direction == "down")
+        return True
+
 
     # A vérifier !!!!!!!
     @property
