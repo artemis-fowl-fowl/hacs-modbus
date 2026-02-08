@@ -31,8 +31,8 @@ async def async_setup_entry(
             down=dev["down"],
             opening=dev["opening"],
             closing=dev["closing"],
-            opening=dev["opened"],
-            closing=dev["closed"],
+            opened=dev["opened"],
+            closed=dev["closed"],
             modbus_interface=modbus_interface,
         )
         for dev in COVER_DEVICES
