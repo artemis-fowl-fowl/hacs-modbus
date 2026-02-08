@@ -216,6 +216,7 @@ class ISmartGarage(ISmartModbusCover):
         """Open the garage door."""
         if self.is_open or self.is_opening:
             return
+        await self._write_coil(self._up_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "up"
         #LOGGER.warning("Ouverture garage")
@@ -225,6 +226,7 @@ class ISmartGarage(ISmartModbusCover):
         """Close the garage door."""
         if self.is_closed or self.is_closing:
             return
+        await self._write_coil(self._down_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "down"
         #_LOGGER.warning("Fermeture garage")
@@ -235,7 +237,7 @@ class ISmartGarage(ISmartModbusCover):
         opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
         closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
         moving = not (opened or closed)
-        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
+        #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "up")
 
 
@@ -244,7 +246,7 @@ class ISmartGarage(ISmartModbusCover):
         opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
         closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
         moving = not (opened or closed)
-        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
+        #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "down")
 
 
