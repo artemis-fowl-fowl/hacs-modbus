@@ -21,36 +21,52 @@ async def async_setup_entry(
     modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
 
-    entities = [
-        ISmartGarage(
-            coordinator=coordinator,
-            name=dev["name"],
-            device_class=dev["type"],
-            device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
-            opened=dev["opened"],
-            closed=dev["closed"],
-            modbus_interface=modbus_interface,
-        )
-        if dev["type"] == "garage" else
-        ISmartModbusCover(
-            coordinator=coordinator,
-            name=dev["name"],
-            device_class=dev["type"],
-            device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
-            opened=dev["opened"],
-            closed=dev["closed"],
-            modbus_interface=modbus_interface,
-        )
-        for dev in COVER_DEVICES if "type" in dev and dev["type"]
-    ]
+entities = [
+    ISmartGarage(
+        coordinator=coordinator,
+        name=dev["name"],
+        device_class=dev["type"],
+        device_id=dev["device_id"],
+        up=dev["up"],
+        down=dev["down"],
+        opening=dev["opening"],
+        closing=dev["closing"],
+        opened=dev["opened"],
+        closed=dev["closed"],
+        modbus_interface=modbus_interface,
+    )
+    if dev["type"] == "garage" else
+
+    ISmartGate(
+        coordinator=coordinator,
+        name=dev["name"],
+        device_class=dev["type"],
+        device_id=dev["device_id"],
+        up=dev["up"],
+        down=dev["down"],
+        opening=dev["opening"],
+        closing=dev["closing"],
+        opened=dev["opened"],
+        closed=dev["closed"],
+        modbus_interface=modbus_interface,
+    )
+    if dev["type"] == "gate" else
+
+    ISmartModbusCover(
+        coordinator=coordinator,
+        name=dev["name"],
+        device_class=dev["type"],
+        device_id=dev["device_id"],
+        up=dev["up"],
+        down=dev["down"],
+        opening=dev["opening"],
+        closing=dev["closing"],
+        opened=dev["opened"],
+        closed=dev["closed"],
+        modbus_interface=modbus_interface,
+    )
+    for dev in COVER_DEVICES if "type" in dev and dev["type"]
+]
 
     async_add_entities(entities)
 
@@ -130,8 +146,9 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def is_closing(self) -> bool:
-        return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
-
+        #return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
+        return True
+    
     @property
     def is_open(self) -> bool:
         return bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
@@ -232,3 +249,50 @@ class ISmartGarage(ISmartModbusCover):
     def device_class(self) -> str:
         """Return the class of this device."""
         return "garage"
+    
+class ISmartGate(ISmartModbusCover):
+    """Representation of an iSMART Modbus gate."""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the gate entity."""
+        super().__init__(*args, **kwargs)
+        self._last_direction = None
+
+    async def async_open_cover(self, **kwargs):
+        """Open the gate."""
+        if self.is_open or self.is_opening:
+            return
+        if (await self._write_coil(self._up_coil) == True):
+            self._last_direction = "up"
+            _LOGGER.warning("Ouverture portail")
+        await self.coordinator.async_request_refresh()
+
+    async def async_close_cover(self, **kwargs):
+        """Close the garage door."""
+        if self.is_closed or self.is_closing:
+            return
+        if (await self._write_coil(self._up_coil) == True):
+            self._last_direction = "down"
+            _LOGGER.warning("Fermeture portail")
+        await self.coordinator.async_request_refresh()
+
+    @property
+    def is_opening(self) -> bool:
+        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
+        _LOGGER.warning(f"is_opening computation, moving = {moving}")
+        return bool(moving and self._last_direction == "up")
+
+
+    @property
+    def is_closing(self) -> bool:
+        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
+        _LOGGER.warning(f"is_closing computation, moving = {moving}")
+        #return bool(moving and self._last_direction == "down")
+        return True
+
+
+    # A vérifier !!!!!!!
+    @property
+    def device_class(self) -> str:
+        """Return the class of this device."""
+        return "gate"

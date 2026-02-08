@@ -133,5 +133,6 @@ COVER_DEVICES = [
 
     # Portail: commandes: Y4 ouverture partielle, Y3 ouvre / stop / ferme, demande vérouillage: X3
     #          retours: Run sur M01, Closed sur M2, Locked sur M3
+    {"name": "Portail", "device_id": 5, "up": "Y3", "down": "Y3", "opening": "M1", "closing": "M1", "opened": "M2", "closed": "M2", "type": "gate"},
 
 ]
