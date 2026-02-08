@@ -129,7 +129,7 @@ COVER_DEVICES = [
     
     # ===== DIVERS (Device 5) =====
     # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
-    {"name": "Garage", "device_id": 5, "up": "I5", "down": "I5", "opening": "Y2", "closing": "Y2", "opened": "M6", "closed": "M7", "type": "garage"},
+    {"name": "Garage", "device_id": 5, "move": "I5", "opened": "M6", "closed": "M7", "type": "garage"},
 
     # Portail: commandes: X4 ouverture partielle, X1 ouvre / stop / ferme, demande vérouillage: X3
     #          retours: Run sur M01, Closed sur M2, Locked sur M3

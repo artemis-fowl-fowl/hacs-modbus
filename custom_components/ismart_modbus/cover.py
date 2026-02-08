@@ -27,10 +27,12 @@ async def async_setup_entry(
             name=dev["name"],
             device_class=dev["type"],
             device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
+            move=dev["move"],
+            up=dev["move"],     # A supprimer pour le moment on peut pas
+            down=dev["move"],   # A supprimer pour le moment on peut pas
+            moving=dev["moving"],# A supprimer
+            opening=None, # A supprimer pour le moment on peut pas
+            closing=None, # A supprimer pour le moment on peut pas
             opened=dev["opened"],
             closed=dev["closed"],
             modbus_interface=modbus_interface,
@@ -207,16 +209,17 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 class ISmartGarage(ISmartModbusCover):
     """Representation of an iSMART Modbus garage door."""
 
-    def __init__(self, *args, **kwargs):
-        """Initialize the garage door entity."""
-        super().__init__(*args, **kwargs)
+    def __init__(self, coordinator, name, device_class, device_id, move, opened, closed, modbus_interface):
+        """Initialize the garage door."""
+        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
+        self._move_coil = self.decode_input(move)
         self._last_direction = None
-
+        
     async def async_open_cover(self, **kwargs):
         """Open the garage door."""
         if self.is_open or self.is_opening:
             return
-        await self._write_coil(self._up_coil)
+        await self._write_coil(self._move_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "up"
         #LOGGER.warning("Ouverture garage")
@@ -226,7 +229,7 @@ class ISmartGarage(ISmartModbusCover):
         """Close the garage door."""
         if self.is_closed or self.is_closing:
             return
-        await self._write_coil(self._down_coil)
+        await self._write_coil(self._move_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "down"
         #_LOGGER.warning("Fermeture garage")
@@ -248,7 +251,6 @@ class ISmartGarage(ISmartModbusCover):
         moving = not (opened or closed)
         #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "down")
-
 
     # A vérifier !!!!!!!
     @property
