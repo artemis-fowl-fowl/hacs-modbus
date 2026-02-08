@@ -131,8 +131,8 @@ COVER_DEVICES = [
     # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
     {"name": "Garage", "device_id": 5, "up": "I5", "down": "I5", "opening": "Y2", "closing": "Y2", "opened": "M6", "closed": "M7", "type": "garage"},
 
-    # Portail: commandes: Y4 ouverture partielle, Y3 ouvre / stop / ferme, demande vérouillage: X3
+    # Portail: commandes: X4 ouverture partielle, X1 ouvre / stop / ferme, demande vérouillage: X3
     #          retours: Run sur M01, Closed sur M2, Locked sur M3
-    {"name": "Portail", "device_id": 5, "up": "Y3", "down": "Y3", "opening": "M1", "closing": "M1", "opened": "M2", "closed": "M2", "type": "gate"},
+    {"name": "Portail", "device_id": 5, "up": "X1", "down": "X1", "opening": "M1", "closing": "M1", "opened": "M2", "closed": "M2", "type": "gate"},
 
 ]

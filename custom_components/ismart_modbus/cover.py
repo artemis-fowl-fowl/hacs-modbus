@@ -98,6 +98,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
         if device_class == 'garage':
             _attr_device_class = CoverDeviceClass.GARAGE
+        elif device_class == 'gate':
+            _attr_device_class = CoverDeviceClass.GATE
         else:
             _attr_device_class = CoverDeviceClass.SHUTTER
 
