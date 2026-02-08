@@ -38,12 +38,12 @@ class ISmartModbusLight(ISmartModbusBitEntity, LightEntity):
     async def async_turn_on(self, **kwargs):
         if self.is_on:
             return
-        await self._write_coil(self._coil, 1)
+        await self._write_coil(self._coil)
 
     async def async_turn_off(self, **kwargs):
         if not self.is_on:
             return
-        await self._write_coil(self._coil, 1)
+        await self._write_coil(self._coil)
 
     @property
     def icon(self):

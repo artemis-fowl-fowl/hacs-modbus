@@ -98,24 +98,16 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         else:
             raise ValueError(f"Output string '{string}' is invalid.")
 
-    async def _write_coil(self, coil, value):
+    async def _write_coil(self, coil, value: int = 1):
         """Write a Modbus coil and refresh state."""
         try:
-            if await self.hass.async_add_executor_job(
-                self._modbus.writecoil_device,
-                self._device_id,
-                coil,
-                value,
-            ) == True:
-                #await self.coordinator.async_request_refresh()
-                await self.coordinator._async_update_ismart(self._device_id)
-                # Notifier les entités dépendantes (mise à jour dans home assistant)
-                self.coordinator.async_update_listeners()
+            if await self.hass.async_add_executor_job(self._modbus.writecoil_device, self._device_id, coil, value) == True:
+                await self.coordinator._async_update_ismart(self._device_id)        # Refresh partiel pour cet automate
+                self.coordinator.async_update_listeners()                           # Force la mise à jour dans home assistant
             else:
                 _LOGGER.error("Modbus write failed on %s", self._name)
         except Exception as e:
             _LOGGER.error("Modbus error on %s: %s", self._name, e)
-
 
     @property
     def name(self) -> str:
