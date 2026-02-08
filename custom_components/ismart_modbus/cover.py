@@ -39,11 +39,9 @@ async def async_setup_entry(
             name=dev["name"],
             device_class=dev["type"],
             device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
-            opened=dev["opened"],
+            move=dev["move"],
+            lock=dev["lock"],
+            partial=dev["partial"],
             closed=dev["closed"],
             modbus_interface=modbus_interface,
         )
@@ -254,49 +252,43 @@ class ISmartGarage(ISmartModbusCover):
 class ISmartGate(ISmartModbusCover):
     """Representation of an iSMART Modbus gate."""
 
-    def __init__(self, *args, **kwargs):
-        """Initialize the gate entity."""
-        super().__init__(*args, **kwargs)
+    def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, closed, modbus_interface):
+        """Initialize the gate"""
+        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, closed, modbus_interface)
+        self._move_coil = self.decode_input(move)
+        self._lock_coil = self.decode_input(lock)
+        self._partial_coil = self.decode_input(partial)
         self._last_direction = None
+        _attr_device_class = CoverDeviceClass.GARAGE
+        _LOGGER.warning("Initialisation garage")
 
     async def async_open_cover(self, **kwargs):
         """Open the gate."""
         if self.is_open or self.is_opening:
             return
-        if (await self._write_coil(self._up_coil) == True):
-            self._last_direction = "up"
-            _LOGGER.warning("Ouverture portail")
+        await self._write_coil(self._move_coil)
+        self._last_direction = "opening"
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
         """Close the garage door."""
         if self.is_closed or self.is_closing:
             return
-        if (await self._write_coil(self._up_coil) == True):
-            self._last_direction = "down"
-            _LOGGER.warning("Fermeture portail")
+        await self._write_coil(self._move_coil)
+        self._last_direction = "closing"
         await self.coordinator.async_request_refresh()
 
     @property
-    def is_closed(self) -> bool:
-        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
-        moving = bool(self.coordinator.get_bit(self._device_id, self._opening_flag))
-        return not (moving or opened)
+    def is_open(self) -> bool:
+        return not self.is_closed
 
     @property
     def is_opening(self) -> bool:
-        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        #_LOGGER.warning(f"is_opening computation, moving = {moving}")
-        return bool(moving and self._last_direction == "up")
-
+        return False    # Pour l'instant je n'ai pas d'indicateur
 
     @property
     def is_closing(self) -> bool:
-        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        #_LOGGER.warning(f"is_closing computation, moving = {moving}")
-        #return bool(moving and self._last_direction == "down")
-        return True
-
+        return False    # Pour l'instant je n'ai pas d'indicateur
 
     # A vérifier !!!!!!!
     @property
