@@ -113,6 +113,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     @staticmethod
     def decode_input(string: str) -> int:
         """Return the Ismart coil address of an input string like "I1" or "X1"."""
+        if string is None:
+            return None
         if string.startswith("I"):
             return 0x0550 + int(string[1:]) - 1
         elif string.startswith("X"):
