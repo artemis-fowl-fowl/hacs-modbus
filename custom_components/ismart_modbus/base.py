@@ -41,21 +41,11 @@ class ISmartModbusBase(CoordinatorEntity):
             return 0x0560 + int(string[1:]) - 1
         raise ValueError(f"Invalid input '{string}'")
 
-    @staticmethod
-    def decode_output(string):
-        """Decode output like Q1 / Y1 to bit position."""
-        if string.startswith("Q"):
-            return int(string[1:]) - 1
-        if string.startswith("Y"):
-            return 8 + int(string[1:]) - 1
-        raise ValueError(f"Invalid output '{string}'")
-
 class ISmartModbusBitEntity(ISmartModbusBase):
     """Base class for bit-based Modbus entities."""
     def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
         super().__init__(coordinator, name, device_id, modbus_interface)
         self._coil = self.decode_input(input)
-        #self._bit_position = self.decode_output(output)
         self._state_flag = output
 
     @property

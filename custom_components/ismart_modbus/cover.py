@@ -105,17 +105,6 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 
-    #### Methode à sortir de cette classe pour être utilisée dans les autres entités (switch, light) et éviter la duplication de code
-    @staticmethod
-    def decode_output(string: str) -> int:
-        """Return the bit position in the OUT_STATE or MEM_STATE for an output string like "Q1" or "M1"."""
-        if string.startswith(("Q", "M")):
-            return int(string[1:]) - 1
-        elif string.startswith("Y"):
-            return 8 + int(string[1:]) - 1
-        else:
-            raise ValueError(f"Output string '{string}' is invalid.")
-
     async def _write_coil(self, coil, value: int = 1):
         """Write a Modbus coil and refresh state."""
         try:
@@ -203,8 +192,6 @@ class ISmartGarage(ISmartModbusCover):
     def __init__(self, *args, **kwargs):
         """Initialize the garage door entity."""
         super().__init__(*args, **kwargs)
-        #self._is_opening = False
-        #self._is_closing = False
         self._last_direction = None
 
     async def async_open_cover(self, **kwargs):
@@ -227,13 +214,11 @@ class ISmartGarage(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, self._opening_flag) and self._last_direction == "up"
-        return bool(state)
+         return bool(self.coordinator.get_bit(self._device_id, self._opening_flag) and self._last_direction == "up")
 
     @property
     def is_closing(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, self._closing_flag) and self._last_direction == "down"
-        return bool(state)
+        return bool(self.coordinator.get_bit(self._device_id, self._closing_flag) and self._last_direction == "down")
 
     # A vérifier !!!!!!!
     @property
