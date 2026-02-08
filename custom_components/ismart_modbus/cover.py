@@ -123,22 +123,22 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def is_opening(self) -> bool:
-        state = self.coordinator.get_bit("outstate", self._device_id, self._opening_flag_pos)
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._opening_flag_pos)
         return bool(state)
 
     @property
     def is_closing(self) -> bool:
-        state = self.coordinator.get_bit("outstate", self._device_id, self._closing_flag_pos)
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._closing_flag_pos)
         return bool(state)
 
     @property
     def is_open(self) -> bool:
-        state = self.coordinator.get_bit("memstate", self._device_id, self._opened_flag_pos)
+        state = self.coordinator.get_bit(self._device_id, "m_registers", self._opened_flag_pos)
         return bool(state)
 
     @property
     def is_closed(self) -> bool:
-        state = self.coordinator.get_bit("memstate", self._device_id, self._closed_flag_pos)
+        state = self.coordinator.get_bit(self._device_id, "m_registers", self._closed_flag_pos)
         return bool(state)
 
     @property

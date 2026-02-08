@@ -65,9 +65,5 @@ class ISmartModbusBitEntity(ISmartModbusBase):
 
     @property
     def is_on(self):
-        state = self.coordinator.get_bit(
-            "outstate",
-            self._device_id,
-            self._bit_position,
-        )
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._bit_position)
         return bool(state)

@@ -58,7 +58,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Modbus failure: {err}")
 
     # --- Méthodes utilitaires pour les automates (inchangées) ---
-    def get_bit(self, register: str, device_id: int, bit_position: int) -> bool | None:
+    def get_bit1(self, register: str, device_id: int, bit_position: int) -> bool | None:
         if register not in ("outstate", "memstate") or not self.data:
             return None
         states = self.data.get(register)
@@ -69,6 +69,25 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         if bit_position not in range(16):
             return None
         return bool((state_word >> bit_position) & 1)
+
+    def get_bit(self, device_id: int, register: str, bit_position: int) -> bool | None:
+        """Get the state of a specific bit in the given register for a specific device."""
+        # Vérification de l'existence des données pour le device_id
+        if device_id not in self.data["ismart"]:
+            return None
+
+        # Récupération des données du device_id
+        device_data = self.data["ismart"][device_id]
+        if not device_data or register not in device_data:
+            return None
+
+        # Vérification de la validité de la position du bit
+        if bit_position not in range(16):
+            return None
+
+        # Récupération de la valeur du registre et extraction du bit
+        register_value = device_data[register]
+        return bool((register_value >> bit_position) & 1)
 
     def get_coil_state(self, device_id: int, coil: int) -> bool | None:
         if not self.data:
