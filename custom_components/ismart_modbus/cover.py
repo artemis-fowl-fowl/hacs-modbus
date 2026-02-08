@@ -221,7 +221,7 @@ class ISmartGarage(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, "outputs", self._opening_flag_pos) and self._last_direction = "up"
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._opening_flag_pos) and self._last_direction == "up"
         return bool(state)
 
     @property
