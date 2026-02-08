@@ -37,6 +37,8 @@ EM111_DEVICES = [
     #{"name": "Zoé", "device_id": 13},
 ]
 
+ISMART_DEVICES = [1,2,3,4,5]    # device id des 5 automates iSMART.
+
 # Tous les dispositifs de la maison
 DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
