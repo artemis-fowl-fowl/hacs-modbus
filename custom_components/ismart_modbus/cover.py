@@ -31,8 +31,8 @@ async def async_setup_entry(
             down=dev["down"],
             opening=dev["opening"],
             closing=dev["closing"],
-            opened=dev.get("opened"),
-            closed=dev.get("closed"),
+            opening=dev["opened"],
+            closing=dev["closed"],
             modbus_interface=modbus_interface,
         )
         for dev in COVER_DEVICES
@@ -54,8 +54,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         down: str,
         opening: str,
         closing: str,
-        opened: str | None = None,
-        closed: str | None = None,
+        opened: str,
+        closed: str,
         modbus_interface=None,
     ):
         """Initialize the cover."""
