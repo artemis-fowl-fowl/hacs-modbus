@@ -90,7 +90,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
 
         raise ValueError(f"Invalid bit_name '{string}': Unable to resolve register type")
 
-    def get_bit2(self, device_id: int, bit_name: int) -> bool | None:
+    def get_bit2(self, device_id: int, bit_name: str) -> bool | None:
         """Get the state of a specific bit in the given register for a specific device."""
         # Vérification de l'existence des données pour le device_id
         if device_id not in self.data["ismart"]:
