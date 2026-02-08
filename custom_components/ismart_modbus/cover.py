@@ -28,11 +28,6 @@ async def async_setup_entry(
             device_class=dev["type"],
             device_id=dev["device_id"],
             move=dev["move"],
-            up=dev["move"],     # A supprimer pour le moment on peut pas
-            down=dev["move"],   # A supprimer pour le moment on peut pas
-            moving=dev["moving"],# A supprimer
-            opening=None, # A supprimer pour le moment on peut pas
-            closing=None, # A supprimer pour le moment on peut pas
             opened=dev["opened"],
             closed=dev["closed"],
             modbus_interface=modbus_interface,
@@ -214,7 +209,7 @@ class ISmartGarage(ISmartModbusCover):
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
         self._last_direction = None
-        
+
     async def async_open_cover(self, **kwargs):
         """Open the garage door."""
         if self.is_open or self.is_opening:
