@@ -148,8 +148,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def is_closing(self) -> bool:
-        #return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
-        return True
+        return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
     
     @property
     def is_open(self) -> bool:
