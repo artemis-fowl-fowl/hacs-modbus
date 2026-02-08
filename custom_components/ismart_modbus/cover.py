@@ -277,6 +277,12 @@ class ISmartGate(ISmartModbusCover):
         await self.coordinator.async_request_refresh()
 
     @property
+    def is_closed(self) -> bool:
+        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag)
+        moving = bool(self.coordinator.get_bit(self._device_id, self._opening_flag)
+        return not (moving or opened)
+
+    @property
     def is_opening(self) -> bool:
         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
         _LOGGER.warning(f"is_opening computation, moving = {moving}")
