@@ -21,37 +21,41 @@ async def async_setup_entry(
     modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
 
-    entities = [
-        ISmartModbusCover(
-            coordinator=coordinator,
-            name=dev["name"],
-            device_class=dev["type"],
-            device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
-            opened=dev["opened"],
-            closed=dev["closed"],
-            modbus_interface=modbus_interface,
-        ) 
-        for dev in COVER_DEVICES if dev["type"] == ["shutter"],
-        ISmartGarage(
-            coordinator=coordinator,
-            name=dev["name"],
-            device_class=dev["type"],
-            device_id=dev["device_id"],
-            up=dev["up"],
-            down=dev["down"],
-            opening=dev["opening"],
-            closing=dev["closing"],
-            opened=dev["opened"],
-            closed=dev["closed"],
-            modbus_interface=modbus_interface,
-        ) 
-        for dev in COVER_DEVICES if dev["type"] == ["garage"]
-    ]
-
+entities = []
+for dev in COVER_DEVICES:
+    if "type" in dev and dev["type"]:  # Vérifie que "type" existe et n'est pas vide
+        if dev["type"] == "garage":
+            entities.append(
+                ISmartGarage(
+                    coordinator = coordinator,
+                    name=dev["name"],
+                    device_class=dev["type"],
+                    device_id=dev["device_id"],
+                    up=dev["up"],
+                    down=dev["down"],
+                    opening=dev["opening"],
+                    closing=dev["closing"],
+                    opened=dev["opened"],
+                    closed=dev["closed"],
+                    modbus_interface = modbus_interface,
+                )
+            )
+        else:
+            entities.append(
+                ISmartModbusCover(
+                    coordinator=coordinator,
+                    name=dev["name"],
+                    device_class=dev["type"],
+                    device_id=dev["device_id"],
+                    up=dev["up"],
+                    down=dev["down"],
+                    opening=dev["opening"],
+                    closing=dev["closing"],
+                    opened=dev["opened"],
+                    closed=dev["closed"],
+                    modbus_interface=modbus_interface,
+                )
+            )
     async_add_entities(entities)
 
 
