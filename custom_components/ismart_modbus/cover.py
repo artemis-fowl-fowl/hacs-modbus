@@ -196,7 +196,7 @@ class ISmartGarage(ISmartModbusCover):
 
     async def async_open_cover(self, **kwargs):
         """Open the garage door."""
-        if self.is_opened or self.is_opening:
+        if self.is_open or self.is_opening:
             return
         if (await self._write_coil(self._up_coil) == True):
             self._last_direction = "up"
