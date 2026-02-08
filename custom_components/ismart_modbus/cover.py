@@ -133,19 +133,19 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def is_opening(self) -> bool:
-        return bool(self.coordinator.get_bit2(self._device_id, self._opening_flag))
+        return bool(self.coordinator.get_bit(self._device_id, self._opening_flag))
 
     @property
     def is_closing(self) -> bool:
-        return bool(self.coordinator.get_bit2(self._device_id, self._closing_flag))
+        return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
 
     @property
     def is_open(self) -> bool:
-        return bool(self.coordinator.get_bit2(self._device_id, self._opened_flag))
+        return bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
 
     @property
     def is_closed(self) -> bool:
-        return bool(self.coordinator.get_bit2(self._device_id, self._closed_flag))
+        return bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
 
     @property
     def state(self):
@@ -221,12 +221,12 @@ class ISmartGarage(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        state = self.coordinator.get_bit2(self._device_id, self._opening_flag) and self._last_direction == "up"
+        state = self.coordinator.get_bit(self._device_id, self._opening_flag) and self._last_direction == "up"
         return bool(state)
 
     @property
     def is_closing(self) -> bool:
-        state = self.coordinator.get_bit2(self._device_id, self._closing_flag) and self._last_direction == "down"
+        state = self.coordinator.get_bit(self._device_id, self._closing_flag) and self._last_direction == "down"
         return bool(state)
 
     # A vérifier !!!!!!!

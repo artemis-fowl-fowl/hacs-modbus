@@ -60,4 +60,4 @@ class ISmartModbusBitEntity(ISmartModbusBase):
 
     @property
     def is_on(self):
-        return bool(self.coordinator.get_bit2(self._device_id, self._state_flag))
+        return bool(self.coordinator.get_bit(self._device_id, self._state_flag))
