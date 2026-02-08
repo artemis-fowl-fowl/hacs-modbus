@@ -132,7 +132,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def unique_id(self) -> str:
-        return f"ismart_cover_{self._device_id}_{self._up_coil}"
+        return f"ismart_cover_{self._name.lower()}"
 
     @property
     def is_opening(self) -> bool:
