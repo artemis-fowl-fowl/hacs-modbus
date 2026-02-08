@@ -34,8 +34,22 @@ async def async_setup_entry(
             opened=dev["opened"],
             closed=dev["closed"],
             modbus_interface=modbus_interface,
-        )
-        for dev in COVER_DEVICES
+        ) 
+        for dev in COVER_DEVICES if dev["type"] == ["shutter"],
+        ISmartGarage(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        ) 
+        for dev in COVER_DEVICES if dev["type"] == ["garage"]
     ]
 
     async_add_entities(entities)
@@ -205,18 +219,20 @@ class ISmartGarage(ISmartModbusCover):
 
     async def async_open_cover(self, **kwargs):
         """Open the garage door."""
-        if self.is_opened:
+        if self.is_opened or self.is_opening:
             return
         if (await self._modbus_interface.write_coil(self._up_coil) == True):
             self._last_direction = "up"
+            _LOGGER.warning("Ouverture garage")
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
         """Close the garage door."""
-        if self.is_closed:
+        if self.is_closed or self.is_closing:
             return
         if (await self._modbus_interface.write_coil(self._down_coil) == True):
             self._last_direction = "down"
+            _LOGGER.warning("Fermeture garage")
         await self.coordinator.async_request_refresh()
 
     @property
