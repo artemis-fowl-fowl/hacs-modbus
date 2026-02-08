@@ -21,41 +21,37 @@ async def async_setup_entry(
     modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
 
-entities = []
-for dev in COVER_DEVICES:
-    if "type" in dev and dev["type"]:  # Vérifie que "type" existe et n'est pas vide
-        if dev["type"] == "garage":
-            entities.append(
-                ISmartGarage(
-                    coordinator = coordinator,
-                    name=dev["name"],
-                    device_class=dev["type"],
-                    device_id=dev["device_id"],
-                    up=dev["up"],
-                    down=dev["down"],
-                    opening=dev["opening"],
-                    closing=dev["closing"],
-                    opened=dev["opened"],
-                    closed=dev["closed"],
-                    modbus_interface = modbus_interface,
-                )
-            )
-        else:
-            entities.append(
-                ISmartModbusCover(
-                    coordinator=coordinator,
-                    name=dev["name"],
-                    device_class=dev["type"],
-                    device_id=dev["device_id"],
-                    up=dev["up"],
-                    down=dev["down"],
-                    opening=dev["opening"],
-                    closing=dev["closing"],
-                    opened=dev["opened"],
-                    closed=dev["closed"],
-                    modbus_interface=modbus_interface,
-                )
-            )
+    entities = [
+        ISmartGarage(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        )
+        if dev["type"] == "garage" else
+        ISmartModbusCover(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        )
+        for dev in COVER_DEVICES if "type" in dev and dev["type"]
+    ]
+
     async_add_entities(entities)
 
 
@@ -92,23 +88,13 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         # Coils pour commandes
         self._up_coil = self.decode_input(up)
         self._down_coil = self.decode_input(down)
-
         # Flags obligatoires
         self._opening_flag = opening
         self._closing_flag = closing
-        # A supprimer
-        self._opening_flag_pos = self.decode_output(opening)
-        self._closing_flag_pos = self.decode_output(closing)
-
         # Flags optionnels
         self._opened_flag = opened
         self._closed_flag = closed
         
-        # A supprimer
-        self._opened_flag_pos = self.decode_output(opened) if opened else self._opening_flag_pos
-        self._closed_flag_pos = self.decode_output(closed) if closed else self._closing_flag_pos
-
-
     @staticmethod
     def decode_input(string: str) -> int:
         """Return the Ismart coil address of an input string like "I1" or "X1"."""
