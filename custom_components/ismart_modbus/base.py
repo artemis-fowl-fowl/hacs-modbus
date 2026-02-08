@@ -55,9 +55,9 @@ class ISmartModbusBitEntity(ISmartModbusBase):
     def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
         super().__init__(coordinator, name, device_id, modbus_interface)
         self._coil = self.decode_input(input)
-        self._bit_position = self.decode_output(output)
+        #self._bit_position = self.decode_output(output)
+        self._state_flag = output
 
     @property
     def is_on(self):
-        state = self.coordinator.get_bit(self._device_id, "outputs", self._bit_position)
-        return bool(state)
+        return bool(self.coordinator.get_bit2(self._device_id, self._state_flag))
