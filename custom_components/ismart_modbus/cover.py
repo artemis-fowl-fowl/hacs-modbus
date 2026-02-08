@@ -93,12 +93,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._device_id = device_id
         self._modbus = modbus_interface
 
-        if device_class == 'garage':
-            _attr_device_class = CoverDeviceClass.GARAGE
-        elif device_class == 'gate':
-            _attr_device_class = CoverDeviceClass.GATE
-        else:
-            _attr_device_class = CoverDeviceClass.SHUTTER
+        _attr_device_class = CoverDeviceClass.SHUTTER
 
         # Coils pour commandes
         self._up_coil = self.decode_input(up)
@@ -211,6 +206,8 @@ class ISmartGarage(ISmartModbusCover):
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
         self._last_direction = None
+        _attr_device_class = CoverDeviceClass.GARAGE
+        _LOGGER.warning("Initialisation garage")
 
     async def async_open_cover(self, **kwargs):
         """Open the garage door."""
@@ -237,9 +234,8 @@ class ISmartGarage(ISmartModbusCover):
         opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
         closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
         moving = not (opened or closed)
-        #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
+        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "up")
-
 
     @property
     def is_closing(self) -> bool:
