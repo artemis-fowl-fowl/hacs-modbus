@@ -66,7 +66,7 @@ async def async_setup_entry(
             modbus_interface=modbus_interface,
         )
         for dev in COVER_DEVICES if "type" in dev and dev["type"]
-    ]
+        ]
 
     async_add_entities(entities)
 
