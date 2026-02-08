@@ -211,7 +211,7 @@ class ISmartGarage(ISmartModbusCover):
         """Open the garage door."""
         if self.is_opened or self.is_opening:
             return
-        if (await self._modbus_interface.write_coil(self._up_coil) == True):
+        if (await self.modbus_interface.write_coil(self._up_coil) == True):
             self._last_direction = "up"
             _LOGGER.warning("Ouverture garage")
         await self.coordinator.async_request_refresh()
@@ -220,7 +220,7 @@ class ISmartGarage(ISmartModbusCover):
         """Close the garage door."""
         if self.is_closed or self.is_closing:
             return
-        if (await self._modbus_interface.write_coil(self._down_coil) == True):
+        if (await self.modbus_interface.write_coil(self._down_coil) == True):
             self._last_direction = "down"
             _LOGGER.warning("Fermeture garage")
         await self.coordinator.async_request_refresh()
