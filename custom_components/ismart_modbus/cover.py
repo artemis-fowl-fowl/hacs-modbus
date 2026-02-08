@@ -25,6 +25,7 @@ async def async_setup_entry(
         ISmartModbusCover(
             coordinator=coordinator,
             name=dev["name"],
+            device_class=dev["type"],
             device_id=dev["device_id"],
             up=dev["up"],
             down=dev["down"],
@@ -43,12 +44,11 @@ async def async_setup_entry(
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     """Representation of an iSMART Modbus cover (shutter)."""
 
-    _attr_device_class = CoverDeviceClass.SHUTTER
-
     def __init__(
         self,
         coordinator,
         name: str,
+        device_class: str,
         device_id: int,
         up: str,
         down: str,
@@ -66,17 +66,30 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._device_id = device_id
         self._modbus = modbus_interface
 
+        if device_class == 'garage':
+            _attr_device_class = CoverDeviceClass.GARAGE
+        else:
+            _attr_device_class = CoverDeviceClass.SHUTTER
+
         # Coils pour commandes
         self._up_coil = self.decode_input(up)
         self._down_coil = self.decode_input(down)
 
         # Flags obligatoires
+        self._opening_flag = opening
+        self._closing_flag = closing
+        # A supprimer
         self._opening_flag_pos = self.decode_output(opening)
         self._closing_flag_pos = self.decode_output(closing)
 
         # Flags optionnels
+        self._opened_flag = opened
+        self._closed_flag = closed
+        
+        # A supprimer
         self._opened_flag_pos = self.decode_output(opened) if opened else self._opening_flag_pos
         self._closed_flag_pos = self.decode_output(closed) if closed else self._closing_flag_pos
+
 
     @staticmethod
     def decode_input(string: str) -> int:
@@ -88,6 +101,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 
+    #### Methode à sortir de cette classe pour être utilisée dans les autres entités (switch, light) et éviter la duplication de code
     @staticmethod
     def decode_output(string: str) -> int:
         """Return the bit position in the OUT_STATE or MEM_STATE for an output string like "Q1" or "M1"."""
@@ -119,23 +133,19 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     @property
     def is_opening(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, "outputs", self._opening_flag_pos)
-        return bool(state)
+        return bool(self.coordinator.get_bit2(self._device_id, self._opening_flag))
 
     @property
     def is_closing(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, "outputs", self._closing_flag_pos)
-        return bool(state)
+        return bool(self.coordinator.get_bit2(self._device_id, self._closing_flag))
 
     @property
     def is_open(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, "m_registers", self._opened_flag_pos)
-        return bool(state)
+        return bool(self.coordinator.get_bit2(self._device_id, self._opened_flag))
 
     @property
     def is_closed(self) -> bool:
-        state = self.coordinator.get_bit(self._device_id, "m_registers", self._closed_flag_pos)
-        return bool(state)
+        return bool(self.coordinator.get_bit2(self._device_id, self._closed_flag))
 
     @property
     def state(self):
@@ -181,3 +191,46 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
         if coil is not None:
             await self._write_coil(coil)
+
+
+class ISmartGarage(ISmartModbusCover):
+    """Representation of an iSMART Modbus garage door."""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the garage door entity."""
+        super().__init__(*args, **kwargs)
+        #self._is_opening = False
+        #self._is_closing = False
+        self._last_direction = None
+
+    async def async_open_cover(self, **kwargs):
+        """Open the garage door."""
+        if self.is_opened:
+            return
+        if (await self._modbus_interface.write_coil(self._up_coil) == True):
+            self._last_direction = "up"
+        await self.coordinator.async_request_refresh()
+
+    async def async_close_cover(self, **kwargs):
+        """Close the garage door."""
+        if self.is_closed:
+            return
+        if (await self._modbus_interface.write_coil(self._down_coil) == True):
+            self._last_direction = "down"
+        await self.coordinator.async_request_refresh()
+
+    @property
+    def is_opening(self) -> bool:
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._opening_flag_pos) and self._last_direction = "up"
+        return bool(state)
+
+    @property
+    def is_closing(self) -> bool:
+        state = self.coordinator.get_bit(self._device_id, "outputs", self._closing_flag_pos) and self._last_direction == "down"
+        return bool(state)
+
+    # A vérifier !!!!!!!
+    @property
+    def device_class(self) -> str:
+        """Return the class of this device."""
+        return "garage"

@@ -22,9 +22,6 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         self.data = {
             "em111": {dev["name"]: None for dev in EM111_DEVICES},  # On crée un disctionnaire pour chaque EM111 avec son nom comme clé et None comme valeur initiale
             "ismart": {i: None for i in ISMART_DEVICES},            # On crée un disctionnaire pour chaque automate iSMART avec son device_id comme clé et None comme valeur initiale
-            "outvalid": [0, 0, 0, 0, 0],
-            "outstate": [0, 0, 0, 0, 0],
-            "memstate": [0, 0, 0, 0, 0],
         }
 
     ### La gestion des exception est bancale au niveau du projet.
@@ -78,6 +75,38 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         register_value = device_data[register]
         return bool((register_value >> bit_position) & 1)
 
+    @staticmethod
+    def decode_bit_name(string: str):
+        """Return the bit register and position."""
+        try:
+            if string.startswith("Q"):
+                return "outputs", int(string[1:]) - 1
+            if string.startswith("Y"):
+                return "outputs", int(string[1:]) + 7
+            if string.startswith("M"):
+                return "m_registers", int(string[1:]) - 1
+        except ValueError:
+            raise ValueError(f"Invalid bit_name '{string}': Unable to resolve bit position")
+
+        raise ValueError(f"Invalid bit_name '{string}': Unable to resolve register type")
+
+    def get_bit2(self, device_id: int, bit_name: int) -> bool | None:
+        """Get the state of a specific bit in the given register for a specific device."""
+        # Vérification de l'existence des données pour le device_id
+        if device_id not in self.data["ismart"]:
+            return None
+        
+        device_data = self.data["ismart"][device_id]                # Récupération des données du device_id
+        register, bit_position = self.decode_bit_name(bit_name)     # Décodage du bit_name pour obtenir le registre et la position du bit
+
+        if not device_data or register not in device_data:
+            return None
+        # Vérification de la validité de la position du bit
+        if bit_position not in range(16):
+            return None
+        # Récupération de la valeur du registre et extraction du bit
+        register_value = device_data[register]
+        return bool((register_value >> bit_position) & 1)
 
     # La fonction s'appelle is_device_available pourtant elle ne concerne que les Ismart, pas les EM111.
     # Il y a un problème d'architecture globale dans le projet.

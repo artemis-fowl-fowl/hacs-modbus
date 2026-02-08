@@ -214,7 +214,7 @@ def writecoil(link: serial.Serial, slave: int, coil: int, state: int) -> int:
     
     if ack != trame:
         _LOGGER.warning('Ack error')
-        return true
+        return False
         
     _LOGGER.info('Ack OK')
     return True
