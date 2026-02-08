@@ -59,7 +59,6 @@ class ISmartModbusBase(CoordinatorEntity):
 
 class ISmartModbusBitEntity(ISmartModbusBase):
     """Base class for bit-based Modbus entities."""
-
     def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
         super().__init__(coordinator, name, device_id, modbus_interface)
         self._coil = self.decode_input(input)

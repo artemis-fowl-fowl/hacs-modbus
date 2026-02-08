@@ -40,10 +40,12 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
         """Fetch data from automates and one EM111 per cycle."""
         try:
             # --- Lecture automates ---
+            """
             outvalid, outstate, memstate = await self.hass.async_add_executor_job(self.modbus_interface.readstate)
             self.data["outvalid"] = outvalid
             self.data["outstate"] = outstate
             self.data["memstate"] = memstate
+            """
             
             # Pour chacun des 5 automates
             for i in ISMART_DEVICES:
