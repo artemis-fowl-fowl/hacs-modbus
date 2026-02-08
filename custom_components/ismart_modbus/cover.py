@@ -232,15 +232,19 @@ class ISmartGarage(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        _LOGGER.warning(f"is_opening computation, moving = {moving}")
+        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
+        closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
+        moving = not (opened or closed)
+        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "up")
 
 
     @property
     def is_closing(self) -> bool:
-        moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        _LOGGER.warning(f"is_closing computation, moving = {moving}")
+        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
+        closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
+        moving = not (opened or closed)
+        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "down")
 
 
