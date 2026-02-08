@@ -278,8 +278,8 @@ class ISmartGate(ISmartModbusCover):
 
     @property
     def is_closed(self) -> bool:
-        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag)
-        moving = bool(self.coordinator.get_bit(self._device_id, self._opening_flag)
+        opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
+        moving = bool(self.coordinator.get_bit(self._device_id, self._opening_flag))
         return not (moving or opened)
 
     @property
