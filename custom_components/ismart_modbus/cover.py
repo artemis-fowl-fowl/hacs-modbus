@@ -216,18 +216,18 @@ class ISmartGarage(ISmartModbusCover):
         """Open the garage door."""
         if self.is_open or self.is_opening:
             return
-        if (await self._write_coil(self._up_coil) == True):
-            self._last_direction = "up"
-            _LOGGER.warning("Ouverture garage")
+        #if (await self._write_coil(self._up_coil) == True):
+        self._last_direction = "up"
+        #LOGGER.warning("Ouverture garage")
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
         """Close the garage door."""
         if self.is_closed or self.is_closing:
             return
-        if (await self._write_coil(self._up_coil) == True):
-            self._last_direction = "down"
-            _LOGGER.warning("Fermeture garage")
+        #if (await self._write_coil(self._up_coil) == True):
+        self._last_direction = "down"
+        #_LOGGER.warning("Fermeture garage")
         await self.coordinator.async_request_refresh()
 
     @property
@@ -289,14 +289,14 @@ class ISmartGate(ISmartModbusCover):
     @property
     def is_opening(self) -> bool:
         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        _LOGGER.warning(f"is_opening computation, moving = {moving}")
+        #_LOGGER.warning(f"is_opening computation, moving = {moving}")
         return bool(moving and self._last_direction == "up")
 
 
     @property
     def is_closing(self) -> bool:
         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
-        _LOGGER.warning(f"is_closing computation, moving = {moving}")
+        #_LOGGER.warning(f"is_closing computation, moving = {moving}")
         #return bool(moving and self._last_direction == "down")
         return True
 
