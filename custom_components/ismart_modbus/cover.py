@@ -21,52 +21,52 @@ async def async_setup_entry(
     modbus_interface = entry_data["modbus"]
     coordinator = entry_data["coordinator"]
 
-entities = [
-    ISmartGarage(
-        coordinator=coordinator,
-        name=dev["name"],
-        device_class=dev["type"],
-        device_id=dev["device_id"],
-        up=dev["up"],
-        down=dev["down"],
-        opening=dev["opening"],
-        closing=dev["closing"],
-        opened=dev["opened"],
-        closed=dev["closed"],
-        modbus_interface=modbus_interface,
-    )
-    if dev["type"] == "garage" else
+    entities = [
+        ISmartGarage(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        )
+        if dev["type"] == "garage" else
 
-    ISmartGate(
-        coordinator=coordinator,
-        name=dev["name"],
-        device_class=dev["type"],
-        device_id=dev["device_id"],
-        up=dev["up"],
-        down=dev["down"],
-        opening=dev["opening"],
-        closing=dev["closing"],
-        opened=dev["opened"],
-        closed=dev["closed"],
-        modbus_interface=modbus_interface,
-    )
-    if dev["type"] == "gate" else
+        ISmartGate(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        )
+        if dev["type"] == "gate" else
 
-    ISmartModbusCover(
-        coordinator=coordinator,
-        name=dev["name"],
-        device_class=dev["type"],
-        device_id=dev["device_id"],
-        up=dev["up"],
-        down=dev["down"],
-        opening=dev["opening"],
-        closing=dev["closing"],
-        opened=dev["opened"],
-        closed=dev["closed"],
-        modbus_interface=modbus_interface,
-    )
-    for dev in COVER_DEVICES if "type" in dev and dev["type"]
-]
+        ISmartModbusCover(
+            coordinator=coordinator,
+            name=dev["name"],
+            device_class=dev["type"],
+            device_id=dev["device_id"],
+            up=dev["up"],
+            down=dev["down"],
+            opening=dev["opening"],
+            closing=dev["closing"],
+            opened=dev["opened"],
+            closed=dev["closed"],
+            modbus_interface=modbus_interface,
+        )
+        for dev in COVER_DEVICES if "type" in dev and dev["type"]
+    ]
 
     async_add_entities(entities)
 
