@@ -241,8 +241,7 @@ class ISmartGarage(ISmartModbusCover):
     def is_closing(self) -> bool:
         moving = not bool(self.coordinator.get_bit(self._device_id, self._opened_flag) or self.coordinator.get_bit(self._device_id, self._closed_flag))
         _LOGGER.warning(f"is_closing computation, moving = {moving}")
-        #return bool(moving and self._last_direction == "down")
-        return True
+        return bool(moving and self._last_direction == "down")
 
 
     # A vérifier !!!!!!!
