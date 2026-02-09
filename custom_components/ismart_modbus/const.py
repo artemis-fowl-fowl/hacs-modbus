@@ -97,10 +97,9 @@ DEVICES = [
     {"name": "Electrovanne_2", "device_id": 5, "input": "I4", "output": "Q4", "type": "switch"},
     {"name": "SDB_radiateur", "device_id": 5, "input": "I7", "output": "Q7", "type": "switch"},
 
-    # ### input sur MemState non pris en charge pour le moment
-    #{"name": "Scooter", "device_id": 5, "input": "M8", "output": "Q5", "type": "switch"},
-    #{"name": "Zoé", "device_id": 5, "input": "M9", "output": "Q6", "type": "switch"},
-    #{"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M10", "type": "switch"},
+    {"name": "Scooter", "device_id": 5, "input": "M8", "output": "Q5", "type": "switch"},
+    {"name": "Zoé", "device_id": 5, "input": "M9", "output": "Q6", "type": "switch"},
+    {"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M10", "type": "switch"},
 
 
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "type": "light"},
