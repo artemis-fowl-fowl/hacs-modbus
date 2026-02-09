@@ -85,7 +85,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     ):
         """Initialize the cover."""
         super().__init__(coordinator)
-        self._attr_unique_id = f"cover_{device_id}_{name.lower()}"
+        self._attr_unique_id = f"cover_{name.lower()}"
         self._attr_name = name
         self._name = name
         self._device_id = device_id
