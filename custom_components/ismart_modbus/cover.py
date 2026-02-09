@@ -199,13 +199,10 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 class ISmartGarage(ISmartModbusCover):
     """Representation of an iSMART Modbus garage door."""
 
-    def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, moving, opened, closed, modbus_interface):
+    def __init__(self, coordinator, name, device_class, device_id, move, opened, closed, modbus_interface):
         """Initialize the garage door."""
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
-        self._lockcoil = self.decode_input(lock)
-        self._partial_coil = self.decode_input(partial)
-        self._moving_flag = moving
         self._last_direction = None
         _attr_device_class = CoverDeviceClass.GARAGE
         _LOGGER.warning("Initialisation garage")
