@@ -42,7 +42,9 @@ async def async_setup_entry(
             move=dev["move"],
             lock=dev["lock"],
             partial=dev["partial"],
+            moving=dev["moving"],
             closed=dev["closed"],
+            locked=dev["locked"],
             modbus_interface=modbus_interface,
         )
         if dev["type"] == "gate" else
@@ -234,7 +236,6 @@ class ISmartGarage(ISmartModbusCover):
         opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
         closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
         moving = not (opened or closed)
-        _LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "up")
 
     @property
@@ -242,7 +243,6 @@ class ISmartGarage(ISmartModbusCover):
         opened = bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
         closed = bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
         moving = not (opened or closed)
-        #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return bool(moving and self._last_direction == "down")
 
     # A vérifier !!!!!!!
@@ -254,11 +254,13 @@ class ISmartGarage(ISmartModbusCover):
 class ISmartGate(ISmartModbusCover):
     """Representation of an iSMART Modbus gate."""
 
-    def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, closed, modbus_interface):
+    def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, moving, closed, locked, modbus_interface):
         """Initialize the gate"""
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
         self._lock_coil = self.decode_input(lock)
+        self._moving_flag = moving
+        self._locked_flag = locked
         self._partial_coil = self.decode_input(partial)
         self._state = None
         _attr_device_class = CoverDeviceClass.GARAGE
@@ -303,6 +305,7 @@ class ISmartGate(ISmartModbusCover):
         moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
         closing = moving and self._last_state not in ["opened", "opening"]
         self._last_state == "closing"
+        #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
         return closing
 
     # A vérifier !!!!!!!
