@@ -199,10 +199,13 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 class ISmartGarage(ISmartModbusCover):
     """Representation of an iSMART Modbus garage door."""
 
-    def __init__(self, coordinator, name, device_class, device_id, move, opened, closed, modbus_interface):
+    def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, moving, opened, closed, modbus_interface):
         """Initialize the garage door."""
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
+        self._lockcoil = self.decode_input(lock)
+        self._partial_coil = self.decode_input(partial)
+        self._moving_flag = moving
         self._last_direction = None
         _attr_device_class = CoverDeviceClass.GARAGE
         _LOGGER.warning("Initialisation garage")
@@ -258,7 +261,7 @@ class ISmartGate(ISmartModbusCover):
         self._move_coil = self.decode_input(move)
         self._lock_coil = self.decode_input(lock)
         self._partial_coil = self.decode_input(partial)
-        self._last_direction = None
+        self._state = None
         _attr_device_class = CoverDeviceClass.GARAGE
         _LOGGER.warning("Initialisation garage")
 
@@ -267,7 +270,7 @@ class ISmartGate(ISmartModbusCover):
         if self.is_open or self.is_opening:
             return
         await self._write_coil(self._move_coil)
-        self._last_direction = "opening"
+        self._last_state = "opening"
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
@@ -275,20 +278,33 @@ class ISmartGate(ISmartModbusCover):
         if self.is_closed or self.is_closing:
             return
         await self._write_coil(self._move_coil)
-        self._last_direction = "closing"
+        self._last_state = "closing"
         await self.coordinator.async_request_refresh()
 
     @property
     def is_open(self) -> bool:
-        return not self.is_closed
+        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        
+        is_open = not moving and not self.is_closed
+        if is_open:
+            self._last_state = "opened"
+        else:
+            self._last_state = "closed"
+        return not moving and not self.is_closed
 
     @property
     def is_opening(self) -> bool:
-        return False    # Pour l'instant je n'ai pas d'indicateur
+        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        opening = moving and self._last_state in ["opened", "opening"]
+        self._last_state == "opening"
+        return opening
 
     @property
     def is_closing(self) -> bool:
-        return False    # Pour l'instant je n'ai pas d'indicateur
+        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        closing = moving and self._last_state not in ["opened", "opening"]
+        self._last_state == "closing"
+        return closing
 
     # A vérifier !!!!!!!
     @property
