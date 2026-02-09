@@ -112,6 +112,8 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             return 0x0550 + int(string[1:]) - 1
         elif string.startswith("X"):
             return 0x0560 + int(string[1:]) - 1
+        if string.startswith("M"):
+            return 0x0540 + int(string[1:]) - 1
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 
