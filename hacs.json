@@ -1,4 +1,10 @@
 {
   "name": "iSMART Modbus",
-  "render_readme": true
+  "filename": "ismart_modbus",
+  "homeassistant": "2024.1.0",
+  "domains": ["light", "switch", "cover", "sensor"],
+  "render_readme": true,
+  "documentation": "https://github.com/artemis-fowl-fowl/hacs-modbus",
+  "issues": "https://github.com/artemis-fowl-fowl/hacs-modbus/issues",
+  "codeowners": ["@artemis-fowl-fowl"]
 }
