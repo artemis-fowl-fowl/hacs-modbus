@@ -33,7 +33,7 @@ SCAN_INTERVAL = 2   # Intervalle de polling pour les automates et EM111
 EM111_DEVICES = [
     #{"name": "Panneaux solaires", "device_id": 10},
     {"name": "Scooter", "device_id": 11},
-    #{"name": "ECS", "device_id": 12},
+    {"name": "ECS", "device_id": 12},
     #{"name": "Zoé", "device_id": 13},
 ]
 
