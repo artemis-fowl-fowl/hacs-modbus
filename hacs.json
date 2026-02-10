@@ -1,5 +1,6 @@
 {
   "name": "iSMART Modbus",
+  "content_in_root": false,
   "filename": "ismart_modbus",
   "homeassistant": "2024.1.0",
   "domains": ["light", "switch", "cover", "sensor"],
