@@ -262,7 +262,7 @@ class ISmartGate(ISmartModbusCover):
         self._moving_flag = moving
         self._locked_flag = locked
         self._partial_coil = self.decode_input(partial)
-        self._state = None
+        self._last_state = None
         _attr_device_class = CoverDeviceClass.GATE
         _LOGGER.warning("Initialisation portail")
 
