@@ -295,9 +295,10 @@ class ISmartGate(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        #moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
-        #opening = moving and self._last_state in ["opened", "opening"]
-        #self._last_state == "opening"
+        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        opening = moving and self._last_state in ["opened", "opening"]
+        self._last_state == "opening"
+        _LOGGER.warning(f"is_opening computation, opened = {self.is_open}, closed = {self.is_closed}, moving = {moving}, opening = {opening}")
         #return opening
         return True
 
