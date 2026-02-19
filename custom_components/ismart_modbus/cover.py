@@ -295,18 +295,20 @@ class ISmartGate(ISmartModbusCover):
 
     @property
     def is_opening(self) -> bool:
-        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
-        opening = moving and self._last_state in ["opened", "opening"]
-        self._last_state == "opening"
-        return opening
+        #moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        #opening = moving and self._last_state in ["opened", "opening"]
+        #self._last_state == "opening"
+        #return opening
+        return True
 
     @property
     def is_closing(self) -> bool:
-        moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
-        closing = moving and self._last_state not in ["opened", "opening"]
-        self._last_state == "closing"
+        #moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
+        #closing = moving and self._last_state not in ["opened", "opening"]
+        #self._last_state == "closing"
         #_LOGGER.warning(f"is_opening computation, opened = {opened}, closed = {closed}, moving = {moving}, last_direction = {self._last_direction}")
-        return closing
+        #return closing
+        return False
 
     # A vérifier !!!!!!!
     @property
