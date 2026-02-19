@@ -263,8 +263,8 @@ class ISmartGate(ISmartModbusCover):
         self._locked_flag = locked
         self._partial_coil = self.decode_input(partial)
         self._state = None
-        _attr_device_class = CoverDeviceClass.GARAGE
-        _LOGGER.warning("Initialisation garage")
+        _attr_device_class = CoverDeviceClass.GATE
+        _LOGGER.warning("Initialisation portail")
 
     async def async_open_cover(self, **kwargs):
         """Open the gate."""
@@ -275,7 +275,7 @@ class ISmartGate(ISmartModbusCover):
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
-        """Close the garage door."""
+        """Close the gate."""
         if self.is_closed or self.is_closing:
             return
         await self._write_coil(self._move_coil)
