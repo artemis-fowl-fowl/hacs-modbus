@@ -6,6 +6,7 @@ from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN, CONF_SERIAL_PORT, CONF_BAUDRATE, CONF_TIMEOUT
 from .modbus_interface import ModbusInterface

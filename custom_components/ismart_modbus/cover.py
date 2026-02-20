@@ -69,9 +69,10 @@ async def async_setup_entry(
 
     async def lock_service(call):
         entity_id = call.data["entity_id"]
-        cover = hass.states.get(entity_id)
-        if cover and hasattr(cover, "async_lock"):
-            await cover.async_lock()
+        component = hass.data["entity_components"]["cover"]
+        entity = component.get_entity(entity_id)
+        if entity:
+            await entity.async_lock()
 
     async def partial_service(call):
         entity_id = call.data["entity_id"]
