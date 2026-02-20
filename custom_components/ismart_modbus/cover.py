@@ -66,6 +66,7 @@ async def async_setup_entry(
         ]
 
     async_add_entities(entities)
+    hass.data[DOMAIN][config_entry.entry_id]["covers"] = entities
 
     async def lock_service(call):
         entity_id = call.data["entity_id"]
@@ -298,17 +299,19 @@ class ISmartGate(ISmartModbusCover):
         self._last_state = "closing"
         await self.coordinator.async_request_refresh()
 
-    async def async_lock(self, **kwargs):
-        """Verrouiller le portail."""
-        await self._write_coil(self._lock_coil)
-        _LOGGER.warning("Portail: Lock")
-        await self.coordinator.async_request_refresh()
-    
-   
-    async def async_partial(self, **kwargs):
-        """Ouvrir le portail partiellement."""
-        await self._write_coil(self._partial_coil)
-        await self.coordinator.async_request_refresh()
+    async def lock_service(call):
+        entity_id = call.data.get("entity_id")
+        for entity in hass.data[DOMAIN][config_entry.entry_id]["covers"]:
+            if entity.entity_id == entity_id:
+                await entity.async_lock()
+                return
+
+    async def partial_service(call):
+        entity_id = call.data.get("entity_id")
+        for entity in hass.data[DOMAIN][config_entry.entry_id]["covers"]:
+            if entity.entity_id == entity_id:
+                await entity.async_partial()
+                return
 
     @property
     def is_open(self) -> bool:
