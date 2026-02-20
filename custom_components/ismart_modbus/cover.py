@@ -67,6 +67,22 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
+    async def lock_service(call):
+        entity_id = call.data["entity_id"]
+        cover = hass.states.get(entity_id)
+        if cover and hasattr(cover, "async_lock"):
+            await cover.async_lock()
+
+    async def partial_service(call):
+        entity_id = call.data["entity_id"]
+        cover = hass.states.get(entity_id)
+        if cover and hasattr(cover, "async_partial"):
+            await cover.async_partial()
+
+    hass.services.async_register(DOMAIN, "lock_gate", lock_service)
+    hass.services.async_register(DOMAIN, "partial_gate", partial_service)
+
+
 
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     """Representation of an iSMART Modbus cover (shutter)."""
@@ -282,6 +298,17 @@ class ISmartGate(ISmartModbusCover):
         self._last_state = "closing"
         await self.coordinator.async_request_refresh()
 
+    async def async_lock(self, **kwargs):
+        """Verrouiller le portail."""
+        await self._write_coil(self._lock_coil)
+        #await self.coordinator.async_request_refresh()
+    
+   
+    async def async_partial(self, **kwargs):
+        """Ouvrir le portail partiellement."""
+        await self._write_coil(self._partial_coil)
+        #await self.coordinator.async_request_refresh()
+
     @property
     def is_open(self) -> bool:
         moving = bool(self.coordinator.get_bit(self._device_id, self._moving_flag))
@@ -309,6 +336,11 @@ class ISmartGate(ISmartModbusCover):
         #_LOGGER.warning(f"is_closing computation, opened = {self.is_open}, closed = {self.is_closed}, moving = {moving}, closing = {closing}")        
         return closing
         #return False
+
+    @property
+    def is_locked(self):
+        locked = bool(self.coordinator.get_bit(self._device_id, self._locked_flag))
+        return locked
 
     # A vérifier !!!!!!!
     @property
