@@ -105,7 +105,8 @@ DEVICES = [
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "type": "light"},
     
     {"name": "Ouverture partielle", "device_id": 5, "input": "M11", "type": "button"},
-
+    {"name": "Verrouillage", "device_id": 5, "input": "X3", "type": "button"},
+    {"name": "Portail verrouillé", "device_id": 5, "output": "M3", "type": "button"},
     # ### Output sur MemState non pris en charge pour le moment
     #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "type": "switch"},
 ]
