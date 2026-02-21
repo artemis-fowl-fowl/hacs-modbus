@@ -22,7 +22,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 class ISmartModbusButton(ISmartModbusBase, ButtonEntity):
 
     def __init__(self, coordinator, name: str, device_id: int, input, modbus):
-        super().__init__(coordinator, name, device_id, input, None, modbus)
+        super().__init__(coordinator, name, device_id, modbus)
         self._attr_unique_id = f"button_{name.lower()}"
         self._coil = self.decode_input(input)   
         self._attr_name = name
