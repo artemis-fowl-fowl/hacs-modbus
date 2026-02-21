@@ -28,11 +28,9 @@ async def async_setup_entry(
     coordinator = entry_data["coordinator"]
     modbus = entry_data["modbus"]
     entities: list[SensorEntity] = []
-
     for dev in EM111_DEVICES:
         name = dev["name"]
         device_id = dev["device_id"]
-
         entities.append(EM111VoltageSensor(coordinator, name, device_id))
         entities.append(EM111CurrentSensor(coordinator, name, device_id))
         entities.append(EM111PowerSensor(coordinator, name, device_id))
@@ -40,26 +38,7 @@ async def async_setup_entry(
         entities.append(EM111PowerDmdPeakSensor(coordinator, name, device_id))
         entities.append(EM111FrequencySensor(coordinator, name, device_id))
         entities.append(EM111EnergySensor(coordinator, name, device_id))
-
-    for dev in DEVICES:
-        if dev["type"] == "sensor":
-            entities.append(ISmartModbusSensor(coordinator, dev["name"], dev["device_id"], dev["output"], modbus))
-
-
     async_add_entities(entities)
-
-
-class ISmartModbusSensor(ISmartModbusBase, SensorEntity):
-
-    def __init__(self, coordinator, name: str, device_id: int, output, modbus):
-        super().__init__(coordinator, name, device_id, modbus)
-        self._attr_unique_id = f"button_{name.lower()}"
-        self._attr_name = name
-        self._state_flag = output
-
-    @property
-    def is_on(self):
-        return bool(self.coordinator.get_bit(self._device_id, self._state_flag))
 
 class EM111BaseSensor(CoordinatorEntity, SensorEntity):
     """Base class for EM111 sensors."""
