@@ -26,6 +26,7 @@ class ISmartModbusSwitch(ISmartModbusBitEntity, SwitchEntity):
 
     def __init__(self, coordinator, name: str, device_id: int, input_reg, output_reg, modbus):
         super().__init__(coordinator, name, device_id, input_reg, output_reg, modbus)
+        ### Normalement il faudrait corriger le nom (supprimmer {device_id})
         self._attr_unique_id = f"switch_{device_id}_{name.lower()}"
         self._attr_name = name
 
