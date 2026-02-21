@@ -1,6 +1,6 @@
-"""Button platform for iSMART Modbus."""
+"""Binary Sensor platform for iSMART Modbus."""
 import logging
-from homeassistant.components.button import BinarySensorEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity
 
 from .base import ISmartModbusBase
 from .const import DOMAIN, DEVICES
@@ -13,7 +13,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     coordinator = entry_data["coordinator"]
     modbus = entry_data["modbus"]
     entities = [
-        ISmartModbusButton(coordinator, dev["name"], dev["device_id"], dev["output"], modbus)
+        ISmartModbusBinarySensor(coordinator, dev["name"], dev["device_id"], dev["output"], modbus)
         for dev in DEVICES if dev["type"] == "sensor"
     ]
     async_add_entities(entities)
@@ -23,7 +23,7 @@ class ISmartModbusBinarySensor(ISmartModbusBase, BinarySensorEntity):
 
     def __init__(self, coordinator, name: str, device_id: int, output, modbus):
         super().__init__(coordinator, name, device_id, modbus)
-        self._attr_unique_id = f"button_{name.lower()}"
+        self._attr_unique_id = f"binary_sensor_{name.lower()}"
         self._attr_name = name
         self._state_flag = output
 
