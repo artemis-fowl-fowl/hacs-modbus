@@ -92,14 +92,14 @@ DEVICES = [
 
     # ===== DIVERS (Device 5) =====
     {"name": "Apoint", "device_id": 5, "input": "I1", "output": "Q1", "type": "light"},
-    {"name": "Ampli", "device_id": 5, "input": "I2", "output": "Q2", "type": "switch"},
-    {"name": "Electrovanne_1", "device_id": 5, "input": "I3", "output": "Q3", "type": "switch"},
-    {"name": "Electrovanne_2", "device_id": 5, "input": "I4", "output": "Q4", "type": "switch"},
-    {"name": "SDB_radiateur", "device_id": 5, "input": "I7", "output": "Q7", "type": "switch"},
+    {"name": "Ampli", "device_id": 5, "input": "I2", "output": "Q2", "type": "toggle_switch"},
+    {"name": "Electrovanne_1", "device_id": 5, "input": "I3", "output": "Q3", "type": "toggle_switch"},
+    {"name": "Electrovanne_2", "device_id": 5, "input": "I4", "output": "Q4", "type": "toggle_switch"},
+    {"name": "SDB_radiateur", "device_id": 5, "input": "I7", "output": "Q7", "type": "toggle_switch"},
 
     {"name": "Scooter", "device_id": 5, "input": "M8", "output": "Q5", "type": "switch"},
     {"name": "Zoé", "device_id": 5, "input": "M9", "output": "Q6", "type": "switch"},
-    {"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M10", "type": "switch"},
+    {"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M10", "type": "toogle_switch"},
 
 
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "type": "light"},
