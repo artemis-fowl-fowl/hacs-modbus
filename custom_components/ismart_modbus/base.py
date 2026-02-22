@@ -1,5 +1,6 @@
 import logging
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +43,15 @@ class ISmartModbusBase(CoordinatorEntity):
         if string.startswith("M"):
             return 0x0540 + int(string[1:]) - 1
         raise ValueError(f"Invalid input '{string}'")
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, self._device_id)},
+            "name": self._name,
+            "manufacturer": "IMO",
+            "model": "iSMART",
+        }
 
 class ISmartModbusBitEntity(ISmartModbusBase):
     """Base class for bit-based Modbus entities."""
