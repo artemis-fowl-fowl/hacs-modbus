@@ -109,6 +109,18 @@ DEVICES = [
     {"name": "Portail verrouillé", "device_id": 5, "output": "M3", "type": "sensor"},
     # ### Output sur MemState non pris en charge pour le moment
     #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "type": "switch"},
+
+    # Accès généraux
+
+    {"name": "Extinction Etage", "device_id": 1, "input": "I9", "type": "button"},
+    {"name": "Extinction RDC", "device_id": 2, "input": "I9", "type": "button"},
+    {"name": "Extinction CH1.X", "device_id": 3, "input": "I11", "type": "button"},
+    {"name": "Extinction Divers", "device_id": 4, "input": "I11", "type": "button"},
+
+    {"name": "Ouverture volets étage", "device_id": 3, "input": "I10", "type": "button"},
+    {"name": "Fermeture volets étage", "device_id": 3, "input": "I9", "type": "button"},
+    {"name": "Ouverture volets RDC", "device_id": 4, "input": "I10", "type": "button"},
+    {"name": "Fermeture volets RDC", "device_id": 4, "input": "I9", "type": "button"},
 ]
 
 COVER_DEVICES = [

@@ -217,7 +217,6 @@ class ISmartGarage(ISmartModbusCover):
         await self._write_coil(self._move_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "up"
-        #LOGGER.warning("Ouverture garage")
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
@@ -227,7 +226,6 @@ class ISmartGarage(ISmartModbusCover):
         await self._write_coil(self._move_coil)
         #if (await self._write_coil(self._up_coil) == True):
         self._last_direction = "down"
-        #_LOGGER.warning("Fermeture garage")
         await self.coordinator.async_request_refresh()
 
     @property
@@ -264,7 +262,6 @@ class ISmartGate(ISmartModbusCover):
         self._partial_coil = self.decode_input(partial)
         self._last_state = None
         _attr_device_class = CoverDeviceClass.GATE
-        _LOGGER.warning("Initialisation portail")
 
     async def async_open_cover(self, **kwargs):
         """Open the gate."""
