@@ -64,26 +64,8 @@ async def async_setup_entry(
         )
         for dev in COVER_DEVICES if "type" in dev and dev["type"]
         ]
-
     async_add_entities(entities)
     hass.data[DOMAIN][config_entry.entry_id]["covers"] = entities
-
-    async def lock_service(call):
-        entity_id = call.data["entity_id"]
-        component = hass.data["entity_components"]["cover"]
-        entity = component.get_entity(entity_id)
-        if entity:
-            await entity.async_lock()
-
-    async def partial_service(call):
-        entity_id = call.data["entity_id"]
-        cover = hass.states.get(entity_id)
-        if cover and hasattr(cover, "async_partial"):
-            await cover.async_partial()
-
-    hass.services.async_register(DOMAIN, "lock_gate", lock_service)
-    hass.services.async_register(DOMAIN, "partial_gate", partial_service)
-
 
 
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
@@ -270,7 +252,8 @@ class ISmartGarage(ISmartModbusCover):
     
 class ISmartGate(ISmartModbusCover):
     """Representation of an iSMART Modbus gate."""
-
+    # Les parametres lock, partial et locked ne sont pas utilisés. Remplacés par des boutons et binary sensors dédiés.
+    # Voir s'il serait intéressant de les intégrés en tant que services ou non.
     def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, moving, closed, locked, modbus_interface):
         """Initialize the gate"""
         super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, closed, modbus_interface)
@@ -298,20 +281,6 @@ class ISmartGate(ISmartModbusCover):
         await self._write_coil(self._move_coil)
         self._last_state = "closing"
         await self.coordinator.async_request_refresh()
-
-    async def lock_service(call):
-        entity_id = call.data.get("entity_id")
-        for entity in hass.data[DOMAIN][config_entry.entry_id]["covers"]:
-            if entity.entity_id == entity_id:
-                await entity.async_lock()
-                return
-
-    async def partial_service(call):
-        entity_id = call.data.get("entity_id")
-        for entity in hass.data[DOMAIN][config_entry.entry_id]["covers"]:
-            if entity.entity_id == entity_id:
-                await entity.async_partial()
-                return
 
     @property
     def is_open(self) -> bool:
