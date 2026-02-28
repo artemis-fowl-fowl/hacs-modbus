@@ -193,7 +193,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     async def async_stop_cover(self, **kwargs):
         """Stop the cover."""
-        await self._write_coil(self._down_coil)
+        await self._write_coil(self._stop_coil)
 
         """Stop the cover by pulsing the active coil."""
         #coil = None
