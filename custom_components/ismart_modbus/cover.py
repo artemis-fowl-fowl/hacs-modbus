@@ -193,6 +193,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     async def async_stop_cover(self, **kwargs):
         """Stop the cover."""
+        # Il y a peut-être un problème si stop_coil n'existe pas (Garage et gate). A vérifier.
         await self._write_coil(self._stop_coil)
 
         """Stop the cover by pulsing the active coil."""
@@ -211,7 +212,7 @@ class ISmartGarage(ISmartModbusCover):
 
     def __init__(self, coordinator, name, device_class, device_id, move, opened, closed, modbus_interface):
         """Initialize the garage door."""
-        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, opened, closed, modbus_interface)
+        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, opened, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
         self._last_direction = None
         _attr_device_class = CoverDeviceClass.GARAGE
@@ -260,7 +261,7 @@ class ISmartGate(ISmartModbusCover):
     # Voir s'il serait intéressant de les intégrés en tant que services ou non.
     def __init__(self, coordinator, name, device_class, device_id, move, lock, partial, moving, closed, locked, modbus_interface):
         """Initialize the gate"""
-        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, closed, modbus_interface)
+        super().__init__(coordinator, name, device_class, device_id, None, None, None, None, None, None, closed, modbus_interface)
         self._move_coil = self.decode_input(move)
         self._lock_coil = self.decode_input(lock)
         self._moving_flag = moving
