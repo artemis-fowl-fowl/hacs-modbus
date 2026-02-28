@@ -56,6 +56,7 @@ async def async_setup_entry(
             device_id=dev["device_id"],
             up=dev["up"],
             down=dev["down"],
+            stop=dev["stop"],
             opening=dev["opening"],
             closing=dev["closing"],
             opened=dev["opened"],
@@ -79,6 +80,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         device_id: int,
         up: str,
         down: str,
+        stop: str,
         opening: str,
         closing: str,
         opened: str,
@@ -98,6 +100,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         # Coils pour commandes
         self._up_coil = self.decode_input(up)
         self._down_coil = self.decode_input(down)
+        self._stop_coil = self.decode_input(stop)
         # Flags obligatoires
         self._opening_flag = opening
         self._closing_flag = closing
@@ -189,15 +192,18 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         await self._write_coil(self._down_coil)
 
     async def async_stop_cover(self, **kwargs):
-        """Stop the cover by pulsing the active coil."""
-        coil = None
-        if self.is_opening:
-            coil = self._up_coil
-        elif self.is_closing:
-            coil = self._down_coil
+        """Stop the cover."""
+        await self._write_coil(self._down_coil)
 
-        if coil is not None:
-            await self._write_coil(coil)
+        """Stop the cover by pulsing the active coil."""
+        #coil = None
+        #if self.is_opening:
+        #    coil = self._up_coil
+        #elif self.is_closing:
+        #    coil = self._down_coil
+
+        #if coil is not None:
+        #    await self._write_coil(coil)
 
 
 class ISmartGarage(ISmartModbusCover):
