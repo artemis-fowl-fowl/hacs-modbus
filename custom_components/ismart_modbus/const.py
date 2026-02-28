@@ -47,9 +47,9 @@ DEVICES = [
     {"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "type": "light"},
     {"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "type": "light"},
     {"name": "Sophie", "device_id": 1, "input": "I5", "output": "Q5", "type": "light"},
-    {"name": "SDB", "device_id": 1, "input": "I6", "output": "Q6", "type": "light"},
-    {"name": "SDB_miroir", "device_id": 1, "input": "I7", "output": "Q7", "type": "light"},
-    {"name": "SDB_douche", "device_id": 1, "input": "I8", "output": "Q8", "type": "light"},
+    {"name": "SDB_douche", "device_id": 1, "input": "I6", "output": "Q6", "type": "light"},
+    {"name": "SDB", "device_id": 1, "input": "I7", "output": "Q7", "type": "light"},
+    {"name": "SDB_miroir", "device_id": 1, "input": "I8", "output": "Q8", "type": "light"},
 
     {"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "type": "light"},
     {"name": "Couloir", "device_id": 1, "input": "X2", "output": "Y2", "type": "light"},
@@ -75,19 +75,19 @@ DEVICES = [
     {"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "type": "light"},
     {"name": "Atelier", "device_id": 2, "input": "X4", "output": "Y4", "type": "light"},
     {"name": "Preau", "device_id": 2, "input": "X5", "output": "Y5", "type": "light"},
-    {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y5", "type": "light"},
-    {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y5", "type": "light"},
+    {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y6", "type": "light"},
+    {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y7", "type": "light"},
     {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "type": "light"},
     
     # ===== LUMIERES DIVERS (Device 3) =====
-    {"name": "Aurélien", "device_id": 3, "input": "X7", "output": "Y5", "type": "light"},
+    {"name": "Aurélien", "device_id": 3, "input": "X7", "output": "Y7", "type": "light"},
     {"name": "Aline", "device_id": 3, "input": "X8", "output": "Y8", "type": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
     {"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "type": "light"},
     {"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "type": "light"},
     {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "type": "light"},
-    {"name": "Sejour ?", "device_id": 4, "input": "X7", "output": "Y7", "type": "light"},
+    {"name": "Sejour ?", "device_id": 4, "input": "X8", "output": "Y8", "type": "light"},
 
 
     # ===== DIVERS (Device 5) =====
