@@ -129,7 +129,7 @@ DEVICES = [
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
     #{"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "stop": "M17", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1","type": "shutter"},
-    {"name": "Parents", "device_id": 3, "up": "B18", "down": "B11", "stop": "N01", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1","type": "shutter"},
+    {"name": "Parents", "device_id": 3, "up": "B148", "down": "B11", "stop": "N01", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1","type": "shutter"},
     #{"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "stop": "M18", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "type": "shutter"},
     {"name": "Gabriel", "device_id": 3, "up": "B27", "down": "B21", "stop": "N02", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "type": "shutter"},
     {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "stop": "N03", "opening": "Q6", "closing": "Q5", "opened": "M6", "closed": "M5", "type": "shutter"},
