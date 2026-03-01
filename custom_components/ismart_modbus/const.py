@@ -112,17 +112,17 @@ DEVICES = [
 
     # Accès généraux
 
-    {"name": "Extinction Etage", "device_id": 1, "input": "I9", "type": "button"},
-    {"name": "Extinction RDC", "device_id": 2, "input": "I9", "type": "button"},
+    {"name": "Extinction Etage", "device_id": 1, "input": "I09", "type": "button"},
+    {"name": "Extinction RDC", "device_id": 2, "input": "I09", "type": "button"},
     {"name": "Extinction CH1.X", "device_id": 3, "input": "I0B", "type": "button"},
     {"name": "Extinction Divers", "device_id": 4, "input": "I0B", "type": "button"},
 
     {"name": "Ouverture volets étage", "device_id": 3, "input": "I0A", "type": "button"},
-    {"name": "Fermeture volets étage", "device_id": 3, "input": "I9", "type": "button"},
+    {"name": "Fermeture volets étage", "device_id": 3, "input": "I09", "type": "button"},
     {"name": "Stop volets étage", "device_id": 3, "input": "M0A", "type": "button"},
 
-    {"name": "Ouverture volets RDC", "device_id": 4, "input": "IA", "type": "button"},
-    {"name": "Fermeture volets RDC", "device_id": 4, "input": "I9", "type": "button"},
+    {"name": "Ouverture volets RDC", "device_id": 4, "input": "I0A", "type": "button"},
+    {"name": "Fermeture volets RDC", "device_id": 4, "input": "I09", "type": "button"},
     {"name": "Stop volets RDC", "device_id": 4, "input": "MA", "type": "button"},
 ]
 
@@ -148,10 +148,10 @@ COVER_DEVICES = [
     
     # ===== DIVERS (Device 5) =====
     # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
-    {"name": "Garage", "device_id": 5, "move": "I5", "opened": "M6", "closed": "M7", "type": "garage"},
+    {"name": "Garage", "device_id": 5, "move": "I05", "opened": "M06", "closed": "M07", "type": "garage"},
 
     # Portail: commandes: X4 ouverture partielle, X1 ouvre / stop / ferme, demande vérouillage: X3
     #          retours: Run sur M01, Closed sur M2, Locked sur M3
-    {"name": "Portail", "device_id": 5, "move": "MC", "lock": "X3", "partial": "MB", "moving" : "M1", "closed": "M2", "locked": "M3", "type": "gate"},
+    {"name": "Portail", "device_id": 5, "move": "M0C", "lock": "X03", "partial": "M0B", "moving" : "M01", "closed": "M02", "locked": "M03", "type": "gate"},
 
 ]
