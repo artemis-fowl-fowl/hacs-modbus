@@ -129,22 +129,22 @@ DEVICES = [
 COVER_DEVICES = [
     # ===== VOLETS ROULANTS (Device 3) =====
     #{"name": "Parents", "device_id": 3, "up": "I2", "down": "I1", "stop": "M17", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1","type": "shutter"},
-    {"name": "Parents", "device_id": 3, "up": "B148", "down": "B11", "stop": "N01", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1","type": "shutter"},
+    {"name": "Parents", "device_id": 3, "up": "I02", "down": "I01", "stop": "N01", "opening": "Q02", "closing": "Q01", "opened": "M02", "closed": "M01","type": "shutter"},
     #{"name": "Gabriel", "device_id": 3, "up": "I4", "down": "I3", "stop": "M18", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "type": "shutter"},
-    {"name": "Gabriel", "device_id": 3, "up": "B27", "down": "B21", "stop": "N02", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "type": "shutter"},
-    {"name": "Paul_W", "device_id": 3, "up": "I6", "down": "I5", "stop": "N03", "opening": "Q6", "closing": "Q5", "opened": "M6", "closed": "M5", "type": "shutter"},
-    {"name": "Paul_S", "device_id": 3, "up": "I8", "down": "I7", "stop": "N04", "opening": "Q8", "closing": "Q7", "opened": "M8", "closed": "M7", "type": "shutter"},
-    {"name": "Sophie", "device_id": 3, "up": "X2", "down": "X1", "stop": "N05", "opening": "Y2", "closing": "Y1", "opened": "MA", "closed": "M9", "type": "shutter"},
-    {"name": "Mezzanine", "device_id": 3, "up": "X4", "down": "X3", "stop": "N06", "opening": "Y4", "closing": "Y3", "opened": "MC", "closed": "MB", "type": "shutter"},
-    {"name": "Velux", "device_id": 3, "up": "X6", "down": "X5", "stop": "N07", "opening": "Y6", "closing": "Y5", "opened": "ME", "closed": "MD", "type": "shutter"},
+    {"name": "Gabriel", "device_id": 3, "up": "I04", "down": "I03", "stop": "N02", "opening": "Q04", "closing": "Q03", "opened": "M04", "closed": "M03", "type": "shutter"},
+    {"name": "Paul_W", "device_id": 3, "up": "I06", "down": "I05", "stop": "N03", "opening": "Q06", "closing": "Q05", "opened": "M06", "closed": "M05", "type": "shutter"},
+    {"name": "Paul_S", "device_id": 3, "up": "I08", "down": "I07", "stop": "N04", "opening": "Q08", "closing": "Q07", "opened": "M08", "closed": "M07", "type": "shutter"},
+    {"name": "Sophie", "device_id": 3, "up": "X02", "down": "X01", "stop": "N05", "opening": "Y02", "closing": "Y01", "opened": "M0A", "closed": "M09", "type": "shutter"},
+    {"name": "Mezzanine", "device_id": 3, "up": "X04", "down": "X03", "stop": "N06", "opening": "Y4", "closing": "Y03", "opened": "M0C", "closed": "M0B", "type": "shutter"},
+    {"name": "Velux", "device_id": 3, "up": "X06", "down": "X05", "stop": "N07", "opening": "Y06", "closing": "Y05", "opened": "M0E", "closed": "M0D", "type": "shutter"},
 
     # ===== VOLETS ROULANTS (Device 4) =====
-    {"name": "Cathedrale", "device_id": 4, "up": "I2", "down": "I1", "stop": "N011", "opening": "Q2", "closing": "Q1", "opened": "M2", "closed": "M1", "type": "shutter"},
-    {"name": "Buanderie", "device_id": 4, "up": "I4", "down": "I3", "stop": "N02", "opening": "Q4", "closing": "Q3", "opened": "M4", "closed": "M3", "type": "shutter"},
-    {"name": "Cuisine", "device_id": 4, "up": "I6", "down": "I5", "stop": "N03", "opening": "Q6", "closing": "Q5", "opened": "M6", "closed": "M5", "type": "shutter"},
-    {"name": "Sejour W", "device_id": 4, "up": "I8", "down": "I7", "stop": "N04", "opening": "Q8", "closing": "Q7", "opened": "M8", "closed": "M7", "type": "shutter"},
-    {"name": "Sejour S", "device_id": 4, "up": "X2", "down": "X1", "stop": "N05", "opening": "Y2", "closing": "Y1", "opened": "MA", "closed": "M9", "type": "shutter"},
-    {"name": "Escalier", "device_id": 4, "up": "X4", "down": "X3", "stop": "N06", "opening": "Y4", "closing": "Y3", "opened": "MC", "closed": "MB", "type": "shutter"},
+    {"name": "Cathedrale", "device_id": 4, "up": "I02", "down": "I01", "stop": "N01", "opening": "Q02", "closing": "Q01", "opened": "M02", "closed": "M01", "type": "shutter"},
+    {"name": "Buanderie", "device_id": 4, "up": "I04", "down": "I03", "stop": "N02", "opening": "Q04", "closing": "Q03", "opened": "M04", "closed": "M03", "type": "shutter"},
+    {"name": "Cuisine", "device_id": 4, "up": "I06", "down": "I05", "stop": "N03", "opening": "Q06", "closing": "Q05", "opened": "M06", "closed": "M05", "type": "shutter"},
+    {"name": "Sejour W", "device_id": 4, "up": "I08", "down": "I07", "stop": "N04", "opening": "Q08", "closing": "Q07", "opened": "M08", "closed": "M07", "type": "shutter"},
+    {"name": "Sejour S", "device_id": 4, "up": "X02", "down": "X01", "stop": "N05", "opening": "Y02", "closing": "Y01", "opened": "M0A", "closed": "M09", "type": "shutter"},
+    {"name": "Escalier", "device_id": 4, "up": "X04", "down": "X03", "stop": "N06", "opening": "Y04", "closing": "Y03", "opened": "M0C", "closed": "M0B", "type": "shutter"},
     
     # ===== DIVERS (Device 5) =====
     # Adaptation un peu délicate peut être créer un autre objet pour les portes de garage ?
