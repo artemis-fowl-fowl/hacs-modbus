@@ -119,6 +119,30 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         except Exception as e:
             _LOGGER.error("Modbus error on %s: %s", self._name, e)
 
+    # Cette methode fait doublon avec celle de la classe de base, mais la classe cover n'hérite pas de la classe de base pour l'instant. A revoir si on veut factoriser le code ou pas.
+    @staticmethod
+    def decode_input(string: str) -> int:
+        """Return the Ismart coil address of an input string like "I1" or "X1"."""
+        if string is None:
+            return None
+        offset = int(string[1:], 16) - 1        
+        if string.startswith("I"):
+            return 0x0550 + offset
+        elif string.startswith("X"):
+            return 0x0560 + offset
+        if string.startswith("M"):
+            if offset < 16:
+                return 0x0540 + offset          # Ismart v2 compatibility
+            return 0x2B80 + offset              # Ismart v3 only ???
+        if string.startswith("N"):
+            if offset < 16:
+                return 0x0590 + offset          # Ismart v2 compatibility
+            return 0x2BC0 + offset              # Ismart v3 only ???
+        if string.startswith("B"):             
+            return 0x2D00 + offset              # Ismart v3 only ???     
+        else:
+            raise ValueError(f"Input string '{string}' is invalid.")
+
     @property
     def name(self) -> str:
         return self._name
