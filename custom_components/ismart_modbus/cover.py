@@ -114,12 +114,16 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         if string is None:
             return None
         if string.startswith("I"):
-            return 0x0550 + int(string[1:]) - 1
+            return 0x0550 + int(string[1:], 16) - 1
         elif string.startswith("X"):
-            return 0x0560 + int(string[1:]) - 1
+            return 0x0560 + int(string[1:], 16) - 1
         if string.startswith("M"):
-            return 0x2B80 + int(string[1:]) - 1
             #return 0x0540 + int(string[1:]) - 1
+            return 0x2B80 + int(string[1:], 16) - 1     # Ismart v3 only ???
+        if string.startswith("N"):
+            return 0x2BC0 + int(string[1:], 16) - 1     # Ismart v3 only ???
+        if string.startswith("B"):
+            return 0x2D00 + int(string[1:], 16) - 1     # Ismart v3 only ???     
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 
