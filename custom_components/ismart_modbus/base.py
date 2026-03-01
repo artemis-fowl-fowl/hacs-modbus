@@ -34,15 +34,28 @@ class ISmartModbusBase(CoordinatorEntity):
             _LOGGER.error("Modbus error on %s: %s", self._name, e)
 
     @staticmethod
-    def decode_input(string):
-        """Decode input like I1 / X1 to Modbus coil address."""
+    def decode_input(string: str) -> int:
+        """Return the Ismart coil address of an input string like "I1" or "X1"."""
+        if string is None:
+            return None
+        offset = int(string[1:], 16) - 1        
         if string.startswith("I"):
-            return 0x0550 + int(string[1:]) - 1
-        if string.startswith("X"):
-            return 0x0560 + int(string[1:]) - 1
+            return 0x0550 + offset
+        elif string.startswith("X"):
+            return 0x0560 + offset
         if string.startswith("M"):
-            return 0x0540 + int(string[1:]) - 1
-        raise ValueError(f"Invalid input '{string}'")
+            if offset < 16:
+                return 0x0540 + offset          # Ismart v2 compatibility
+            return 0x2B80 + offset              # Ismart v3 only ???
+        if string.startswith("N"):
+            if offset < 16:
+                return 0x0590 + offset          # Ismart v2 compatibility
+            return 0x2BC0 + offset              # Ismart v3 only ???
+        if string.startswith("B"):             
+            return 0x2D00 + offset              # Ismart v3 only ???     
+        else:
+            raise ValueError(f"Input string '{string}' is invalid.")
+
 
     # Le device_info est utilisé par Home Assistant pour regrouper les entités par appareil dans l'interface utilisateur.
     # On ne veux pas ce ça

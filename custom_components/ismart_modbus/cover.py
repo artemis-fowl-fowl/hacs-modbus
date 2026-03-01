@@ -108,29 +108,6 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         self._opened_flag = opened
         self._closed_flag = closed
         
-    @staticmethod
-    def decode_input(string: str) -> int:
-        """Return the Ismart coil address of an input string like "I1" or "X1"."""
-        if string is None:
-            return None
-        offset = int(string[1:], 16) - 1        
-        if string.startswith("I"):
-            return 0x0550 + offset
-        elif string.startswith("X"):
-            return 0x0560 + offset
-        if string.startswith("M"):
-            if offset < 16:
-                return 0x0540 + offset          # Ismart v2 compatibility
-            return 0x2B80 + offset              # Ismart v3 only ???
-        if string.startswith("N"):
-            if offset < 16:
-                return 0x0590 + offset          # Ismart v2 compatibility
-            return 0x2BC0 + offset              # Ismart v3 only ???
-        if string.startswith("B"):             
-            return 0x2D00 + offset              # Ismart v3 only ???     
-        else:
-            raise ValueError(f"Input string '{string}' is invalid.")
-
     async def _write_coil(self, coil, value: int = 1):
         """Write a Modbus coil and refresh state."""
         try:
