@@ -194,10 +194,12 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     async def async_open_cover(self, **kwargs):
         """Open the cover."""
+        _LOGGER.warning(f"Up cover {self._up_coil}")
         await self._write_coil(self._up_coil)
 
     async def async_close_cover(self, **kwargs):
         """Close the cover."""
+        _LOGGER.warning(f"Down cover {self._up_coil}")
         await self._write_coil(self._down_coil)
 
     async def async_stop_cover(self, **kwargs):
@@ -205,16 +207,6 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         # Il y a peut-être un problème si stop_coil n'existe pas (Garage et gate). A vérifier.
         _LOGGER.warning(f"Stop cover {self._stop_coil}")
         await self._write_coil(self._stop_coil)
-
-        """Stop the cover by pulsing the active coil."""
-        #coil = None
-        #if self.is_opening:
-        #    coil = self._up_coil
-        #elif self.is_closing:
-        #    coil = self._down_coil
-
-        #if coil is not None:
-        #    await self._write_coil(coil)
 
 
 class ISmartGarage(ISmartModbusCover):
