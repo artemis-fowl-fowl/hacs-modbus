@@ -199,7 +199,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
 
     async def async_close_cover(self, **kwargs):
         """Close the cover."""
-        _LOGGER.warning(f"Down cover {self._up_coil}")
+        _LOGGER.warning(f"Down cover {self._down_coil}")
         await self._write_coil(self._down_coil)
 
     async def async_stop_cover(self, **kwargs):
