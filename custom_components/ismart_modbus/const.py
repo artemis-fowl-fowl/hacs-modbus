@@ -123,7 +123,7 @@ DEVICES = [
 
     {"name": "Ouverture volets RDC", "device_id": 4, "input": "I0A", "type": "button"},
     {"name": "Fermeture volets RDC", "device_id": 4, "input": "I09", "type": "button"},
-    {"name": "Stop volets RDC", "device_id": 4, "input": "MA", "type": "button"},
+    {"name": "Stop volets RDC", "device_id": 4, "input": "M0A", "type": "button"},
 ]
 
 COVER_DEVICES = [
