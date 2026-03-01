@@ -62,12 +62,13 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
     def decode_bit_name(string: str):
         """Return the bit register and position."""
         try:
+            offset = int(string[1:], 16) - 1   
             if string.startswith("Q"):
-                return "outputs", int(string[1:]) - 1
+                return "outputs", offset
             if string.startswith("Y"):
-                return "outputs", int(string[1:]) + 7
+                return "outputs", offset + 7
             if string.startswith("M"):
-                return "m_registers", int(string[1:]) - 1
+                return "m_registers", offset
         except ValueError:
             raise ValueError(f"Invalid bit_name '{string}': Unable to resolve bit position")
 
