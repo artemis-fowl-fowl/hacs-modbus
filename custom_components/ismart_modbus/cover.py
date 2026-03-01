@@ -120,13 +120,13 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             return 0x0560 + offset
         if string.startswith("M"):
             if offset < 16:
-                return 0x0540 + offset
+                return 0x0540 + offset          # Ismart v2 compatibility
             return 0x2B80 + offset              # Ismart v3 only ???
         if string.startswith("N"):
             if offset < 16:
                 return 0x0590 + offset          # Ismart v2 compatibility
             return 0x2BC0 + offset              # Ismart v3 only ???
-        if string.startswith("B"):              # Ismart v2 compatibility
+        if string.startswith("B"):             
             return 0x2D00 + offset              # Ismart v3 only ???     
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
