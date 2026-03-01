@@ -195,6 +195,7 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     async def async_stop_cover(self, **kwargs):
         """Stop the cover."""
         # Il y a peut-être un problème si stop_coil n'existe pas (Garage et gate). A vérifier.
+        _LOGGER.warning(f"Stop cover {self._stop_coil}")
         await self._write_coil(self._stop_coil)
 
         """Stop the cover by pulsing the active coil."""
