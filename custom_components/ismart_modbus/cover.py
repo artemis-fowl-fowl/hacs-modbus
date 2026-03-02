@@ -125,7 +125,10 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
         """Return the Ismart coil address of an input string like "I1" or "X1"."""
         if string is None:
             return None
-        offset = int(string[1:], 16) - 1        
+        if string.startswith("B"):             
+            offset = int(string[1:], 10) - 1    # Offsets en base 10
+            return 0x2D00 + offset              # Ismart v3 only ???   
+        offset = int(string[1:], 16) - 1        # Offsets en base 16       
         if string.startswith("I"):
             return 0x0550 + offset
         elif string.startswith("X"):
@@ -138,8 +141,6 @@ class ISmartModbusCover(CoordinatorEntity, CoverEntity):
             if offset < 16:
                 return 0x0590 + offset          # Ismart v2 compatibility
             return 0x2BC0 + offset              # Ismart v3 only ???
-        if string.startswith("B"):             
-            return 0x2D00 + offset              # Ismart v3 only ???     
         else:
             raise ValueError(f"Input string '{string}' is invalid.")
 

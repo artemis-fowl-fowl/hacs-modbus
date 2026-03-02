@@ -40,6 +40,8 @@ EM111_DEVICES = [
 ISMART_DEVICES = [1,2,3,4,5]    # device id des 5 automates iSMART.
 
 # Tous les dispositifs de la maison
+# Les index en I, Q, X, Y, Q, M et N sont en base 16
+# Les index en B sont en base 10
 DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
     {"name": "Parents", "device_id": 1, "input": "I01", "output": "Q01", "type": "light"},
@@ -111,7 +113,7 @@ DEVICES = [
     #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "type": "switch"},
 
     # Accès généraux
-    {"name": "Test", "device_id": 3, "input": "B93", "type": "button"},
+    {"name": "Test", "device_id": 3, "input": "B147", "type": "button"},
 
     {"name": "Extinction Etage", "device_id": 1, "input": "I09", "type": "button"},
     {"name": "Extinction RDC", "device_id": 2, "input": "I09", "type": "button"},
