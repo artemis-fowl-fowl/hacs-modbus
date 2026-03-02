@@ -42,75 +42,76 @@ ISMART_DEVICES = [1,2,3,4,5]    # device id des 5 automates iSMART.
 # Tous les dispositifs de la maison
 DEVICES = [
     # ===== LUMIERES ETAGE (Device 1) =====
-    {"name": "Parents", "device_id": 1, "input": "I1", "output": "Q1", "type": "light"},
-    {"name": "Dressing", "device_id": 1, "input": "I2", "output": "Q2", "type": "light"},
-    {"name": "Gabriel", "device_id": 1, "input": "I3", "output": "Q3", "type": "light"},
-    {"name": "Paul", "device_id": 1, "input": "I4", "output": "Q4", "type": "light"},
-    {"name": "Sophie", "device_id": 1, "input": "I5", "output": "Q5", "type": "light"},
-    {"name": "SDB_douche", "device_id": 1, "input": "I6", "output": "Q6", "type": "light"},
-    {"name": "SDB", "device_id": 1, "input": "I7", "output": "Q7", "type": "light"},
-    {"name": "SDB_miroir", "device_id": 1, "input": "I8", "output": "Q8", "type": "light"},
+    {"name": "Parents", "device_id": 1, "input": "I01", "output": "Q01", "type": "light"},
+    {"name": "Dressing", "device_id": 1, "input": "I02", "output": "Q02", "type": "light"},
+    {"name": "Gabriel", "device_id": 1, "input": "I03", "output": "Q03", "type": "light"},
+    {"name": "Paul", "device_id": 1, "input": "I04", "output": "Q04", "type": "light"},
+    {"name": "Sophie", "device_id": 1, "input": "I05", "output": "Q05", "type": "light"},
+    {"name": "SDB_douche", "device_id": 1, "input": "I06", "output": "Q06", "type": "light"},
+    {"name": "SDB", "device_id": 1, "input": "I07", "output": "Q07", "type": "light"},
+    {"name": "SDB_miroir", "device_id": 1, "input": "I08", "output": "Q08", "type": "light"},
 
-    {"name": "Grenier", "device_id": 1, "input": "X1", "output": "Y1", "type": "light"},
-    {"name": "Couloir", "device_id": 1, "input": "X2", "output": "Y2", "type": "light"},
-    {"name": "Mezzanine", "device_id": 1, "input": "X3", "output": "Y3", "type": "light"},
-    {"name": "Sejour", "device_id": 1, "input": "X4", "output": "Y4", "type": "light"},
+    {"name": "Grenier", "device_id": 1, "input": "X01", "output": "Y01", "type": "light"},
+    {"name": "Couloir", "device_id": 1, "input": "X02", "output": "Y02", "type": "light"},
+    {"name": "Mezzanine", "device_id": 1, "input": "X03", "output": "Y03", "type": "light"},
+    {"name": "Sejour", "device_id": 1, "input": "X04", "output": "Y04", "type": "light"},
 
-    {"name": "Passerelle", "device_id": 1, "input": "X5", "output": "Y5", "type": "light"},
-    {"name": "SDJ", "device_id": 1, "input": "X6", "output": "Y6", "type": "light"},
-    {"name": "WC_etage", "device_id": 1, "input": "X7", "output": "Y7", "type": "light"},
+    {"name": "Passerelle", "device_id": 1, "input": "X05", "output": "Y05", "type": "light"},
+    {"name": "SDJ", "device_id": 1, "input": "X06", "output": "Y06", "type": "light"},
+    {"name": "WC_etage", "device_id": 1, "input": "X07", "output": "Y07", "type": "light"},
 
     # ===== LUMIERES RDC (Device 2) =====
-    {"name": "Salon1", "device_id": 2, "input": "I1", "output": "Q1", "type": "light"},
-    {"name": "Salon2", "device_id": 2, "input": "I2", "output": "Q2", "type": "light"},
-    {"name": "Cuisine", "device_id": 2, "input": "I3", "output": "Q3", "type": "light"},
-    {"name": "Ilot", "device_id": 2, "input": "I4", "output": "Q4", "type": "light"},
-    {"name": "Evier", "device_id": 2, "input": "I5", "output": "Q5", "type": "light"},
-    {"name": "Terrasse", "device_id": 2, "input": "I6", "output": "Q6", "type": "light"},
-    {"name": "Buanderie", "device_id": 2, "input": "I7", "output": "Q7", "type": "light"},
-    {"name": "Buanderie_miroir", "device_id": 2, "input": "I8", "output": "Q8", "type": "light"},
+    {"name": "Salon1", "device_id": 2, "input": "I01", "output": "Q01", "type": "light"},
+    {"name": "Salon2", "device_id": 2, "input": "I02", "output": "Q02", "type": "light"},
+    {"name": "Cuisine", "device_id": 2, "input": "I03", "output": "Q03", "type": "light"},
+    {"name": "Ilot", "device_id": 2, "input": "I04", "output": "Q04", "type": "light"},
+    {"name": "Evier", "device_id": 2, "input": "I05", "output": "Q05", "type": "light"},
+    {"name": "Terrasse", "device_id": 2, "input": "I06", "output": "Q06", "type": "light"},
+    {"name": "Buanderie", "device_id": 2, "input": "I07", "output": "Q07", "type": "light"},
+    {"name": "Buanderie_miroir", "device_id": 2, "input": "I08", "output": "Q08", "type": "light"},
 
-    {"name": "WC_RDC", "device_id": 2, "input": "X1", "output": "Y1", "type": "light"},
-    {"name": "Hall", "device_id": 2, "input": "X2", "output": "Y2", "type": "light"},
-    {"name": "Cellier", "device_id": 2, "input": "X3", "output": "Y3", "type": "light"},
-    {"name": "Atelier", "device_id": 2, "input": "X4", "output": "Y4", "type": "light"},
-    {"name": "Preau", "device_id": 2, "input": "X5", "output": "Y5", "type": "light"},
-    {"name": "Garage", "device_id": 2, "input": "X6", "output": "Y6", "type": "light"},
-    {"name": "Cave", "device_id": 2, "input": "X7", "output": "Y7", "type": "light"},
-    {"name": "Cour", "device_id": 2, "input": "X8", "output": "Y8", "type": "light"},
+    {"name": "WC_RDC", "device_id": 2, "input": "X01", "output": "Y01", "type": "light"},
+    {"name": "Hall", "device_id": 2, "input": "X02", "output": "Y02", "type": "light"},
+    {"name": "Cellier", "device_id": 2, "input": "X03", "output": "Y03", "type": "light"},
+    {"name": "Atelier", "device_id": 2, "input": "X04", "output": "Y04", "type": "light"},
+    {"name": "Preau", "device_id": 2, "input": "X05", "output": "Y05", "type": "light"},
+    {"name": "Garage", "device_id": 2, "input": "X06", "output": "Y06", "type": "light"},
+    {"name": "Cave", "device_id": 2, "input": "X07", "output": "Y07", "type": "light"},
+    {"name": "Cour", "device_id": 2, "input": "X08", "output": "Y08", "type": "light"},
     
     # ===== LUMIERES DIVERS (Device 3) =====
-    {"name": "Aurélien", "device_id": 3, "input": "X7", "output": "Y7", "type": "light"},
-    {"name": "Aline", "device_id": 3, "input": "X8", "output": "Y8", "type": "light"},
+    {"name": "Aurélien", "device_id": 3, "input": "X07", "output": "Y07", "type": "light"},
+    {"name": "Aline", "device_id": 3, "input": "X08", "output": "Y08", "type": "light"},
 
     # ===== LUMIERES DIVERS (Device 4) =====
-    {"name": "Gabriel_lit", "device_id": 4, "input": "X5", "output": "Y5", "type": "light"},
-    {"name": "Paul_lit", "device_id": 4, "input": "X6", "output": "Y6", "type": "light"},
-    {"name": "Sophie_lit", "device_id": 4, "input": "X7", "output": "Y7", "type": "light"},
-    {"name": "Sejour ?", "device_id": 4, "input": "X8", "output": "Y8", "type": "light"},
+    {"name": "Gabriel_lit", "device_id": 4, "input": "X05", "output": "Y05", "type": "light"},
+    {"name": "Paul_lit", "device_id": 4, "input": "X06", "output": "Y06", "type": "light"},
+    {"name": "Sophie_lit", "device_id": 4, "input": "X07", "output": "Y07", "type": "light"},
+    {"name": "Sejour ?", "device_id": 4, "input": "X08", "output": "Y08", "type": "light"},
 
 
     # ===== DIVERS (Device 5) =====
-    {"name": "Apoint", "device_id": 5, "input": "I1", "output": "Q1", "type": "light"},
-    {"name": "Ampli", "device_id": 5, "input": "I2", "output": "Q2", "type": "toggle_switch"},
-    {"name": "Electrovanne_1", "device_id": 5, "input": "I3", "output": "Q3", "type": "toggle_switch"},
-    {"name": "Electrovanne_2", "device_id": 5, "input": "I4", "output": "Q4", "type": "toggle_switch"},
-    {"name": "SDB_radiateur", "device_id": 5, "input": "I7", "output": "Q7", "type": "toggle_switch"},
+    {"name": "Apoint", "device_id": 5, "input": "I01", "output": "Q01", "type": "light"},
+    {"name": "Ampli", "device_id": 5, "input": "I02", "output": "Q02", "type": "toggle_switch"},
+    {"name": "Electrovanne_1", "device_id": 5, "input": "I03", "output": "Q03", "type": "toggle_switch"},
+    {"name": "Electrovanne_2", "device_id": 5, "input": "I04", "output": "Q04", "type": "toggle_switch"},
+    {"name": "SDB_radiateur", "device_id": 5, "input": "I07", "output": "Q07", "type": "toggle_switch"},
 
-    {"name": "Scooter", "device_id": 5, "input": "M8", "output": "Q5", "type": "switch"},
-    {"name": "Zoé", "device_id": 5, "input": "M9", "output": "Q6", "type": "switch"},
-    {"name": "Heures_creuses", "device_id": 5, "input": "I6", "output": "M0A", "type": "toogle_switch"},
+    {"name": "Scooter", "device_id": 5, "input": "M08", "output": "Q05", "type": "switch"},
+    {"name": "Zoé", "device_id": 5, "input": "M09", "output": "Q06", "type": "switch"},
+    {"name": "Heures_creuses", "device_id": 5, "input": "I06", "output": "M0A", "type": "toogle_switch"},
 
 
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "type": "light"},
     
     {"name": "Ouverture partielle", "device_id": 5, "input": "M0B", "type": "button"},
-    {"name": "Verrouillage", "device_id": 5, "input": "X3", "type": "button"},
-    {"name": "Portail verrouillé", "device_id": 5, "output": "M3", "type": "sensor"},
+    {"name": "Verrouillage", "device_id": 5, "input": "X03", "type": "button"},
+    {"name": "Portail verrouillé", "device_id": 5, "output": "M03", "type": "sensor"},
     # ### Output sur MemState non pris en charge pour le moment
     #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "type": "switch"},
 
     # Accès généraux
+    {"name": "Test", "device_id": 3, "input": "B147", "type": "button"},
 
     {"name": "Extinction Etage", "device_id": 1, "input": "I09", "type": "button"},
     {"name": "Extinction RDC", "device_id": 2, "input": "I09", "type": "button"},
