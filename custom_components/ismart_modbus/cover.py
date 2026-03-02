@@ -69,14 +69,6 @@ async def async_setup_entry(
     async_add_entities(entities)
     hass.data[DOMAIN][config_entry.entry_id]["covers"] = entities
 
-class ModelISmartModbusBitEntity(ISmartModbusBase):
- 
- """Base class for bit-based Modbus entities."""
-    def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
-        super().__init__(coordinator, name, device_id, modbus_interface)
-        self._coil = self.decode_input(input)
-        self._state_flag = output
-
 class ISmartModbusCover2(ISmartModbusBase):
     """Representation of an iSMART Modbus cover (shutter)."""
 
