@@ -68,6 +68,119 @@ async def async_setup_entry(
     async_add_entities(entities)
     hass.data[DOMAIN][config_entry.entry_id]["covers"] = entities
 
+class ModelISmartModbusBitEntity(ISmartModbusBase):
+ 
+ """Base class for bit-based Modbus entities."""
+    def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
+        super().__init__(coordinator, name, device_id, modbus_interface)
+        self._coil = self.decode_input(input)
+        self._state_flag = output
+
+class ISmartModbusCover2(ISmartModbusBase):
+    """Representation of an iSMART Modbus cover (shutter)."""
+
+    def __init__(
+        self,
+        coordinator,
+        name: str,
+        device_class: str,
+        device_id: int,
+        up: str,
+        down: str,
+        stop: str,
+        opening: str,
+        closing: str,
+        opened: str,
+        closed: str,
+        modbus_interface=None,
+    ):
+        """Initialize the cover."""
+        super().__init__(coordinator, name, device_id, modbus_interface)
+        self._attr_unique_id = f"cover_{name.lower()}"
+        # Coils pour commandes
+        self._up_coil = self.decode_input(up)
+        self._down_coil = self.decode_input(down)
+        self._stop_coil = self.decode_input(stop)
+        # Flags obligatoires
+        self._opening_flag = opening
+        self._closing_flag = closing
+        # Flags optionnels
+        self._opened_flag = opened
+        self._closed_flag = closed
+        
+    async def _write_coil(self, coil, value: int = 1):
+        """Write a Modbus coil and refresh state."""
+        try:
+            if await self.hass.async_add_executor_job(self._modbus.writecoil_device, self._device_id, coil, value) == True:
+                await self.coordinator._async_update_ismart(self._device_id)        # Refresh partiel pour cet automate
+                self.coordinator.async_update_listeners()                           # Force la mise à jour dans home assistant
+            else:
+                _LOGGER.error("Modbus write failed on %s", self._name)
+        except Exception as e:
+            _LOGGER.error("Modbus error on %s: %s", self._name, e)
+
+    @property
+    def unique_id(self) -> str:
+        return f"ismart_cover_{self._name.lower()}"
+
+    @property
+    def is_opening(self) -> bool:
+        return bool(self.coordinator.get_bit(self._device_id, self._opening_flag))
+
+    @property
+    def is_closing(self) -> bool:
+        return bool(self.coordinator.get_bit(self._device_id, self._closing_flag))
+    
+    @property
+    def is_open(self) -> bool:
+        return bool(self.coordinator.get_bit(self._device_id, self._opened_flag))
+
+    @property
+    def is_closed(self) -> bool:
+        return bool(self.coordinator.get_bit(self._device_id, self._closed_flag))
+
+    @property
+    def state(self):
+        if self.is_opening:
+            return CoverState.OPENING
+        if self.is_closing:
+            return CoverState.CLOSING
+        if self.is_closed:
+            return CoverState.CLOSED
+        if self.is_open:
+            return CoverState.OPEN
+        return None
+
+    @property
+    def available(self) -> bool:
+        return self.coordinator.is_device_available(self._device_id)
+
+    @property
+    def icon(self) -> str | None:
+        if self.is_opening or self.is_closing:
+            return "mdi:window-shutter-cog"
+        if self.is_closed:
+            return "mdi:window-shutter"
+        if self.is_open:
+            return "mdi:window-shutter-open"
+        return "mdi:window-shutter-alert"
+
+    async def async_open_cover(self, **kwargs):
+        """Open the cover."""
+        _LOGGER.warning(f"Up cover {self._up_coil}")
+        await self._write_coil(self._up_coil)
+
+    async def async_close_cover(self, **kwargs):
+        """Close the cover."""
+        _LOGGER.warning(f"Down cover {self._down_coil}")
+        await self._write_coil(self._down_coil)
+
+    async def async_stop_cover(self, **kwargs):
+        """Stop the cover."""
+        # Il y a peut-être un problème si stop_coil n'existe pas (Garage et gate). A vérifier.
+        _LOGGER.warning(f"Stop cover {self._stop_coil}")
+        await self._write_coil(self._stop_coil)
+
 
 class ISmartModbusCover(CoordinatorEntity, CoverEntity):
     """Representation of an iSMART Modbus cover (shutter)."""

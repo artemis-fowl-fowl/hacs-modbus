@@ -58,17 +58,6 @@ class ISmartModbusBase(CoordinatorEntity):
             raise ValueError(f"Input string '{string}' is invalid.")
 
 
-    # Le device_info est utilisé par Home Assistant pour regrouper les entités par appareil dans l'interface utilisateur.
-    # On ne veux pas ce ça
-    #@property
-    #def device_info(self):
-    #    return {
-    #        "identifiers": {(DOMAIN, self._device_id)},
-    #        "name": self._name,
-    #        "manufacturer": "IMO",
-    #        "model": "iSMART",
-    #    }
-
 class ISmartModbusBitEntity(ISmartModbusBase):
     """Base class for bit-based Modbus entities."""
     def __init__(self, coordinator, name, device_id, input, output, modbus_interface):
