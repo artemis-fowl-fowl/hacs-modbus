@@ -111,7 +111,7 @@ DEVICES = [
     #{"name": "Alarme", "device_id": 5, "input": "I10", "output": "M04", "type": "switch"},
 
     # Accès généraux
-    {"name": "Test", "device_id": 3, "input": "B147", "type": "button"},
+    {"name": "Test", "device_id": 3, "input": "B93", "type": "button"},
 
     {"name": "Extinction Etage", "device_id": 1, "input": "I09", "type": "button"},
     {"name": "Extinction RDC", "device_id": 2, "input": "I09", "type": "button"},

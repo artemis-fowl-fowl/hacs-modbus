@@ -28,7 +28,7 @@ class ISmartModbusButton(ISmartModbusBase, ButtonEntity):
         self._attr_name = name
 
     async def async_press(self) -> None:
-        _LOGGER.warning(f"Stop cover {self._coil}")
+        _LOGGER.warning(f"Button {self._coil}")
         await self._write_coil(self._coil)
 
     @property
