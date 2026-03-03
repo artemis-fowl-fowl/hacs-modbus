@@ -66,7 +66,7 @@ class ISmartModbusCoordinator(DataUpdateCoordinator):
             if string.startswith("Q"):
                 return "outputs", offset
             if string.startswith("Y"):
-                return "outputs", offset + 7
+                return "outputs", offset + 8
             if string.startswith("M"):
                 return "m_registers", offset
         except ValueError:
