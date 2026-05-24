@@ -81,15 +81,15 @@ DEVICES = [
     {"name": "Cave", "device_id": 2, "input": "X07", "output": "Y07", "type": "light"},
     {"name": "Cour", "device_id": 2, "input": "X08", "output": "Y08", "type": "light"},
     
-    # ===== LUMIERES DIVERS (Device 3) =====
+    # ===== DIVERS (Device 3) =====
     {"name": "Aurélien", "device_id": 3, "input": "X07", "output": "Y07", "type": "light"},
     {"name": "Aline", "device_id": 3, "input": "X08", "output": "Y08", "type": "light"},
 
-    # ===== LUMIERES DIVERS (Device 4) =====
+    # ===== DIVERS (Device 4) =====
     {"name": "Gabriel_lit", "device_id": 4, "input": "X05", "output": "Y05", "type": "light"},
     {"name": "Paul_lit", "device_id": 4, "input": "X06", "output": "Y06", "type": "light"},
     {"name": "Sophie_lit", "device_id": 4, "input": "X07", "output": "Y07", "type": "light"},
-    {"name": "Sejour ?", "device_id": 4, "input": "X08", "output": "Y08", "type": "light"},
+    {"name": "Piscine", "device_id": 4, "input": "X08", "output": "Y08", "type": "toggle_switch"},
 
 
     # ===== DIVERS (Device 5) =====
