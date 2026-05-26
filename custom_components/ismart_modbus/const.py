@@ -89,8 +89,9 @@ DEVICES = [
     {"name": "Gabriel_lit", "device_id": 4, "input": "X05", "output": "Y05", "type": "light"},
     {"name": "Paul_lit", "device_id": 4, "input": "X06", "output": "Y06", "type": "light"},
     {"name": "Sophie_lit", "device_id": 4, "input": "X07", "output": "Y07", "type": "light"},
-    {"name": "Piscine", "device_id": 4, "input": "X08", "output": "Y08", "type": "toggle_switch"},
-
+    #{"name": "Piscine", "device_id": 4, "input": "X08", "output": "Y08", "type": "toggle_switch"},
+    {"name": "Piscine_toggle_60min", "device_id": 4, "input": "X08", "output": "Y08", "type": "toggle_switch"},
+    {"name": "Piscine", "device_id": 4, "input": "M0D", "output": "Y08", "type": "switch"},
 
     # ===== DIVERS (Device 5) =====
     {"name": "Apoint", "device_id": 5, "input": "I01", "output": "Q01", "type": "light"},
@@ -101,8 +102,8 @@ DEVICES = [
 
     {"name": "Scooter", "device_id": 5, "input": "M08", "output": "Q05", "type": "switch"},
     {"name": "Zoé", "device_id": 5, "input": "M09", "output": "Q06", "type": "switch"},
-    {"name": "Heures_creuses", "device_id": 5, "input": "I06", "output": "M0A", "type": "toogle_switch"},
-
+    #{"name": "Heures_creuses", "device_id": 5, "input": "I06", "output": "M0A", "type": "toggle_switch"},
+    {"name": "Heures_creuses", "device_id": 5, "output": "M10", "type": "sensor"},
 
     {"name": "Cabanon", "device_id": 5, "input": "X3", "output": "Y3", "type": "light"},
     
