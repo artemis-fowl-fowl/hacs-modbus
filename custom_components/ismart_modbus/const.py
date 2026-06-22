@@ -53,16 +53,16 @@ DEVICES = [
     {"name": "SDB", "device_id": 1, "input": "I07", "output": "Q07", "type": "light"},
     {"name": "SDB_miroir", "device_id": 1, "input": "I08", "output": "Q08", "type": "light"},
 
-    {"name":"Grenier","device_id":1,"input":8,"output":"0x2C10","type":"light"},
+#    {"name": "Grenier", "device_id": 1, "input": "X01", "output": "Y01", "type": "light"},
     {"name": "Couloir", "device_id": 1, "input": "X02", "output": "Y02", "type": "light"},
     {"name": "Mezzanine", "device_id": 1, "input": "X03", "output": "Y03", "type": "light"},
     {"name": "Sejour", "device_id": 1, "input": "X04", "output": "Y04", "type": "light"},
 
     {"name": "Passerelle", "device_id": 1, "input": "X05", "output": "Y05", "type": "light"},
-    {"name":"WC_etage","device_id":1,"input":"X15","output":"Y15","type":"light"},
+#ancien   {"name": "SDJ", "device_id": 1, "input": "X06", "output": "Y06", "type": "light"},
     {"name": "SDJ", "device_id": 1, "input": "X07", "output": "Y07", "type": "light"},
- # grenier et wc etage sont modif par moi donc peut etre foireux
- # 
+ # GRENIER ABSENT 
+ # WC ETAGE ABSENT  
     # ===== LUMIERES RDC (Device 2) =====
 
     {"name": "Salon1", "device_id": 2, "input": "I01", "output": "Q01", "type": "light"},
